@@ -32,9 +32,13 @@ extends Selector<HullModButton>
 	private boolean needEnhanceText = true;
 	private boolean needBuildInText = true;
 	private LabelWithVariables countLabel;
+	private LabelWithVariables currentCostsLabel;
 	private final FleetMemberAPI fleetMember;
 	private final ShipVariantAPI checkerVariant;
 	private final ShipVariantAPI originalVariant;
+	private int sModsAdded = 0;
+	private int sModsRemoved = 0;
+	private int modsEnhanced = 0;
 
 	public BuildInPlugin(FleetMemberAPI fleetMember, ShipVariantAPI variant)
 	{
@@ -43,10 +47,11 @@ extends Selector<HullModButton>
 		this.checkerVariant = variant.clone();
 	}
 
-	public void init(PanelCreator.PanelCreatorData<List<HullModButton>> data, LabelWithVariables countLabel)
+	public void init(PanelCreator.PanelCreatorData<List<HullModButton>> data, LabelWithVariables countLabel, LabelWithVariables currentCostsLabel)
 	{
 		items = data.created();
 		this.countLabel = countLabel;
+		this.currentCostsLabel = currentCostsLabel;
 		update();
 	}
 
@@ -68,29 +73,14 @@ extends Selector<HullModButton>
 
 			if(button.getData().isBuiltIn())
 			{
-				// If the S-mod isn't selected, check if it can be removed
-				if(!button.isSelected())
-				{
-					SectorEntityToken entity = Global.getSector().getCampaignUI().getCurrentInteractionDialog().getInteractionTarget();
-					MarketAPI market = entity.getMarket();
-					Object tradeMode = entity.getMemory().get("$tradeMode");
-					boolean can = tradeMode != null && !tradeMode.equals(CampaignUIAPI.CoreUITradeMode.NONE) && !tradeMode.equals("NONE") && market.hasIndustry("hullmodservices");
-
-					if(can)
-					{
-						enable(i, button.getDefaultDescription());
-					}
-					else
-					{
-						disable(i, "Requires docking at a market with the Hull Mod Services structure", true);
-					}
-					continue;
-				}
-
 				// Undoing this refund would result in negative S-mod slots
 				if(count >= maxCount)
 				{
 					disable(i, button.getDefaultDescription(), false, true);
+				}
+				else if(sModsAdded > 0)
+				{
+					disable(i, "Can't add and remove s-mods at the same time", false, true);
 				}
 				// Otherwise it's possible to undo the refund
 				else
@@ -100,7 +90,7 @@ extends Selector<HullModButton>
 			}
 			else
 			{
-				if(Costs.addSmodStoryPointCost(checkerVariant) > Costs.getPlayerStoryPoints() || Costs.addSmodCreditCost(checkerVariant, button.getData().isEnhanceOnly()) > Costs.getPlayerCredits())
+				if(Costs.addSmodStoryPointCost(checkerVariant, sModsAdded+1) > Costs.getPlayerStoryPoints() || Costs.addSmodCreditCost(checkerVariant, button.getData().isEnhanceOnly(), sModsAdded+1) > Costs.getPlayerCredits())
 				{
 					disable(i, button.getDefaultDescription(), false);
 				}
@@ -108,6 +98,10 @@ extends Selector<HullModButton>
 				else if(count >= maxCount && !button.getData().isEnhanceOnly())
 				{
 					disable(i, button.getDefaultDescription(), false);
+				}
+				else if(sModsRemoved > 0 && !button.getData().isEnhanceOnly())
+				{
+					disable(i, "Can't add and remove s-mods at the same time", false, false);
 				}
 				// No reason to be disabled; enable it
 				else
@@ -154,14 +148,13 @@ extends Selector<HullModButton>
 		BitSet disabledIndices = new BitSet();
 		InteractionDialogAPI dialog = Global.getSector().getCampaignUI().getCurrentInteractionDialog();
 		SectorEntityToken interactionTarget = dialog == null ? null : dialog.getInteractionTarget();
+
 		while(checkedEntriesChanged)
 		{
 			ShipAPI checkerShip = makeShip(checkerVariant, fleetMember);
-			// Since hull mods may have dependencies, some checked entries may
-			// need to be unchecked.
+			// Since hull mods may have dependencies, some checked entries may need to be unchecked.
 			// Since dependencies can be chained, we need to do this in a loop.
-			// (# of loops is bounded by # of checked entries as well as
-			// longest hull mod dependency chain)
+			// (# of loops is bounded by # of checked entries as well as longest hull mod dependency chain)
 			checkedEntriesChanged = false;
 			for(int i = 0; i < items.size(); i++)
 			{
@@ -170,9 +163,11 @@ extends Selector<HullModButton>
 				{
 					continue;
 				}
+
 				HullModSpecAPI hullMod = Global.getSettings().getHullModSpec(button.getData().id());
 				boolean shouldDisable = false;
 				String disableText = null;
+
 				if(!hullMod.getEffect().isApplicableToShip(checkerShip) && !button.getData().isBuiltIn() && !originalVariant.hasHullMod(button.getData().id()))
 				{
 					String reason = hullMod.getEffect().getUnapplicableReason(checkerShip);
@@ -191,11 +186,9 @@ extends Selector<HullModButton>
 				{
 					String tradeModeString = interactionTarget.getMemory().getString("$tradeMode");
 					CampaignUIAPI.CoreUITradeMode tradeMode = tradeModeString == null ? CampaignUIAPI.CoreUITradeMode.NONE : CampaignUIAPI.CoreUITradeMode.valueOf(tradeModeString);
-					if(!originalVariant.hasHullMod(button.getData().id()) && !hullMod.getEffect().canBeAddedOrRemovedNow(checkerShip,
-							interactionTarget.getMarket(), tradeMode))
+					if(!originalVariant.hasHullMod(button.getData().id()) && !hullMod.getEffect().canBeAddedOrRemovedNow(checkerShip, interactionTarget.getMarket(), tradeMode))
 					{
-						String reason = hullMod.getEffect().getCanNotBeInstalledNowReason(checkerShip,
-								interactionTarget.getMarket(), tradeMode);
+						String reason = hullMod.getEffect().getCanNotBeInstalledNowReason(checkerShip, interactionTarget.getMarket(), tradeMode);
 						shouldDisable = true;
 						if(reason != null && !button.getData().isBuiltIn())
 						{
@@ -206,11 +199,13 @@ extends Selector<HullModButton>
 						disableText = shortenText(reason, button.getDescription());
 					}
 				}
+
 				if(hullMod.hasTag("no_build_in"))
 				{
 					shouldDisable = true;
 					disableText = hullMod.getDisplayName() + " can't be built in";
 				}
+
 				if(shouldDisable)
 				{
 					if(button.isSelected())
@@ -218,15 +213,18 @@ extends Selector<HullModButton>
 						forceDeselect(i);
 						checkedEntriesChanged = true;
 					}
+
 					if(disableText == null)
 					{
 						disableText = "Can't build in (no reason given, default message)";
 					}
+
 					disable(i, disableText, true);
 					disabledIndices.set(i);
 				}
 			}
 		}
+
 		return disabledIndices;
 	}
 
@@ -238,6 +236,10 @@ extends Selector<HullModButton>
 		{
 			// No need to check isEnhanceOnly because those aren't in the list in the first place
 			countLabel.changeVar(0, countLabel.getVar(0) - 1);
+
+			sModsRemoved++;
+			currentCostsLabel.changeVar(0, sModsRemoved+modsEnhanced);
+
 			update();
 		}
 		else
@@ -245,6 +247,23 @@ extends Selector<HullModButton>
 			if(!hullModButton.getData().isEnhanceOnly())
 			{
 				countLabel.changeVar(0, countLabel.getVar(0) + 1);
+
+				sModsAdded++;
+				currentCostsLabel.changeVar(0, Costs.addSmodStoryPointCost(originalVariant, sModsAdded)+modsEnhanced);
+				currentCostsLabel.changeVar(1, Costs.addSmodCreditCost(originalVariant, false, sModsAdded));
+			}
+			else
+			{
+				modsEnhanced++;
+				if(sModsAdded == 0)
+				{
+					currentCostsLabel.changeVar(0, sModsRemoved+modsEnhanced);
+				}
+				else
+				{
+					currentCostsLabel.changeVar(0, Costs.addSmodStoryPointCost(originalVariant, sModsAdded)+modsEnhanced);
+				}
+				currentCostsLabel.changeVar(1, Costs.addSmodCreditCost(originalVariant, false, sModsAdded));
 			}
 			String hullModId = items.get(index).getData().id();
 			checkerVariant.addMod(hullModId);
@@ -262,8 +281,7 @@ extends Selector<HullModButton>
 
 	/**
 	 * Tests if a ship made from checkerVariant still has all the hull mods that checkerVariant does.
-	 * If not, this likely means that a mod forcibly removed some other hull mod(s) due to mod
-	 * incompatibilities,
+	 * If not, this likely means that a mod forcibly removed some other hull mod(s) due to mod incompatibilities,
 	 * so adding this hull mod would not be safe.
 	 */
 	private boolean testForDesync()
@@ -292,12 +310,31 @@ extends Selector<HullModButton>
 		{
 			// No need to check isEnhanceOnly because those aren't in the list in the first place
 			countLabel.changeVar(0, countLabel.getVar(0) + 1);
+			sModsRemoved--;
+			currentCostsLabel.changeVar(0, sModsRemoved+modsEnhanced);
 		}
 		else
 		{
 			if(!hullModButton.getData().isEnhanceOnly())
 			{
 				countLabel.changeVar(0, countLabel.getVar(0) - 1);
+
+				sModsAdded--;
+				currentCostsLabel.changeVar(0, Costs.addSmodStoryPointCost(originalVariant, sModsAdded)+modsEnhanced);
+				currentCostsLabel.changeVar(1, Costs.addSmodCreditCost(originalVariant, false, sModsAdded));
+			}
+			else
+			{
+				modsEnhanced--;
+				if(sModsAdded == 0)
+				{
+					currentCostsLabel.changeVar(0, sModsRemoved+modsEnhanced);
+				}
+				else
+				{
+					currentCostsLabel.changeVar(0, Costs.addSmodStoryPointCost(originalVariant, sModsAdded)+modsEnhanced);
+				}
+				currentCostsLabel.changeVar(1, Costs.addSmodCreditCost(originalVariant, false, sModsAdded));
 			}
 			String hullModId = items.get(index).getData().id();
 			// Don't remove hull mods that were already on the ship
@@ -317,6 +354,10 @@ extends Selector<HullModButton>
 		if(!button.getData().isEnhanceOnly())
 		{
 			countLabel.changeVar(0, countLabel.getVar(0) - 1);
+
+			sModsAdded--;
+			currentCostsLabel.changeVar(0, Costs.addSmodStoryPointCost(originalVariant, sModsAdded)+modsEnhanced);
+			currentCostsLabel.changeVar(1, Costs.addSmodCreditCost(originalVariant, false, sModsAdded));
 		}
 		String hullModId = items.get(index).getData().id();
 		// Don't remove hull mods that were already on the ship

@@ -216,6 +216,7 @@ public class PanelCreator
 			10f,
 			tooltipMaker
 		);
+
 		// Add the hull mod's effect description to a tooltip on mouse hover
 		tooltipMaker.addTooltipToPrevious(new TooltipMakerAPI.TooltipCreator()
 		{
@@ -226,8 +227,7 @@ public class PanelCreator
 				{
 					List<String> highlights = new ArrayList<>();
 					String descParam;
-					// hard cap at 100 just in case getDescriptionParam for some reason
-					// doesn't default to null
+					// hard cap at 100 just in case getDescriptionParam for some reason doesn't default to null
 					for(int i = 0; i < 100 && (descParam = data.hullModEffect().getDescriptionParam(i, data.hullSize(), null)) != null; i++)
 					{
 						highlights.add(descParam);
@@ -254,6 +254,7 @@ public class PanelCreator
 			}
 
 		}, TooltipMakerAPI.TooltipLocation.RIGHT);
+
 		return button;
 	}
 

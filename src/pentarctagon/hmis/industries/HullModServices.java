@@ -15,7 +15,6 @@ import java.lang.invoke.MethodHandles;
 public class HullModServices
 extends BaseIndustry
 {
-    // TODO: check what this does when launching the game normally
     private static final Logger log = LogManager.getLogger(MethodHandles.lookup().lookupClass());
     static
     {
@@ -107,11 +106,11 @@ extends BaseIndustry
         {
             if(mode == ImprovementDescriptionMode.INDUSTRY_TOOLTIP)
             {
-                info.addPara("Reduced hullmod costs by an additional %s percent.", initPad, Misc.getHighlightColor(), "20");
+                info.addPara("Reduced hullmod costs by an additional %s percent. No effect if ship quality is already above 190%.", initPad, Misc.getHighlightColor(), "20");
             }
             else
             {
-                info.addPara("Reduces hullmod costs by an additional %s percent.", initPad, Misc.getHighlightColor(), "20");
+                info.addPara("Reduces hullmod costs by an additional %s percent. No effect if ship quality is already above 190%.", initPad, Misc.getHighlightColor(), "20");
             }
             initPad = pad;
             addedSomething = true;

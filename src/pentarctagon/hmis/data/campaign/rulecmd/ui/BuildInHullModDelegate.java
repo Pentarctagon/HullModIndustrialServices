@@ -55,8 +55,8 @@ implements CustomDialogDelegate
 	public void createCustomDialog(CustomPanelAPI panel, CustomDialogDelegate.CustomDialogCallback callback)
 	{
 		String titleString = "Choose hull mods to build in";
-		float titleHeight = 50f;
-		float shipInfoPanelPad = 10f;
+		float titleHeight = 90f;
+		float shipInfoPanelPad = 40f;
 		float yPad = 5f;
 
 		// Set the callback function, so customDialogConfirm can call it and create the ship list again
@@ -64,8 +64,13 @@ implements CustomDialogDelegate
 		this.callback = callback;
 		BuildInHullModDialogCreator.shouldRecreateShipPanel = true;
 
-		// Initialize the S-mod counter at the top. This tracks the "pending" value that will be set when the player hits confirm.
-		LabelWithVariables countLabel = PanelCreator.createLabelWithVariables(panel, "S-mods: %s/%s", Color.WHITE, 30f, Alignment.LMID, selectedVariant.getSMods().size(), 11).created();
+		// credits and story points the player currently has
+		// don't need to store the return value since these don't change while the dialog is open
+		PanelCreator.createLabelWithVariables(panel, "Credits: %,d", Color.WHITE, 30f, Alignment.LMID, Costs.getPlayerCredits());
+		PanelCreator.createLabelWithVariables(panel, "Story points: %s", Color.WHITE, 50f, Alignment.LMID, Costs.getPlayerStoryPoints());
+		// Initialize the S-mod counter and costs at the top. This tracks the "pending" values that will be set when the player hits confirm.
+		LabelWithVariables countLabel = PanelCreator.createLabelWithVariables(panel, "S-mods: %s/%s", Color.WHITE, 70f, Alignment.LMID, selectedVariant.getSMods().size(), 11).created();
+		LabelWithVariables currentCostsLabel = PanelCreator.createLabelWithVariables(panel, "Cost: %s story points, %,d credits", Color.WHITE, 90f, Alignment.LMID, 0, 0).created();
 
 		// Static text at the top of the screen. The function positions it at the top of panel
 		CustomPanelAPI titlePanel = PanelCreator.createTitle(panel, titleString, titleHeight).panel();
@@ -80,7 +85,7 @@ implements CustomDialogDelegate
 		PanelCreator.PanelCreatorData<List<HullModButton>> createdButtonsData = PanelCreator.createHullModPanel(panel, hullModPanelHeight, dWidth, buttonData, plugin);
 		createdButtonsData.panel().getPosition().belowMid(shipInfoPanel, yPad);
 
-		plugin.init(createdButtonsData, countLabel);
+		plugin.init(createdButtonsData, countLabel, currentCostsLabel);
 	}
 
 	/**
@@ -222,24 +227,17 @@ implements CustomDialogDelegate
 		{
 			HullModSpecAPI hullMod = Global.getSettings().getHullModSpec(ids.get(i));
 			boolean isEnhanceOnly = i < firstIndexToBeCounted;
-			int creditCost = Costs.addSmodCreditCost(selectedVariant, isEnhanceOnly);
-			int storyPointCost = Costs.addSmodStoryPointCost(selectedVariant);
-			String description = storyPointCost + " story points";
-			if(creditCost > 0)
-			{
-				description += ", " + creditCost + " credits";
-			}
 			buttonData.add(
 				new HullModButtonData(
 					hullMod.getId(),
 					hullMod.getDisplayName() + (isEnhanceOnly ? "*" : ""),
 					hullMod.getSpriteName(),
-					description,
+					"",
 					hullMod.getDescription(selectedVariant.getHullSize()),
 					hullMod.getEffect(),
 					selectedVariant.getHullSize(),
-					creditCost,
-					storyPointCost,
+					0,
+					0,
 					isEnhanceOnly,
 					returnBuiltIn
 				)
