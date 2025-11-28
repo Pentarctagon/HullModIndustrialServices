@@ -1,0 +1,5 @@
+{
+    "ruleCommandPackages":[
+        "pentarctagon.hmis.data.campaign.rulecmd"
+    ]
+}

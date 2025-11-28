@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="HullModIndustrialServices.jar">
+    <output-path>$PROJECT_DIR$/jars</output-path>
+    <root id="archive" name="HullModIndustrialServices.jar">
+      <element id="module-output" name="hull-mod-industrial-services" />
+    </root>
+  </artifact>
+</component>
