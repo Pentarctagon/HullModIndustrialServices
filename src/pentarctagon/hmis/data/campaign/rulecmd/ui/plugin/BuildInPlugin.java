@@ -88,10 +88,6 @@ extends Selector<HullModButton>
 				{
 					disable(i, "Can't add and remove s-mods at the same time", false);
 				}
-				else if(count >= maxCount)
-				{
-					disable(i, "Reached max s-mod limit", false);
-				}
 				else if(sModsRemoved+modsEnhanced+1 > Costs.getPlayerStoryPoints())
 				{
 					disable(i, "Insufficient story points", false);

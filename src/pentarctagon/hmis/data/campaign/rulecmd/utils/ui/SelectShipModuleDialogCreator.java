@@ -7,6 +7,7 @@ import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
 import com.fs.starfarer.api.ui.CustomPanelAPI;
 import pentarctagon.hmis.data.campaign.rulecmd.ui.plugin.ModulePlugin;
+import pentarctagon.hmis.data.campaign.rulecmd.utils.Constants;
 import pentarctagon.hmis.data.campaign.rulecmd.utils.Sizing;
 
 import java.util.ArrayList;
@@ -20,14 +21,13 @@ public class SelectShipModuleDialogCreator
 		List<ShipVariantAPI> modulesWithOP = getModuleVariantsWithOP(fleetMember.getVariant());
 
 		List<String> moduleNameStrings = new ArrayList<>();
-		int maxSMods = 11;
-		moduleNameStrings.add("Base ship" + String.format("  (%s/%s S-mods)", fleetMember.getVariant().getSMods().size(), maxSMods));
+		moduleNameStrings.add("Base ship" + String.format("  (%s/%s S-mods)", fleetMember.getVariant().getSMods().size(), Constants.MAX_SMODS));
 		int currentVariantIndex = 0;
 
 		for(int i = 0; i < modulesWithOP.size(); i++)
 		{
 			ShipVariantAPI moduleVariant = modulesWithOP.get(i);
-			moduleNameStrings.add("Module: " + moduleVariant.getHullSpec().getHullName() + String.format("  (%s/%s S-mods)", moduleVariant.getSMods().size(), maxSMods));
+			moduleNameStrings.add("Module: " + moduleVariant.getHullSpec().getHullName() + String.format("  (%s/%s S-mods)", moduleVariant.getSMods().size(), Constants.MAX_SMODS));
 			if(selectedVariant == moduleVariant)
 			{
 				currentVariantIndex = i + 1;

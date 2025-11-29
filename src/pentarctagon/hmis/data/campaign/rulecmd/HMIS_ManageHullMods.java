@@ -10,9 +10,9 @@ import pentarctagon.hmis.data.campaign.rulecmd.utils.Sizing;
 import java.util.List;
 import java.util.Map;
 
-// TODO: lunalib integration
-// TODO: prevent gaming the costs by increasing faction doctrine quality -> s-mod stuff -> decrease it
-// TODO: hullmods
+// TODO: remove build in button from refit screen
+// TODO: lunalib integration - update URLs in version file
+// TODO: somehow prevent gaming the costs by increasing faction doctrine quality -> s-mod stuff -> decrease it?
 // TODO: logging?
 // TODO: how to handle best of the best skill
 

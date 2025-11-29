@@ -6,6 +6,7 @@ import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.campaign.listeners.ColonyInteractionListener;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
 import org.magiclib.achievements.MagicAchievement;
+import pentarctagon.hmis.data.campaign.rulecmd.utils.Constants;
 
 public class PointlessVanityProject
 extends MagicAchievement
@@ -39,7 +40,7 @@ implements ColonyInteractionListener
 
 		for(FleetMemberAPI data : Global.getSector().getPlayerFleet().getFleetData().getMembersInPriorityOrder())
 		{
-			if(data.getVariant().getSMods().size() >= 11)
+			if(data.getVariant().getSMods().size() >= Constants.MAX_SMODS)
 			{
 				completeAchievement();
 			}

@@ -9,6 +9,7 @@ import com.fs.starfarer.api.impl.campaign.ids.Stats;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
 import org.apache.log4j.*;
+import pentarctagon.hmis.data.campaign.rulecmd.utils.Constants;
 
 import java.awt.*;
 import java.lang.invoke.MethodHandles;
@@ -73,21 +74,21 @@ extends BaseIndustry
     @Override
     public boolean isAvailableToBuild()
     {
-        return super.isAvailableToBuild() && market.hasIndustry(Industries.ORBITALWORKS) && market.getSize() > 4;
+        return super.isAvailableToBuild() && market.hasIndustry(Industries.ORBITALWORKS) && market.getSize() >= Constants.HMIS_MIN_MARKET_SIZE;
     }
 
     @Override
     public String getUnavailableReason()
     {
-	    if(!market.hasIndustry(Industries.ORBITALWORKS) && market.getSize() > 4)
+	    if(!market.hasIndustry(Industries.ORBITALWORKS) && market.getSize() >= Constants.HMIS_MIN_MARKET_SIZE)
 	    {
 		    return "Requires Orbital Works";
 	    }
-	    if(market.hasIndustry(Industries.ORBITALWORKS) && market.getSize() <= 4)
+	    if(market.hasIndustry(Industries.ORBITALWORKS) && market.getSize() < Constants.HMIS_MIN_MARKET_SIZE)
 	    {
 		    return "Requires at least size 5 colony";
 	    }
-	    if(!market.hasIndustry(Industries.ORBITALWORKS) && market.getSize() <= 4)
+	    if(!market.hasIndustry(Industries.ORBITALWORKS) && market.getSize() < Constants.HMIS_MIN_MARKET_SIZE)
 	    {
 		    return "Requires Orbital Works and at least a size 5 colony";
 	    }
