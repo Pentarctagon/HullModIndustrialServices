@@ -1,0 +1,3 @@
+fieldID,fieldName,fieldType,defaultValue,secondaryValue,fieldDescription,minValue,maxValue,tab
+hmis_story-point-multiplier,Story Point Multiplier,Double,1,,Multiplier to apply to the story point cost of building in s-mods,0.1,,
+hmis_credits-multiplier,Credits Multiplier,Double,1,,Multiplier to apply to the credits cost of building in s-mods,0.1,,

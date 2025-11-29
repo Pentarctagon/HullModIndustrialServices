@@ -3,6 +3,7 @@ package pentarctagon.hmis.data.campaign.rulecmd.utils;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
+import lunalib.lunaSettings.LunaSettings;
 import pentarctagon.hmis.industries.HullModServices;
 
 public class Costs
@@ -24,19 +25,25 @@ public class Costs
 		int squared = (int)Math.pow(count+added, 2);
 
 		float modifier = getCostMultiplier();
+		double lunaMultiplier = Global.getSettings().getModManager().isModEnabled("lunalib") && LunaSettings.getDouble("pentarctagon_HullModIndustrialServices", "hmis_story-point-multiplier") != null
+			? LunaSettings.getDouble("pentarctagon_HullModIndustrialServices", "hmis_story-point-multiplier")
+			: 1.0d;
 
 		// if quality is under 100%, increase cost by the percent difference
 		// ie: 75% quality returns -0.25 -> 0.25 -> 1.25 * cost = +25% cost
 		// if quality is over 100%, decrease cost by the difference
 		// ie: 160% quality returns 0.6 -> -0.4 -> 0.4 * cost = -60% cost
+		float calculated;
 		if(modifier < 0)
 		{
-			return (int)((Math.abs(modifier)+1)*squared);
+			calculated = (Math.abs(modifier)+1)*squared;
 		}
 		else
 		{
-			return (int)(Math.abs(modifier-1)*squared);
+			calculated = Math.abs(modifier-1)*squared;
 		}
+
+		return (int)(calculated*lunaMultiplier);
 	}
 
 	/**
@@ -57,19 +64,25 @@ public class Costs
 		int enhanceReduction = isEnhanceOnly ? cost/2 : cost;
 
 		float modifier = getCostMultiplier();
+		double lunaMultiplier = Global.getSettings().getModManager().isModEnabled("lunalib") && LunaSettings.getDouble("pentarctagon_HullModIndustrialServices", "hmis_credits-multiplier") != null
+				? LunaSettings.getDouble("pentarctagon_HullModIndustrialServices", "hmis_credits-multiplier")
+				: 1.0d;
 
 		// if quality is under 100%, increase cost by the percent difference
 		// ie: 75% quality returns -0.25 -> 0.25 -> 1.25 * cost = +25% cost
 		// if quality is over 100%, decrease cost by the difference
 		// ie: 160% quality returns 0.6 -> -0.4 -> 0.4 * cost = -60% cost
+		float calculated;
 		if(modifier < 0)
 		{
-			return (int)((Math.abs(modifier)+1)*enhanceReduction);
+			calculated = (Math.abs(modifier)+1)*enhanceReduction;
 		}
 		else
 		{
-			return (int)(Math.abs(modifier-1)*enhanceReduction);
+			calculated = Math.abs(modifier-1)*enhanceReduction;
 		}
+
+		return (int)(calculated*lunaMultiplier);
 	}
 
 	/**
