@@ -10,12 +10,9 @@ import pentarctagon.hmis.data.campaign.rulecmd.utils.Sizing;
 import java.util.List;
 import java.util.Map;
 
-// TODO: fix cost calculations and display
-//       implemented s-mods, need to handle removal and enhancement
+// TODO: lunalib integration
 // TODO: prevent gaming the costs by increasing faction doctrine quality -> s-mod stuff -> decrease it
 // TODO: hullmods
-// TODO: achievements
-// TODO: lunalib integration
 // TODO: logging?
 // TODO: how to handle best of the best skill
 

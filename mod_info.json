@@ -9,6 +9,17 @@
   "jars": [ "jars/HullModIndustrialServices.jar" ],
   "modPlugin": "pentarctagon.hmis.HullModIndustrialServices",
   "dependencies": [
-    {"id": "MagicLib", "name": "MagicLib"}
+    {
+      "id": "MagicLib",
+      "name": "MagicLib"
+    },
+    {
+      "id": "lw_lazylib",
+      "name": "LazyLib"
+    },
+    {
+      "id": "lunalib",
+      "name": "LunaLib"
+    }
   ]
 }

@@ -192,3 +192,4 @@ nbdist/
 .idea/vcs.xml
 
 .idea/csv-editor.xml
+/jars/HullModIndustrialServices.jar

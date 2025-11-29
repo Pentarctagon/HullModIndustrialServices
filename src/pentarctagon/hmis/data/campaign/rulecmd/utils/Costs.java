@@ -1,7 +1,9 @@
 package pentarctagon.hmis.data.campaign.rulecmd.utils;
 
 import com.fs.starfarer.api.Global;
+import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
+import pentarctagon.hmis.industries.HullModServices;
 
 public class Costs
 {
@@ -77,9 +79,12 @@ public class Costs
 	 */
 	private static float getCostMultiplier()
 	{
-		//System.out.println(Global.getSector().getPlayerFaction().getDoctrine().getShipQualityContribution());
-
-		float productionQuality = Global.getSector().getCampaignUI().getCurrentInteractionDialog().getInteractionTarget().getMarket().getShipQualityFactor();
+		MarketAPI market = Global.getSector().getCampaignUI().getCurrentInteractionDialog().getInteractionTarget().getMarket();
+		float productionQuality = market.getShipQualityFactor();
+		if(market.getIndustry(HullModServices.ID).isImproved())
+		{
+			productionQuality += 0.2f;
+		}
 		float reduced = productionQuality-1;
 
 		// no, this isn't going to be completely free

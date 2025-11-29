@@ -4,7 +4,6 @@ import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CampaignUIAPI;
 import com.fs.starfarer.api.campaign.InteractionDialogAPI;
 import com.fs.starfarer.api.campaign.SectorEntityToken;
-import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
@@ -55,6 +54,18 @@ extends Selector<HullModButton>
 		update();
 	}
 
+	/*
+	 * The calculated costs are already shown in the label, so just get them from there
+	 */
+	public int getStoryPointCost()
+	{
+		return currentCostsLabel.getVar(0);
+	}
+	public int getCreditCost()
+	{
+		return currentCostsLabel.getVar(1);
+	}
+
 	/**
 	 * Set all hullmod buttons as enabled or disabled
 	 */
@@ -73,16 +84,18 @@ extends Selector<HullModButton>
 
 			if(button.getData().isBuiltIn())
 			{
-				// Undoing this refund would result in negative S-mod slots
-				if(count >= maxCount)
+				if(sModsAdded > 0)
 				{
-					disable(i, button.getDefaultDescription(), false, true);
+					disable(i, "Can't add and remove s-mods at the same time", false);
 				}
-				else if(sModsAdded > 0)
+				else if(count >= maxCount)
 				{
-					disable(i, "Can't add and remove s-mods at the same time", false, true);
+					disable(i, "Reached max s-mod limit", false);
 				}
-				// Otherwise it's possible to undo the refund
+				else if(sModsRemoved+modsEnhanced+1 > Costs.getPlayerStoryPoints())
+				{
+					disable(i, "Insufficient story points", false);
+				}
 				else
 				{
 					enable(i, button.getDefaultDescription());
@@ -90,18 +103,30 @@ extends Selector<HullModButton>
 			}
 			else
 			{
-				if(Costs.addSmodStoryPointCost(checkerVariant, sModsAdded+1) > Costs.getPlayerStoryPoints() || Costs.addSmodCreditCost(checkerVariant, button.getData().isEnhanceOnly(), sModsAdded+1) > Costs.getPlayerCredits())
+				if(sModsRemoved > 0 && !button.getData().isEnhanceOnly())
 				{
-					disable(i, button.getDefaultDescription(), false);
+					disable(i, "Can't add and remove s-mods at the same time", false);
+				}
+				// check if player has enough credits to build in another mod
+				// enhancing a mod doesn't cost credits so don't need to check those here
+				else if(Costs.addSmodCreditCost(checkerVariant, button.getData().isEnhanceOnly(), sModsAdded+1) > Costs.getPlayerCredits() && !button.getData().isEnhanceOnly())
+				{
+					disable(i, "Insufficient credits", false);
+				}
+				// check if player has enough story points to build in another mod
+				// or if they have one additional story point to allow enhancing a mod
+				else if
+				(
+					(Costs.addSmodStoryPointCost(checkerVariant, sModsAdded+1)+modsEnhanced > Costs.getPlayerStoryPoints() && !button.getData().isEnhanceOnly()) ||
+					(Costs.addSmodStoryPointCost(checkerVariant, sModsAdded)+modsEnhanced+1 > Costs.getPlayerStoryPoints() && button.getData().isEnhanceOnly())
+				)
+				{
+					disable(i, "Insufficient story points", false);
 				}
 				// Already at limit
 				else if(count >= maxCount && !button.getData().isEnhanceOnly())
 				{
-					disable(i, button.getDefaultDescription(), false);
-				}
-				else if(sModsRemoved > 0 && !button.getData().isEnhanceOnly())
-				{
-					disable(i, "Can't add and remove s-mods at the same time", false, false);
+					disable(i, "Reached max s-mod limit", false);
 				}
 				// No reason to be disabled; enable it
 				else
@@ -115,20 +140,15 @@ extends Selector<HullModButton>
 	/**
 	 * Disable an item, but only if it isn't already selected.
 	 */
-	private void disable(int index, String reason, boolean highlight, boolean alwaysDisable)
+	private void disable(int index, String reason, boolean highlight)
 	{
 		HullModButton item = items.get(index);
 		// Ignore already selected items
-		if(item.isSelected() && !alwaysDisable)
+		if(item.isSelected())
 		{
 			return;
 		}
 		item.disable(reason, highlight);
-	}
-
-	private void disable(int index, String reason, boolean highlight)
-	{
-		disable(index, reason, highlight, false);
 	}
 
 	/**

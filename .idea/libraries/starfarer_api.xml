@@ -21,6 +21,7 @@
       <root url="jar://$PROJECT_DIR$/../../xstream-1.4.10.jar!/" />
       <root url="jar://$PROJECT_DIR$/../MagicLib/jars/MagicLib.jar!/" />
       <root url="jar://$PROJECT_DIR$/../LazyLib/jars/LazyLib.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../LunaLib/jars/LunaLib.jar!/" />
     </CLASSES>
     <JAVADOC>
       <root url="https://starsectorcommunityapidocs.github.io/CommunityApiDocs/" />

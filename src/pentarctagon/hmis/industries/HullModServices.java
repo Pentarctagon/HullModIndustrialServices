@@ -1,5 +1,7 @@
 package pentarctagon.hmis.industries;
 
+import com.fs.starfarer.api.Global;
+import com.fs.starfarer.api.campaign.econ.CommoditySpecAPI;
 import com.fs.starfarer.api.impl.campaign.econ.impl.BaseIndustry;
 import com.fs.starfarer.api.impl.campaign.ids.Commodities;
 import com.fs.starfarer.api.impl.campaign.ids.Industries;
@@ -8,6 +10,7 @@ import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
 import org.apache.log4j.*;
 
+import java.awt.*;
 import java.lang.invoke.MethodHandles;
 
 // RefitHandler.java:modifyBuildInButton, updateMasteryButton
@@ -15,6 +18,8 @@ import java.lang.invoke.MethodHandles;
 public class HullModServices
 extends BaseIndustry
 {
+	public static final String ID = "hullmodservices";
+
     private static final Logger log = LogManager.getLogger(MethodHandles.lookup().lookupClass());
     static
     {
@@ -32,7 +37,7 @@ extends BaseIndustry
     {
         super.apply(true);
 
-        if (market.getPrevStability() >= 7)
+        if(market.getPrevStability() >= 7)
         {
             market.getStats().getDynamic().getMod(Stats.PRODUCTION_QUALITY_MOD).modifyFlat(getModId(0), 0.2f, "Hull Mod Services");
         }
@@ -41,11 +46,20 @@ extends BaseIndustry
             market.getStats().getDynamic().getMod(Stats.PRODUCTION_QUALITY_MOD).modifyFlat(getModId(0), 0f, "Hull Mod Services - low stability");
         }
 
+		if(Commodities.ALPHA_CORE.equals(getAICoreId()))
+		{
+			market.getStats().getDynamic().getMod(Stats.PRODUCTION_QUALITY_MOD).modifyFlat(getModId(1), 0.1f, "Hull Mod Services - Alpha Core");
+		}
+		else
+		{
+			market.getStats().getDynamic().getMod(Stats.PRODUCTION_QUALITY_MOD).unmodify(getModId(1));
+		}
+
 		if(market.hasIndustry(Industries.ORBITALWORKS))
 		{
 			demand(Commodities.METALS, market.getIndustry(Industries.ORBITALWORKS).getDemand(Commodities.METALS).getQuantity().getModifiedInt()+2);
 			demand(Commodities.RARE_METALS, market.getIndustry(Industries.ORBITALWORKS).getDemand(Commodities.METALS).getQuantity().getModifiedInt());
-			demand(Commodities.HEAVY_MACHINERY, market.getIndustry(Industries.ORBITALWORKS).getDemand(Commodities.METALS).getQuantity().getModifiedInt()+2);
+			demand(Commodities.FUEL, market.getIndustry(Industries.ORBITALWORKS).getDemand(Commodities.METALS).getQuantity().getModifiedInt()+2);
 		}
     }
 
@@ -106,11 +120,11 @@ extends BaseIndustry
         {
             if(mode == ImprovementDescriptionMode.INDUSTRY_TOOLTIP)
             {
-                info.addPara("Reduced hullmod costs by an additional %s percent. No effect if ship quality is already above 190%.", initPad, Misc.getHighlightColor(), "20");
+                info.addPara("Reduced hullmod costs by an additional %s%%.", initPad, Misc.getHighlightColor(), "20");
             }
             else
             {
-                info.addPara("Reduces hullmod costs by an additional %s percent. No effect if ship quality is already above 190%.", initPad, Misc.getHighlightColor(), "20");
+                info.addPara("Reduces hullmod costs by an additional %s%%.", initPad, Misc.getHighlightColor(), "20");
             }
             initPad = pad;
             addedSomething = true;
@@ -128,4 +142,28 @@ extends BaseIndustry
             info.addSpacer(-pad);
         }
     }
+
+	@Override
+	public void addAlphaCoreDescription(TooltipMakerAPI tooltip, AICoreDescriptionMode mode)
+	{
+		float pad = 10f;
+		Color highlight = Misc.getHighlightColor();
+
+		String pre = "Alpha-level AI core currently assigned. ";
+		if(mode == AICoreDescriptionMode.MANAGE_CORE_DIALOG_LIST || mode == AICoreDescriptionMode.INDUSTRY_TOOLTIP)
+		{
+			pre = "Alpha-level AI core. ";
+		}
+
+		if(mode == AICoreDescriptionMode.INDUSTRY_TOOLTIP || mode == AICoreDescriptionMode.MANAGE_CORE_TOOLTIP)
+		{
+			CommoditySpecAPI coreSpec = Global.getSettings().getCommoditySpec(aiCoreId);
+			TooltipMakerAPI text = tooltip.beginImageWithText(coreSpec.getIconName(), 48);
+			text.addPara(pre + "Reduces upkeep cost by %s. Reduces demand by %s%% unit. Increases ship quality by 10%%.", pad, highlight, String.valueOf((int)((1f - UPKEEP_MULT) * 100f)), String.valueOf(DEMAND_REDUCTION));
+			tooltip.addImageWithText(pad);
+			return;
+		}
+
+		tooltip.addPara(pre + "Reduces upkeep cost by %s%%. Reduces demand by %s unit. Increases ship quality by 10%%.", pad, highlight, String.valueOf((int)((1f - UPKEEP_MULT) * 100f)), String.valueOf(DEMAND_REDUCTION));
+	}
 }

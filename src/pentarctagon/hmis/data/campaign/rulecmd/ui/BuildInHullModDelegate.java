@@ -130,6 +130,9 @@ implements CustomDialogDelegate
 			}
 		}
 
+		Global.getSector().getPlayerFleet().getCargo().getCredits().subtract(plugin.getCreditCost());
+		Global.getSector().getPlayerPerson().getStats().spendStoryPoints(plugin.getStoryPointCost(), false, null, false, null);
+
 		recreateShipPanel();
 	}
 
