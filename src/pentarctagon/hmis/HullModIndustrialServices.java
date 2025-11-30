@@ -4,6 +4,7 @@ import com.fs.starfarer.api.BaseModPlugin;
 import com.fs.starfarer.api.EveryFrameScript;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.listeners.ListenerManagerAPI;
+import pentarctagon.hmis.dmods.RestorationCostListener;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
@@ -11,16 +12,22 @@ import java.lang.invoke.MethodType;
 import java.net.URL;
 import java.net.URLClassLoader;
 
+/**
+ * Reflection stuff copied from Progressive S-Mods.
+ * No idea how it works.
+ * I can only assume it's manually searching the UI structure via reflection since there's no modding API available to edit vanilla UIs.
+ */
 @SuppressWarnings("unused")
 public class HullModIndustrialServices
 extends BaseModPlugin
 {
+	private static final String REFIT = "pentarctagon.hmis.data.campaign.rulecmd.ui.refit.RefitTabListenerAndScript";
 	private static final String[] reflectionWhitelist = new String[] {
-		"pentarctagon.hmis.data.campaign.rulecmd.ui.refit.RefitTabListenerAndScript",
+		REFIT,
 		"pentarctagon.hmis.data.campaign.rulecmd.ui.refit.ReflectionStuff"
 	};
 
-	public static ReflectionEnabledClassLoader getClassLoader()
+	private static ReflectionEnabledClassLoader getClassLoader()
 	{
 		URL url = HullModIndustrialServices.class.getProtectionDomain().getCodeSource().getLocation();
 		return new ReflectionEnabledClassLoader(url, HullModIndustrialServices.class.getClassLoader());
@@ -31,7 +38,7 @@ extends BaseModPlugin
 	{
 		try
 		{
-			Class<?> cls = getClassLoader().loadClass("pentarctagon.hmis.data.campaign.rulecmd.ui.refit.RefitTabListenerAndScript");
+			Class<?> cls = getClassLoader().loadClass(REFIT);
 			MethodHandles.Lookup lookup = MethodHandles.lookup();
 			MethodHandle mh = lookup.findConstructor(cls, MethodType.methodType(void.class));
 			EveryFrameScript refitScript = (EveryFrameScript) mh.invoke();
@@ -43,6 +50,8 @@ extends BaseModPlugin
 		{
 			throw new RuntimeException("Failed to add refit tab listener", e);
 		}
+
+		Global.getSector().getListenerManager().addListener(new RestorationCostListener(), true);
 	}
 
 	public static class ReflectionEnabledClassLoader
@@ -73,6 +82,7 @@ extends BaseModPlugin
 			{
 				return c;
 			}
+
 			// Be the defining classloader for all classes in the reflection whitelist
 			// For classes defined by this loader, classes in java.lang.reflect will be loaded directly
 			// by the system classloader, without the intermediate delegations.
@@ -83,6 +93,7 @@ extends BaseModPlugin
 					return findClass(name);
 				}
 			}
+
 			return super.loadClass(name, resolve);
 		}
 	}

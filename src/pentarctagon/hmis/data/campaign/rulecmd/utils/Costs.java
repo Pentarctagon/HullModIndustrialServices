@@ -25,7 +25,7 @@ public class Costs
 		int squared = (int)Math.pow(count+added, 2);
 
 		float modifier = getCostMultiplier();
-		double lunaMultiplier = Global.getSettings().getModManager().isModEnabled("lunalib") && LunaSettings.getDouble("pentarctagon_HullModIndustrialServices", "hmis_story-point-multiplier") != null
+		double lunaMultiplier = LunaSettings.getDouble("pentarctagon_HullModIndustrialServices", "hmis_story-point-multiplier") != null
 			? LunaSettings.getDouble("pentarctagon_HullModIndustrialServices", "hmis_story-point-multiplier")
 			: 1.0d;
 
@@ -64,7 +64,7 @@ public class Costs
 		int enhanceReduction = isEnhanceOnly ? cost/2 : cost;
 
 		float modifier = getCostMultiplier();
-		double lunaMultiplier = Global.getSettings().getModManager().isModEnabled("lunalib") && LunaSettings.getDouble("pentarctagon_HullModIndustrialServices", "hmis_credits-multiplier") != null
+		double lunaMultiplier = LunaSettings.getDouble("pentarctagon_HullModIndustrialServices", "hmis_credits-multiplier") != null
 				? LunaSettings.getDouble("pentarctagon_HullModIndustrialServices", "hmis_credits-multiplier")
 				: 1.0d;
 

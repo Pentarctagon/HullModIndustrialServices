@@ -2,7 +2,6 @@ package pentarctagon.hmis.data.campaign.rulecmd.ui.refit;
 
 import com.fs.starfarer.api.EveryFrameScript;
 import com.fs.starfarer.api.Global;
-import com.fs.starfarer.api.campaign.CampaignUIAPI;
 import com.fs.starfarer.api.campaign.CoreUITabId;
 import com.fs.starfarer.api.campaign.listeners.CoreUITabListener;
 import com.fs.starfarer.api.ui.ButtonAPI;
@@ -12,6 +11,7 @@ import com.fs.starfarer.coreui.refit.ModPickerDialogV3;
 import java.util.LinkedList;
 import java.util.List;
 
+@SuppressWarnings("unused")
 public class RefitTabListenerAndScript
 implements CoreUITabListener, EveryFrameScript
 {
@@ -20,10 +20,7 @@ implements CoreUITabListener, EveryFrameScript
 	@Override
 	public void reportAboutToOpenCoreTab(CoreUITabId id, Object param)
 	{
-		if(CoreUITabId.REFIT.equals(id) && !insideRefitScreen)
-		{
-			insideRefitScreen = true;
-		}
+		insideRefitScreen = CoreUITabId.REFIT.equals(id) && !insideRefitScreen;
 	}
 
 	@Override
@@ -49,16 +46,14 @@ implements CoreUITabListener, EveryFrameScript
 		{
 			return;
 		}
-
-		CampaignUIAPI ui = Global.getSector().getCampaignUI();
-		if(!CoreUITabId.REFIT.equals(ui.getCurrentCoreTab()))
+		if(!CoreUITabId.REFIT.equals(Global.getSector().getCampaignUI().getCurrentCoreTab()))
 		{
 			insideRefitScreen = false;
 			return;
 		}
 
-		LinkedList<UIPanelAPI> modsPanels = getAllModsPanels(ReflectionStuff.getCoreUI());
 		// Delete the build-in button from all mods panels, including inactive ones
+		LinkedList<UIPanelAPI> modsPanels = getAllModsPanels(ReflectionStuff.getCoreUI());
 		for(UIPanelAPI panel : modsPanels)
 		{
 			ButtonAPI perm = (ButtonAPI) ReflectionStuff.invokeMethod(panel, "getPerm");
