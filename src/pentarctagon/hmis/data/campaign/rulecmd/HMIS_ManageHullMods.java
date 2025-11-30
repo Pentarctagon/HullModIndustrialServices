@@ -13,9 +13,8 @@ import java.util.List;
 import java.util.Map;
 
 // TODO: more lunalib configurations for costs?
-// TODO: console commands?
 // TODO: lunalib integration - update URLs in version file
-// TODO: somehow prevent gaming the costs by increasing faction doctrine quality -> s-mod stuff -> decrease it?
+// TODO: somehow prevent gaming the costs by increasing faction doctrine quality -> s-mod stuff -> decrease it
 // TODO: logging?
 //       also do something about the Logger bits copied over in the reflection stuff
 // TODO: how to handle best of the best skill?

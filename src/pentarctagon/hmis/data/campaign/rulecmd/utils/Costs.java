@@ -8,9 +8,6 @@ import pentarctagon.hmis.industries.HullModServices;
 
 public class Costs
 {
-	public static final int ENHANCE = 1;
-	public static final int REMOVE = 1;
-
 	/**
 	 * To add the Nth s-mod, it costs N^2 story points
 	 */
@@ -25,9 +22,8 @@ public class Costs
 		int squared = (int)Math.pow(count+added, 2);
 
 		float modifier = getCostMultiplier();
-		double lunaMultiplier = LunaSettings.getDouble("pentarctagon_HullModIndustrialServices", "hmis_story-point-multiplier") != null
-			? LunaSettings.getDouble("pentarctagon_HullModIndustrialServices", "hmis_story-point-multiplier")
-			: 1.0d;
+		Double lunaMultiplier = LunaSettings.getDouble("pentarctagon_HullModIndustrialServices", "hmis_story-point-multiplier");
+		lunaMultiplier = lunaMultiplier == null ? 1d : lunaMultiplier;
 
 		// if quality is under 100%, increase cost by the percent difference
 		// ie: 75% quality returns -0.25 -> 0.25 -> 1.25 * cost = +25% cost
@@ -64,9 +60,8 @@ public class Costs
 		int enhanceReduction = isEnhanceOnly ? cost/2 : cost;
 
 		float modifier = getCostMultiplier();
-		double lunaMultiplier = LunaSettings.getDouble("pentarctagon_HullModIndustrialServices", "hmis_credits-multiplier") != null
-				? LunaSettings.getDouble("pentarctagon_HullModIndustrialServices", "hmis_credits-multiplier")
-				: 1.0d;
+		Double lunaMultiplier = LunaSettings.getDouble("pentarctagon_HullModIndustrialServices", "hmis_credits-multiplier");
+		lunaMultiplier = lunaMultiplier == null ? 1d : lunaMultiplier;
 
 		// if quality is under 100%, increase cost by the percent difference
 		// ie: 75% quality returns -0.25 -> 0.25 -> 1.25 * cost = +25% cost
