@@ -49,6 +49,7 @@ So, the goals I have for this mod are:
 * Have the cost of fixing d-mods be affected by how much you've invested in your colony's industrial capacity. If your faction has the capacity to field fleets of ships of such quality that they rarely have any d-mods after construction, it should be cheaper to fix d-mods as well.
 * S-mods shouldn't be immediately available to some random captain with no influence, accomplishments, or money (aka you, the player character). They're powerful upgrades which can significantly improve a ship's effectiveness and as such gaining them should be more of a part of the player's progression through the game.
 * Keep this mod focused just on stuff related to s-mods and d-mods.
+* Keep this mod vanilla-friendly.
 
 ## Compatibility ##
 I don't know of any outright incompatibilities, but you could probably get some strange results mixing this with Progressive S-Mods or Ship Mastery System. It also doesn't use the game's max s-mod limit, so while things like the Domain Refurbishment Barge from Random Assortment of Things (RAT) won't break anything they also won't do anything either.
