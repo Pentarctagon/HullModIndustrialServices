@@ -48,7 +48,7 @@ So, the goals I have for this mod are:
 * Allow removing s-mods, to make it less punishing to try different builds.
 * Have the cost of fixing d-mods be affected by how much you've invested in your colony's industrial capacity. If your faction has the capacity to field fleets of ships of such quality that they rarely have any d-mods after construction, it should be cheaper to fix d-mods as well.
 * S-mods shouldn't be immediately available to some random captain with no influence, accomplishments, or money (aka you, the player character). They're powerful upgrades which can significantly improve a ship's effectiveness and as such gaining them should be more of a part of the player's progression through the game.
-* Keep this focused just on stuff related to s-mods and d-mods.
+* Keep this mod focused just on stuff related to s-mods and d-mods.
 
 ## Compatibility ##
 I don't know of any outright incompatibilities, but you could probably get some strange results mixing this with Progressive S-Mods or Ship Mastery System. It also doesn't use the game's max s-mod limit, so while things like the Domain Refurbishment Barge from Random Assortment of Things (RAT) won't break anything they also won't do anything either.
@@ -70,7 +70,7 @@ It should be safe to add to an existing save file, but not safe to remove.
 
 ## Future Plans ##
 * Add this structure to certain Core worlds (ie: Culann, Chicomoztoc, Kazeron).
-* Alternate ways to get s-mods - For example, as a reward for consecutive months serving as a commissioned fleet of a faction or a reward from completing missions for high value contacts, you'd be able to add one or more s-mods to your fleet for free at one of that faction's colonies or a friendly faction's colonies which has the Hull Mod Services structure.
+* Alternate ways to get s-mods - For example, as a reward for consecutive months serving as a commissioned fleet of a faction or a reward from completing missions for high value contacts, you'd be able to add one or more s-mods to your fleet for free at one of that faction's colonies (or a friendly faction's colony which has the Hull Mod Services structure if they have no such colony).
 * Figure out a way to handle the ship quality value set in the faction doctrine. Currently it's possible to game it a bit by temporarily setting the quality to max -> adding s-mods/removing d-mods -> setting it back to what it was before.
 * Figure out what to do with the Best of the Best skill, ideally in a way that's compatible with Second in Command.
 * Potentially related, see about using the game's normal s-mod limit and allowing other modded content to affect the s-mod limit like normal.
