@@ -105,7 +105,7 @@ extends Selector<HullModButton>
 				}
 				// check if player has enough credits to build in another mod
 				// enhancing a mod doesn't cost credits so don't need to check those here
-				else if(Costs.addSmodCreditCost(checkerVariant, button.getData().isEnhanceOnly(), sModsAdded+1) > Costs.getPlayerCredits() && !button.getData().isEnhanceOnly())
+				else if(Costs.addSmodCreditCost(checkerVariant, sModsAdded+1) > Costs.getPlayerCredits() && !button.getData().isEnhanceOnly())
 				{
 					disable(i, "Insufficient credits", false);
 				}
@@ -266,7 +266,7 @@ extends Selector<HullModButton>
 
 				sModsAdded++;
 				currentCostsLabel.changeVar(0, Costs.addSmodStoryPointCost(originalVariant, sModsAdded)+modsEnhanced);
-				currentCostsLabel.changeVar(1, Costs.addSmodCreditCost(originalVariant, false, sModsAdded));
+				currentCostsLabel.changeVar(1, Costs.addSmodCreditCost(originalVariant, sModsAdded));
 			}
 			else
 			{
@@ -279,7 +279,7 @@ extends Selector<HullModButton>
 				{
 					currentCostsLabel.changeVar(0, Costs.addSmodStoryPointCost(originalVariant, sModsAdded)+modsEnhanced);
 				}
-				currentCostsLabel.changeVar(1, Costs.addSmodCreditCost(originalVariant, false, sModsAdded));
+				currentCostsLabel.changeVar(1, Costs.addSmodCreditCost(originalVariant, sModsAdded));
 			}
 			String hullModId = items.get(index).getData().id();
 			checkerVariant.addMod(hullModId);
@@ -337,7 +337,7 @@ extends Selector<HullModButton>
 
 				sModsAdded--;
 				currentCostsLabel.changeVar(0, Costs.addSmodStoryPointCost(originalVariant, sModsAdded)+modsEnhanced);
-				currentCostsLabel.changeVar(1, Costs.addSmodCreditCost(originalVariant, false, sModsAdded));
+				currentCostsLabel.changeVar(1, Costs.addSmodCreditCost(originalVariant, sModsAdded));
 			}
 			else
 			{
@@ -350,7 +350,7 @@ extends Selector<HullModButton>
 				{
 					currentCostsLabel.changeVar(0, Costs.addSmodStoryPointCost(originalVariant, sModsAdded)+modsEnhanced);
 				}
-				currentCostsLabel.changeVar(1, Costs.addSmodCreditCost(originalVariant, false, sModsAdded));
+				currentCostsLabel.changeVar(1, Costs.addSmodCreditCost(originalVariant, sModsAdded));
 			}
 			String hullModId = items.get(index).getData().id();
 			// Don't remove hull mods that were already on the ship
@@ -373,7 +373,7 @@ extends Selector<HullModButton>
 
 			sModsAdded--;
 			currentCostsLabel.changeVar(0, Costs.addSmodStoryPointCost(originalVariant, sModsAdded)+modsEnhanced);
-			currentCostsLabel.changeVar(1, Costs.addSmodCreditCost(originalVariant, false, sModsAdded));
+			currentCostsLabel.changeVar(1, Costs.addSmodCreditCost(originalVariant, sModsAdded));
 		}
 		String hullModId = items.get(index).getData().id();
 		// Don't remove hull mods that were already on the ship

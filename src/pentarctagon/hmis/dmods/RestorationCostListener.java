@@ -23,21 +23,23 @@ implements ColonyInteractionListener
 	@Override
 	public void reportPlayerOpenedMarket(MarketAPI market)
 	{
-		if(market.hasIndustry(HullModServices.ID))
+		// at ship quality of 150% or greater, restoration doesn't cost more if the ship has multiple dmods
+		if(market.getShipQualityFactor() >= 1.5)
 		{
-			// at ship quality of 150% or greater, restoration doesn't cost more if the ship has multiple dmods
-			if(market.getShipQualityFactor() >= 1.5)
+			Global.getSettings().setFloat("baseRestoreCostMultPerDMod", 1f);
+		}
+		// if ship quality is over 100%, decrease restoration cost by the amount over 100%
+		// ie:
+		// default of 1.2 and a ship quality of 150%
+		// 1.2 - (1.5 - 1) = 0.7 aka 70% of baseShipHullCost instead of 120%
+		if(market.getShipQualityFactor() > 1f)
+		{
+			float mult = Global.getSettings().getFloat("baseRestoreCostMult") - (market.getShipQualityFactor() - 1);
+			if(mult < 0.5f)
 			{
-				Global.getSettings().setFloat("baseRestoreCostMultPerDMod", 1f);
+				mult = 0.5f;
 			}
-			// if ship quality is over 100%, decrease restoration cost by the amount over 100%
-			// ie:
-			// default of 1.2 and a ship quality of 150%
-			// 1.2 - (1.5 - 1) = 0.7 aka 70% of baseShipHullCost instead of 120%
-			if(market.getShipQualityFactor() > 1f)
-			{
-				Global.getSettings().setFloat("baseRestoreCostMult", Global.getSettings().getFloat("baseRestoreCostMult") - (market.getShipQualityFactor() - 1));
-			}
+			Global.getSettings().setFloat("baseRestoreCostMult", mult);
 		}
 	}
 

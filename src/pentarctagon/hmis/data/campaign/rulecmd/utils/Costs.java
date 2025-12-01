@@ -46,7 +46,7 @@ public class Costs
 	 * To add the Nth s-mod, it costs (N-2)^2 million credits, where N can't be less than 0.
 	 * Therefore, adding s-mods won't cost any credits until the 3rd s-mod
 	 */
-	public static int addSmodCreditCost(ShipVariantAPI ship, boolean isEnhanceOnly, int added)
+	public static int addSmodCreditCost(ShipVariantAPI ship, int added)
 	{
 		if(added == 0)
 		{
@@ -57,7 +57,6 @@ public class Costs
 		int base = Math.max(count+added-2, 0);
 		int squared = (int)Math.pow(base, 2);
 		int cost = squared*1_000_000;
-		int enhanceReduction = isEnhanceOnly ? cost/2 : cost;
 
 		float modifier = getCostMultiplier();
 		Double lunaMultiplier = LunaSettings.getDouble("pentarctagon_HullModIndustrialServices", "hmis_credits-multiplier");
@@ -70,11 +69,11 @@ public class Costs
 		float calculated;
 		if(modifier < 0)
 		{
-			calculated = (Math.abs(modifier)+1)*enhanceReduction;
+			calculated = (Math.abs(modifier)+1)*cost;
 		}
 		else
 		{
-			calculated = Math.abs(modifier-1)*enhanceReduction;
+			calculated = Math.abs(modifier-1)*cost;
 		}
 
 		return (int)(calculated*lunaMultiplier);
