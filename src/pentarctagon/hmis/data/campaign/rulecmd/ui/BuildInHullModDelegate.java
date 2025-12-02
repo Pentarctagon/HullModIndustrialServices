@@ -135,8 +135,10 @@ implements CustomDialogDelegate
 		checkAndApplyOverburdened();
 		checkAndApplyMaintenanceNightmare();
 
-		Global.getSector().getPlayerFleet().getCargo().getCredits().subtract(plugin.getCreditCost());
-		Global.getSector().getPlayerPerson().getStats().spendStoryPoints(plugin.getStoryPointCost(), false, null, false, null);
+		int credits = plugin.getCreditCost();
+		int storyPoints = plugin.getStoryPointCost();
+		Global.getSector().getPlayerFleet().getCargo().getCredits().subtract(credits);
+		Global.getSector().getPlayerPerson().getStats().spendStoryPoints(storyPoints, false, null, false, null);
 
 		recreateShipPanel();
 	}

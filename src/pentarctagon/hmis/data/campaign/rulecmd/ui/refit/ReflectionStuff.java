@@ -2,17 +2,19 @@ package pentarctagon.hmis.data.campaign.rulecmd.ui.refit;
 
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CampaignUIAPI;
-import com.fs.starfarer.api.campaign.CoreUIAPI;
 import com.fs.starfarer.api.campaign.InteractionDialogAPI;
 import com.fs.starfarer.api.ui.UIPanelAPI;
-import org.apache.log4j.Logger;
+import org.apache.log4j.*;
 
+import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 public class ReflectionStuff
 {
+	private static final Logger log = LogManager.getLogger(MethodHandles.lookup().lookupClass());
+
 	public static UIPanelAPI getCoreUI()
 	{
 		CampaignUIAPI campaignUI = Global.getSector().getCampaignUI();
@@ -29,7 +31,7 @@ public class ReflectionStuff
 			}
 			catch(Exception e)
 			{
-				Logger.getLogger(ReflectionStuff.class).error("Failed to retrieve field", e);
+				log.error("Failed to retrieve field 'core'", e);
 				return null;
 			}
 		}
@@ -47,7 +49,7 @@ public class ReflectionStuff
 		}
 		catch(Exception e)
 		{
-			Logger.getLogger(ReflectionStuff.class).error("Failed to invoke method", e);
+			log.error("Failed to invoke method" + methodName, e);
 			return null;
 		}
 	}

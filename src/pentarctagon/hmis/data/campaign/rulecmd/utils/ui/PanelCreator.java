@@ -93,13 +93,13 @@ public class PanelCreator
 				@Override
 				public void buttonPressed(Object buttonId)
 				{
-					if(buttonId.equals(BUTTON_MANAGE_MODULE))
-					{
-						BuildInHullModDialogCreator.shouldRecreateShipPanel = false;
-						callback.dismissCustomDialog(1);
-						InteractionDialogAPI dialog = Global.getSector().getCampaignUI().getCurrentInteractionDialog();
-						SelectShipModuleDialogCreator.createPanel(ship, selectedVariant, dialog, shipScrollPanelY);
-					}
+				if(buttonId.equals(BUTTON_MANAGE_MODULE))
+				{
+					BuildInHullModDialogCreator.shouldRecreateShipPanel = false;
+					callback.dismissCustomDialog(1);
+					InteractionDialogAPI dialog = Global.getSector().getCampaignUI().getCurrentInteractionDialog();
+					SelectShipModuleDialogCreator.createPanel(ship, selectedVariant, dialog, shipScrollPanelY);
+				}
 				}
 			};
 		}

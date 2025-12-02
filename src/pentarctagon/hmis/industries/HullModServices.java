@@ -12,26 +12,11 @@ import org.apache.log4j.*;
 import pentarctagon.hmis.data.campaign.rulecmd.utils.Constants;
 
 import java.awt.*;
-import java.lang.invoke.MethodHandles;
-
-// RefitHandler.java:modifyBuildInButton, updateMasteryButton
 
 public class HullModServices
 extends BaseIndustry
 {
 	public static final String ID = "hullmodservices";
-
-    private static final Logger log = LogManager.getLogger(MethodHandles.lookup().lookupClass());
-    static
-    {
-        ConsoleAppender console = new ConsoleAppender();
-        String PATTERN = "%m%n";
-        console.setLayout(new PatternLayout(PATTERN));
-        console.setThreshold(Level.DEBUG);
-        console.activateOptions();
-        log.setAdditivity(false);
-        log.addAppender(console);
-    }
 
     @Override
     public void apply()

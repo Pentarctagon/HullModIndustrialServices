@@ -12,13 +12,10 @@ import pentarctagon.hmis.data.campaign.rulecmd.utils.Sizing;
 import java.util.List;
 import java.util.Map;
 
-// TODO: write a better README.md
-// TODO: logging?
-//       also do something about the Logger bits copied over in the reflection stuff
-// TODO: somehow prevent gaming the costs by increasing faction doctrine quality -> s-mod stuff -> decrease it
-// TODO: how to handle best of the best skill?
-// TODO: parade piece explosion radius+effects
 // TODO: lunalib integration - update URLs in version file
+// TODO: how to package mod and where to upload? how to add it to a github release?
+//       add link to it to version file
+// TODO: create forum thread and add link to version file
 
 /**
  * Entry point for hull mod management dialog - see rules.csv
@@ -30,7 +27,6 @@ extends BaseCommandPlugin
 	@Override
 	public boolean execute(String ruleId, InteractionDialogAPI dialog, List<Misc.Token> params, Map<String, MemoryAPI> memoryMap)
 	{
-		System.out.println(Global.getSettings().getFloat("baseRestoreCostMult"));
 		dialog.showCustomDialog(Sizing.PANEL_WIDTH, Sizing.panelHeight(), new SelectShipDelegate(dialog));
 		return true;
 	}

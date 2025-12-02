@@ -36,6 +36,8 @@ extends BaseModPlugin
 	@Override
 	public void onGameLoad(boolean newGame)
 	{
+		Global.getSector().getListenerManager().addListener(new RestorationCostListener(), true);
+
 		try
 		{
 			Class<?> cls = getClassLoader().loadClass(REFIT);
@@ -50,8 +52,6 @@ extends BaseModPlugin
 		{
 			throw new RuntimeException("Failed to add refit tab listener", e);
 		}
-
-		Global.getSector().getListenerManager().addListener(new RestorationCostListener(), true);
 	}
 
 	public static class ReflectionEnabledClassLoader
