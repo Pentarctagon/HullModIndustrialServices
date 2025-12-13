@@ -1,4 +1,5 @@
 id,trigger,conditions,script,text,options,notes
 hmis_Start,PopulateOptions,"$menuState == main
-$market.ind:hullmodservices","SetShortcut hmis_OptionManage ""Q""",,17:hmis_OptionManage:Manage hull mods,
+$market.ind:hullmodservices
+$market.ind:orbitalworks","SetShortcut hmis_OptionManage ""Q""",,17:hmis_OptionManage:Manage hull mods,
 hmis_Manage,DialogOptionSelected,$option == hmis_OptionManage,HMIS_ManageHullMods,,,

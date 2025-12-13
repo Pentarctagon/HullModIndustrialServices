@@ -2,6 +2,7 @@ package pentarctagon.hmis.industries;
 
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.econ.CommoditySpecAPI;
+import com.fs.starfarer.api.campaign.econ.Industry;
 import com.fs.starfarer.api.impl.campaign.econ.impl.BaseIndustry;
 import com.fs.starfarer.api.impl.campaign.ids.Commodities;
 import com.fs.starfarer.api.impl.campaign.ids.Industries;
@@ -25,6 +26,10 @@ extends BaseIndustry
         if(market.getPrevStability() >= 7)
         {
             market.getStats().getDynamic().getMod(Stats.PRODUCTION_QUALITY_MOD).modifyFlat(getModId(0), 0.2f, "Hull Mod Services");
+        }
+		else if(market.hasIndustry(Industries.ORBITALWORKS) && market.hasIndustry(ID) && market.getIndustry(Industries.ORBITALWORKS).isDisrupted())
+        {
+	        market.getStats().getDynamic().getMod(Stats.PRODUCTION_QUALITY_MOD).modifyFlat(getModId(0), 0f, "Hull Mod Services - Orbital Works disrupted");
         }
         else
         {

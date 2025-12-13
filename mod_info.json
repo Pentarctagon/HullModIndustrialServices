@@ -3,9 +3,9 @@
   "name": "HullModIndustrialServices",
   "author": "pentarctagon",
   "utility": false,
-  "version": { "major": "0", "minor": "0", "patch": "1" },
+  "version": { "major": "1", "minor": "0", "patch": "0" },
   "description": "Adds the Hull Mod Services colony structure for different handling of s-mods. Also reduces the cost of removing d-mods at player owned colonies if the ship quality is over 100%.",
-  "gameVersion": "0.98a-RC5",
+  "gameVersion": "0.98a-RC8",
   "jars": [ "jars/HullModIndustrialServices.jar" ],
   "modPlugin": "pentarctagon.hmis.HullModIndustrialServices",
   "dependencies": []
