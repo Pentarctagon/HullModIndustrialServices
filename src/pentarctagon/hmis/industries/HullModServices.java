@@ -8,7 +8,6 @@ import com.fs.starfarer.api.impl.campaign.ids.Industries;
 import com.fs.starfarer.api.impl.campaign.ids.Stats;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
-import org.apache.log4j.*;
 import pentarctagon.hmis.data.campaign.rulecmd.utils.Constants;
 
 import java.awt.*;

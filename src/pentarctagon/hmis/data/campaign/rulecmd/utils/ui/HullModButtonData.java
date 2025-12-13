@@ -7,12 +7,9 @@ public record HullModButtonData(
 	String id,
 	String name,
 	String spriteName,
-	String defaultDescription,
     String tooltipDescription,
 	HullModEffect hullModEffect,
     ShipAPI.HullSize hullSize,
-	int creditCost,
-	int storyPointCost,
 	boolean isEnhanceOnly,
 	boolean isBuiltIn
 )

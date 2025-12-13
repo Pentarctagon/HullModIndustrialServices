@@ -35,9 +35,6 @@ extends Selector<HullModButton>
 	private final FleetMemberAPI fleetMember;
 	private final ShipVariantAPI checkerVariant;
 	private final ShipVariantAPI originalVariant;
-	private int sModsAdded = 0;
-	private int sModsRemoved = 0;
-	private int modsEnhanced = 0;
 
 	public BuildInPlugin(FleetMemberAPI fleetMember, ShipVariantAPI variant)
 	{
@@ -57,13 +54,9 @@ extends Selector<HullModButton>
 	/*
 	 * The calculated costs are already shown in the label, so just get them from there
 	 */
-	public int getStoryPointCost()
-	{
-		return currentCostsLabel.getVar(0);
-	}
 	public int getCreditCost()
 	{
-		return currentCostsLabel.getVar(1);
+		return currentCostsLabel.getVar(0);
 	}
 
 	/**
@@ -72,8 +65,19 @@ extends Selector<HullModButton>
 	public void update()
 	{
 		BitSet unapplicable = disableUnapplicable();
-		int count = countLabel.getVar(0);
-		int maxCount = countLabel.getVar(1);
+
+		// get first selected regular hullmod
+		int selectedRegularHullmod = -1;
+		for(int i = 0; i < items.size(); i++)
+		{
+			HullModButton item = items.get(i);
+			if(item.isSelected() && !item.getData().isEnhanceOnly() && !item.getData().isBuiltIn())
+			{
+				selectedRegularHullmod = i;
+				break;
+			}
+		}
+
 		for(int i = 0; i < items.size(); i++)
 		{
 			HullModButton button = items.get(i);
@@ -82,54 +86,46 @@ extends Selector<HullModButton>
 				continue;
 			}
 
-			if(button.getData().isBuiltIn())
+			if(checkerVariant.getTags().contains("unrestorable"))
 			{
-				if(sModsAdded > 0)
-				{
-					disable(i, "Can't add and remove s-mods at the same time", false);
-				}
-				else if(sModsRemoved+modsEnhanced+1 > Costs.getPlayerStoryPoints())
-				{
-					disable(i, "Insufficient story points", false);
-				}
-				else
-				{
-					enable(i, button.getDefaultDescription());
-				}
+				disable(i, "Ship is unrestorable", false);
+				continue;
 			}
-			else
+
+			// disable regular hullmod buttons if s-mod limit reached by clicking another regular hullmod
+			int maxSmods = Costs.getTotalSmods(fleetMember);
+			if(countLabel.getVar(0) >= maxSmods && !button.getData().isBuiltIn())
 			{
-				if(sModsRemoved > 0 && !button.getData().isEnhanceOnly())
-				{
-					disable(i, "Can't add and remove s-mods at the same time", false);
-				}
-				// check if player has enough credits to build in another mod
-				// enhancing a mod doesn't cost credits so don't need to check those here
-				else if(Costs.addSmodCreditCost(checkerVariant, sModsAdded+1) > Costs.getPlayerCredits() && !button.getData().isEnhanceOnly())
-				{
-					disable(i, "Insufficient credits", false);
-				}
-				// check if player has enough story points to build in another mod
-				// or if they have one additional story point to allow enhancing a mod
-				else if
-				(
-					(Costs.addSmodStoryPointCost(checkerVariant, sModsAdded+1)+modsEnhanced > Costs.getPlayerStoryPoints() && !button.getData().isEnhanceOnly()) ||
-					(Costs.addSmodStoryPointCost(checkerVariant, sModsAdded)+modsEnhanced+1 > Costs.getPlayerStoryPoints() && button.getData().isEnhanceOnly())
-				)
-				{
-					disable(i, "Insufficient story points", false);
-				}
-				// Already at limit
-				else if(count >= maxCount && !button.getData().isEnhanceOnly())
-				{
-					disable(i, "Reached max s-mod limit", false);
-				}
-				// No reason to be disabled; enable it
-				else
-				{
-					enable(i, button.getDefaultDescription());
-				}
+				disable(i, "Ship s-mod limit reached", false);
+				continue;
 			}
+
+			// disable s-mods if s-mod limit reached by removing an existing s-mod and then clicking another regular hullmod
+			if(countLabel.getVar(0) == maxSmods && button.getData().isBuiltIn() && selectedRegularHullmod != -1)
+			{
+				disable(i, "Ship s-mod limit reached", false);
+				continue;
+			}
+
+			// handle case of: click s-mod -> click hullmod -> click s-mod again
+			// otherwise this let's you bypass the s-mod limit
+			if(countLabel.getVar(0) > maxSmods && button.getData().isBuiltIn() && selectedRegularHullmod != -1)
+			{
+				forceDeselect(selectedRegularHullmod);
+				update();
+				return;
+			}
+
+			// enhancing a hullmod or removing an s-mod have the same cost
+			// else use the cost for adding a s-mod
+			int nextCost = Costs.getSmodCreditCost(checkerVariant, button.getData().isEnhanceOnly() || button.getData().isBuiltIn());
+			if(getCreditCost() + nextCost > Costs.getPlayerCredits())
+			{
+				disable(i, "Not enough credits", false);
+				continue;
+			}
+
+			enable(i, button.getDefaultDescription());
 		}
 	}
 
@@ -188,9 +184,7 @@ extends Selector<HullModButton>
 				{
 					String reason = hullMod.getEffect().getUnapplicableReason(checkerShip);
 					// Can build in any number of logistics hull mods
-					// Don't use s-mods in the check ship as we want to be able to tell when
-					// incompatibilities arise
-					// via forcible removing of non s-mods
+					// Don't use s-mods in the check ship as we want to be able to tell when incompatibilities arise via forcible removing of non s-mods
 					if(reason != null && !reason.startsWith("Maximum of 2 non-built-in \"Logistics\""))
 					{
 						disableText = shortenText(reason, button.getDescription());
@@ -209,7 +203,7 @@ extends Selector<HullModButton>
 						if(reason != null && !button.getData().isBuiltIn())
 						{
 							// getCanNotBeInstalledNowReason() returns a weird message when trying to build in logistic
-							//  hullmods while not at a spaceport or station
+							// hullmods while not at a spaceport or station
 							reason = reason.replace("Can only be removed at", "Can only be built in at");
 						}
 						disableText = shortenText(reason, button.getDescription());
@@ -250,37 +244,16 @@ extends Selector<HullModButton>
 		HullModButton hullModButton = items.get(index);
 		if(hullModButton.getData().isBuiltIn())
 		{
-			// No need to check isEnhanceOnly because those aren't in the list in the first place
 			countLabel.changeVar(0, countLabel.getVar(0) - 1);
-
-			sModsRemoved++;
-			currentCostsLabel.changeVar(0, sModsRemoved+modsEnhanced);
-
-			update();
 		}
-		else
+		else if(!hullModButton.getData().isEnhanceOnly())
 		{
-			if(!hullModButton.getData().isEnhanceOnly())
-			{
-				countLabel.changeVar(0, countLabel.getVar(0) + 1);
+			countLabel.changeVar(0, countLabel.getVar(0) + 1);
+		}
+		currentCostsLabel.changeVar(0, currentCostsLabel.getVar(0)+Costs.getSmodCreditCost(originalVariant, hullModButton.getData().isEnhanceOnly() || hullModButton.getData().isBuiltIn()));
 
-				sModsAdded++;
-				currentCostsLabel.changeVar(0, Costs.addSmodStoryPointCost(originalVariant, sModsAdded)+modsEnhanced);
-				currentCostsLabel.changeVar(1, Costs.addSmodCreditCost(originalVariant, sModsAdded));
-			}
-			else
-			{
-				modsEnhanced++;
-				if(sModsAdded == 0)
-				{
-					currentCostsLabel.changeVar(0, sModsRemoved+modsEnhanced);
-				}
-				else
-				{
-					currentCostsLabel.changeVar(0, Costs.addSmodStoryPointCost(originalVariant, sModsAdded)+modsEnhanced);
-				}
-				currentCostsLabel.changeVar(1, Costs.addSmodCreditCost(originalVariant, sModsAdded));
-			}
+		if(!hullModButton.getData().isBuiltIn())
+		{
 			String hullModId = items.get(index).getData().id();
 			checkerVariant.addMod(hullModId);
 			if(testForDesync())
@@ -288,11 +261,8 @@ extends Selector<HullModButton>
 				forceDeselect(index);
 				Global.getSector().getCampaignUI().getMessageDisplay().addMessage("Can't build in due to custom hull mod incompatibility", Misc.getNegativeHighlightColor());
 			}
-			else
-			{
-				update();
-			}
 		}
+		update();
 	}
 
 	/**
@@ -324,34 +294,16 @@ extends Selector<HullModButton>
 		HullModButton hullModButton = items.get(index);
 		if(hullModButton.getData().isBuiltIn())
 		{
-			// No need to check isEnhanceOnly because those aren't in the list in the first place
 			countLabel.changeVar(0, countLabel.getVar(0) + 1);
-			sModsRemoved--;
-			currentCostsLabel.changeVar(0, sModsRemoved+modsEnhanced);
 		}
-		else
+		else if(!hullModButton.getData().isEnhanceOnly())
 		{
-			if(!hullModButton.getData().isEnhanceOnly())
-			{
-				countLabel.changeVar(0, countLabel.getVar(0) - 1);
+			countLabel.changeVar(0, countLabel.getVar(0) - 1);
+		}
+		currentCostsLabel.changeVar(0, currentCostsLabel.getVar(0)-Costs.getSmodCreditCost(originalVariant, hullModButton.getData().isEnhanceOnly() || hullModButton.getData().isBuiltIn()));
 
-				sModsAdded--;
-				currentCostsLabel.changeVar(0, Costs.addSmodStoryPointCost(originalVariant, sModsAdded)+modsEnhanced);
-				currentCostsLabel.changeVar(1, Costs.addSmodCreditCost(originalVariant, sModsAdded));
-			}
-			else
-			{
-				modsEnhanced--;
-				if(sModsAdded == 0)
-				{
-					currentCostsLabel.changeVar(0, sModsRemoved+modsEnhanced);
-				}
-				else
-				{
-					currentCostsLabel.changeVar(0, Costs.addSmodStoryPointCost(originalVariant, sModsAdded)+modsEnhanced);
-				}
-				currentCostsLabel.changeVar(1, Costs.addSmodCreditCost(originalVariant, sModsAdded));
-			}
+		if(!hullModButton.getData().isBuiltIn())
+		{
 			String hullModId = items.get(index).getData().id();
 			// Don't remove hull mods that were already on the ship
 			if(!originalVariant.hasHullMod(hullModId))
@@ -370,10 +322,7 @@ extends Selector<HullModButton>
 		if(!button.getData().isEnhanceOnly())
 		{
 			countLabel.changeVar(0, countLabel.getVar(0) - 1);
-
-			sModsAdded--;
-			currentCostsLabel.changeVar(0, Costs.addSmodStoryPointCost(originalVariant, sModsAdded)+modsEnhanced);
-			currentCostsLabel.changeVar(1, Costs.addSmodCreditCost(originalVariant, sModsAdded));
+			currentCostsLabel.changeVar(0, currentCostsLabel.getVar(0)-Costs.getSmodCreditCost(originalVariant, button.getData().isBuiltIn() || button.getData().isEnhanceOnly()));
 		}
 		String hullModId = items.get(index).getData().id();
 		// Don't remove hull mods that were already on the ship

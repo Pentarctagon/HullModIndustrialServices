@@ -2,81 +2,35 @@ package pentarctagon.hmis.data.campaign.rulecmd.utils;
 
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
+import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
-import lunalib.lunaSettings.LunaSettings;
+import com.fs.starfarer.api.fleet.FleetMemberAPI;
+import com.fs.starfarer.api.impl.campaign.ids.Stats;
 import pentarctagon.hmis.industries.HullModServices;
 
 public class Costs
 {
 	/**
-	 * To add the Nth s-mod, it costs N^2 story points
+	 * added == true  -> adding an s-mod
+	 * added == false -> removing s-mod or enhancing default hullmod
 	 */
-	public static int addSmodStoryPointCost(ShipVariantAPI ship, int added)
+	public static int getSmodCreditCost(ShipVariantAPI ship, boolean enhancedRemoved)
 	{
-		if(added == 0)
+		float qualityModifier = getCostMultiplier();
+
+		int cost;
+		if(enhancedRemoved)
 		{
-			return 0;
-		}
-
-		int count = ship.getSMods().size();
-		int squared = (int)Math.pow(count+added, 2);
-
-		float modifier = getCostMultiplier();
-		Double lunaMultiplier = LunaSettings.getDouble("pentarctagon_HullModIndustrialServices", "hmis_story-point-multiplier");
-		lunaMultiplier = lunaMultiplier == null ? 1d : lunaMultiplier;
-
-		// if quality is under 100%, increase cost by the percent difference
-		// ie: 75% quality returns -0.25 -> 0.25 -> 1.25 * cost = +25% cost
-		// if quality is over 100%, decrease cost by the difference
-		// ie: 160% quality returns 0.6 -> -0.4 -> 0.4 * cost = -60% cost
-		float calculated;
-		if(modifier < 0)
-		{
-			calculated = (Math.abs(modifier)+1)*squared;
+			cost = shipSizeEnhanceRemoveCost(ship);
 		}
 		else
 		{
-			calculated = Math.abs(modifier-1)*squared;
+			cost = shipSizeSmodCost(ship);
 		}
 
-		return (int)(calculated*lunaMultiplier);
-	}
+		double lunaMultiplier = LunaHelper.getDouble("hmis_credits-multiplier", 1d);
 
-	/**
-	 * To add the Nth s-mod, it costs (N-2)^2 million credits, where N can't be less than 0.
-	 * Therefore, adding s-mods won't cost any credits until the 3rd s-mod
-	 */
-	public static int addSmodCreditCost(ShipVariantAPI ship, int added)
-	{
-		if(added == 0)
-		{
-			return 0;
-		}
-
-		int count = ship.getSMods().size();
-		int base = Math.max(count+added-2, 0);
-		int squared = (int)Math.pow(base, 2);
-		int cost = squared*1_000_000;
-
-		float modifier = getCostMultiplier();
-		Double lunaMultiplier = LunaSettings.getDouble("pentarctagon_HullModIndustrialServices", "hmis_credits-multiplier");
-		lunaMultiplier = lunaMultiplier == null ? 1d : lunaMultiplier;
-
-		// if quality is under 100%, increase cost by the percent difference
-		// ie: 75% quality returns -0.25 -> 0.25 -> 1.25 * cost = +25% cost
-		// if quality is over 100%, decrease cost by the difference
-		// ie: 160% quality returns 0.6 -> -0.4 -> 0.4 * cost = -60% cost
-		float calculated;
-		if(modifier < 0)
-		{
-			calculated = (Math.abs(modifier)+1)*cost;
-		}
-		else
-		{
-			calculated = Math.abs(modifier-1)*cost;
-		}
-
-		return (int)(calculated*lunaMultiplier);
+		return (int)(cost*qualityModifier*lunaMultiplier);
 	}
 
 	/**
@@ -86,18 +40,19 @@ public class Costs
 	 */
 	private static float getCostMultiplier()
 	{
-		MarketAPI market = Global.getSector().getCampaignUI().getCurrentInteractionDialog().getInteractionTarget().getMarket();
-		float productionQuality = market.getShipQualityFactor();
+		MarketAPI market = getPlayerMarket();
+		float adjustedQuality = getAdjustedQuality(market);
+
 		if(market.getIndustry(HullModServices.ID).isImproved())
 		{
-			productionQuality += 0.2f;
+			adjustedQuality += 0.2f;
 		}
-		float reduced = productionQuality-1;
+		float reduced = Math.abs(adjustedQuality-2);
 
 		// no, this isn't going to be completely free
-		if(reduced > 0.9)
+		if(reduced < 0.1)
 		{
-			return 0.9f;
+			return 0.1f;
 		}
 		else
 		{
@@ -105,12 +60,85 @@ public class Costs
 		}
 	}
 
+	/**
+	 * can game the system by a significant margin by adjusting the ship quality in the player's faction doctrine
+	 * so while not a great solution, just ignore the actual value and pretend it's the middle setting (+25%)
+	 * ideal solution would be to have changes to faction doctrine ship quality fade in over time rather than taking effect instantly
+	 * but no idea if that's possible at all, how to convey that on the UI, etc
+	 */
+	public static float getAdjustedQuality(MarketAPI market)
+	{
+		float doctrineQuality = Global.getSector().getPlayerFaction().getProduction().getFaction().getDoctrine().getShipQualityContribution();
+		return market.getShipQualityFactor() - doctrineQuality + 0.25f;
+	}
+
+	private static int shipSizeSmodCost(ShipVariantAPI ship)
+	{
+		ShipAPI.HullSize size = ship.getHullSize();
+		if(size == ShipAPI.HullSize.FRIGATE)
+		{
+			return 100_000;
+		}
+		if(size == ShipAPI.HullSize.DESTROYER)
+		{
+			return 200_000;
+		}
+		if(size == ShipAPI.HullSize.CRUISER)
+		{
+			return 300_000;
+		}
+		if(size == ShipAPI.HullSize.CAPITAL_SHIP)
+		{
+			return 500_000;
+		}
+		return 100_000;
+	}
+
+	private static int shipSizeEnhanceRemoveCost(ShipVariantAPI ship)
+	{
+		ShipAPI.HullSize size = ship.getHullSize();
+		if(size == ShipAPI.HullSize.FRIGATE)
+		{
+			return 100_000;
+		}
+		if(size == ShipAPI.HullSize.DESTROYER)
+		{
+			return 115_000;
+		}
+		if(size == ShipAPI.HullSize.CRUISER)
+		{
+			return 130_000;
+		}
+		if(size == ShipAPI.HullSize.CAPITAL_SHIP)
+		{
+			return 150_000;
+		}
+		return 100_000;
+	}
+
 	public static int getPlayerCredits()
 	{
 		return (int)Global.getSector().getPlayerFleet().getCargo().getCredits().get();
 	}
-	public static int getPlayerStoryPoints()
+	public static MarketAPI getPlayerMarket()
 	{
-		return Global.getSector().getPlayerPerson().getStats().getStoryPoints();
+		return Global.getSector().getCampaignUI().getCurrentInteractionDialog().getInteractionTarget().getMarket();
+	}
+
+	public static int getBaseSmods()
+	{
+		return Global.getSettings().getInt("maxPermanentHullmods");
+	}
+	public static int getBonusSmods(FleetMemberAPI ship)
+	{
+		return (int)ship.getStats().getDynamic().getMod(Stats.MAX_PERMANENT_HULLMODS_MOD).getFlatBonus();
+	}
+
+	/**
+	 * Base s-mods from global settings plus ship-specific modifier to s-mod limit
+	 */
+	public static int getTotalSmods(FleetMemberAPI ship)
+	{
+		return getBaseSmods()+getBonusSmods(ship);
 	}
 }

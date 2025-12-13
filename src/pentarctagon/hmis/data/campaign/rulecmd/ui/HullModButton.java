@@ -36,8 +36,8 @@ extends Button
 		super("", baseColor, darkColor, brightColor, width, height, pad);
 		this.spriteName = data.spriteName();
 		this.titleText = data.name();
-		this.descriptionText = data.defaultDescription();
-		this.defaultDescription = data.defaultDescription();
+		this.descriptionText = "";
+		this.defaultDescription = "";
 		this.titleColor = titleColor;
 
 		this.data = data;

@@ -2,25 +2,44 @@ package pentarctagon.hmis.data.campaign.rulecmd.utils.ui;
 
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.*;
+import com.fs.starfarer.api.characters.MutableCharacterStatsAPI;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
-import com.fs.starfarer.api.ui.Alignment;
-import com.fs.starfarer.api.ui.CustomPanelAPI;
-import com.fs.starfarer.api.ui.LabelAPI;
-import com.fs.starfarer.api.ui.TooltipMakerAPI;
+import com.fs.starfarer.api.impl.campaign.ids.Skills;
+import com.fs.starfarer.api.impl.campaign.ids.Tags;
+import com.fs.starfarer.api.impl.campaign.intel.TriTachyonDeal;
+import com.fs.starfarer.api.ui.*;
 import com.fs.starfarer.api.util.Misc;
 import pentarctagon.hmis.data.campaign.rulecmd.ui.*;
 import pentarctagon.hmis.data.campaign.rulecmd.ui.Button;
 import pentarctagon.hmis.data.campaign.rulecmd.ui.plugin.BuildInPlugin;
+import pentarctagon.hmis.data.campaign.rulecmd.utils.Costs;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.*;
 import java.util.List;
 
 public class PanelCreator
 {
 	private static final String BUTTON_MANAGE_MODULE = "BUTTON_MANAGE_MODULE";
+	private static final String BUTTON_ALLOW_RESTORATION = "BUTTON_ALLOW_RESTORATION";
+	private static final String BUTTON_DEINTEGRATE_AI = "BUTTON_DEINTEGRATE_AI";
+	private static final String BUTTON_INTEGRATE_AI = "BUTTON_INTEGRATE_AI";
+	private static final int MAKE_RESTORABLE_COST = 500_000;
+	private static final int DEINTEGRATE_AI_COST = 150_000;
+	private static final int INTEGRATE_AI_COST = 50_000;
+	private static final Set<String> captainSkills = Set.of(
+		Skills.HELMSMANSHIP,
+		Skills.TARGET_ANALYSIS,
+		Skills.COMBAT_ENDURANCE,
+		Skills.POINT_DEFENSE,
+		Skills.IMPACT_MITIGATION,
+		Skills.BALLISTIC_MASTERY,
+		Skills.FIELD_MODULATION,
+		Skills.DAMAGE_CONTROL,
+		Skills.SYSTEMS_EXPERTISE,
+		Skills.MISSILE_SPECIALIZATION
+	);
 
 	/**
 	 * Creates and adds a title with the provided text to the provided panel.
@@ -49,13 +68,14 @@ public class PanelCreator
 		Sizes sizes = getSizes(panel, 0);
 
 		TooltipMakerAPI tooltipMaker = panel.createUIElement(sizes.width(), sizes.buttonListHeight(), true);
-		panel.addUIElement(tooltipMaker).inTL(sizes.buttonListHorizontalPadding(), 30);
 
 		List<SelectShipButton> buttons = new ArrayList<>();
 		for(FleetMemberAPI data : Global.getSector().getPlayerFleet().getFleetData().getMembersInPriorityOrder())
 		{
 			buttons.add(new SelectShipButton(data, panel, tooltipMaker));
 		}
+		// this must be after the buttons are added otherwise the scrollbar doesn't appear/work
+		panel.addUIElement(tooltipMaker).inTL(sizes.buttonListHorizontalPadding(), 10);
 
 		return new PanelCreatorData<>(panel, tooltipMaker, buttons);
 	}
@@ -72,7 +92,7 @@ public class PanelCreator
 	}
 
 	/**
-	 * Create a panel containing the ship image, name, S-mod limit and the button to increase the limit.
+	 * Create a panel containing the ship image and info
 	 * Returns the panel, so the next panel can be positioned below it.
 	 */
 	public static CustomPanelAPI createShipInfoPanel(CustomPanelAPI panel, FleetMemberAPI ship, ShipVariantAPI selectedVariant, CustomDialogDelegate.CustomDialogCallback callback, float shipScrollPanelY)
@@ -81,18 +101,11 @@ public class PanelCreator
 		float shipSize = 80f;
 		boolean shipHasModules = !SelectShipModuleDialogCreator.getModuleVariantsWithOP(ship.getVariant()).isEmpty();
 
-		CustomUIPanelPlugin panelPlugin = null;
-
-		// If ship has modules, add a button for switching modules and a listener plugin
-		// When the button is pressed, dismiss this dialog and open a new module selection dialog
-		// If a module is selected in that dialog, the hullmod panel will be recreated with a different selectedVariant parameter
-		if(shipHasModules)
+		CustomUIPanelPlugin panelPlugin = new BaseCustomUIPanelPlugin()
 		{
-			panelPlugin = new BaseCustomUIPanelPlugin()
+			@Override
+			public void buttonPressed(Object buttonId)
 			{
-				@Override
-				public void buttonPressed(Object buttonId)
-				{
 				if(buttonId.equals(BUTTON_MANAGE_MODULE))
 				{
 					BuildInHullModDialogCreator.shouldRecreateShipPanel = false;
@@ -100,9 +113,38 @@ public class PanelCreator
 					InteractionDialogAPI dialog = Global.getSector().getCampaignUI().getCurrentInteractionDialog();
 					SelectShipModuleDialogCreator.createPanel(ship, selectedVariant, dialog, shipScrollPanelY);
 				}
+				else if(buttonId.equals(BUTTON_ALLOW_RESTORATION))
+				{
+					ship.getVariant().removeTag(Tags.HULL_UNRESTORABLE);
+					Global.getSector().getPlayerFleet().getCargo().getCredits().subtract(MAKE_RESTORABLE_COST);
+					callback.dismissCustomDialog(1);
 				}
-			};
-		}
+				else if(buttonId.equals(BUTTON_DEINTEGRATE_AI))
+				{
+					List<MutableCharacterStatsAPI.SkillLevelAPI> skills = ship.getCaptain().getStats().getSkillsCopy();
+					long skillsCount = skills.stream().filter(skill -> skill.getLevel() > 0).count();
+					ship.getCaptain().getMemory().unset("$captain_unremovable");
+					ship.getCaptain().getStats().setLevel(ship.getCaptain().getStats().getLevel()-1);
+					// if they have skills and they have more skills than levels
+					if(!skills.isEmpty() && skillsCount > ship.getCaptain().getStats().getLevel())
+					{
+						// find the first vanilla combat skill
+						Optional<MutableCharacterStatsAPI.SkillLevelAPI> remove = skills.stream().filter(skill -> captainSkills.contains(skill.getSkill().getId())).findFirst();
+						// if found, remove it
+						remove.ifPresent(skillLevelAPI -> ship.getCaptain().getStats().setSkillLevel(skillLevelAPI.getSkill().getId(), 0));
+					}
+					Global.getSector().getPlayerFleet().getCargo().getCredits().subtract(DEINTEGRATE_AI_COST);
+					callback.dismissCustomDialog(1);
+				}
+				else if(buttonId.equals(BUTTON_INTEGRATE_AI))
+				{
+					ship.getCaptain().getMemory().set("$captain_unremovable", true);
+					ship.getCaptain().getStats().setLevel(ship.getCaptain().getStats().getLevel()+1);
+					Global.getSector().getPlayerFleet().getCargo().getCredits().subtract(INTEGRATE_AI_COST);
+					callback.dismissCustomDialog(1);
+				}
+			}
+		};
 
 		CustomPanelAPI shipInfoPanel = panel.createCustomPanel(sizes.width(), shipSize, panelPlugin);
 
@@ -143,6 +185,48 @@ public class PanelCreator
 		{
 			infoTextElement.addButton("Manage a different module", BUTTON_MANAGE_MODULE, infoTextWidth, 30f, 5f);
 		}
+		// make ship restorable
+		if(ship.getVariant().getTags().contains("unrestorable") && Costs.getAdjustedQuality(Costs.getPlayerMarket()) >= 1.5f)
+		{
+			String creditsText = String.format("Allow Restoration (%,d credits)", MAKE_RESTORABLE_COST);
+			ButtonAPI button = infoTextElement.addButton(creditsText, BUTTON_ALLOW_RESTORATION, infoTextWidth, 30f, 5f);
+			if(Costs.getPlayerCredits() < MAKE_RESTORABLE_COST)
+			{
+				button.setEnabled(false);
+			}
+		}
+		// de-integrate AI core
+		if
+		(
+			ship.getCaptain().isAICore() &&
+			ship.getCaptain().getMemory().getBoolean("$captain_unremovable") &&
+			TriTachyonDeal.hasDeal() &&
+			Costs.getAdjustedQuality(Costs.getPlayerMarket()) >= 1.5f
+		)
+		{
+			String creditsText = String.format("De-integrate AI (%,d credits)", DEINTEGRATE_AI_COST);
+			ButtonAPI button = infoTextElement.addButton(creditsText, BUTTON_DEINTEGRATE_AI, infoTextWidth, 30f, 5f);
+			if(Costs.getPlayerCredits() < DEINTEGRATE_AI_COST)
+			{
+				button.setEnabled(false);
+			}
+		}
+		// integrate AI core
+		if
+		(
+			ship.getCaptain().isAICore() &&
+			!ship.getCaptain().getMemory().getBoolean("$captain_unremovable") &&
+			TriTachyonDeal.hasDeal() &&
+			Costs.getAdjustedQuality(Costs.getPlayerMarket()) >= 1.5f
+		)
+		{
+			String creditsText = String.format("Integrate AI (%,d credits)", INTEGRATE_AI_COST);
+			ButtonAPI button = infoTextElement.addButton(creditsText, BUTTON_INTEGRATE_AI, infoTextWidth, 30f, 5f);
+			if(Costs.getPlayerCredits() < INTEGRATE_AI_COST)
+			{
+				button.setEnabled(false);
+			}
+		}
 
 		shipInfoPanel.addUIElement(infoTextElement).rightOfTop(shipElement, infoTextPad);
 		panel.addComponent(shipInfoPanel);
@@ -150,7 +234,7 @@ public class PanelCreator
 		return shipInfoPanel;
 	}
 
-	public static PanelCreatorData<List<Button>> createButtonList(CustomPanelAPI panel, List<String> buttonText, float buttonHeight, float buttonPadding, float distanceFromTop)
+	public static PanelCreatorData<List<Button>> createModuleButtonList(CustomPanelAPI panel, List<String> buttonText, float buttonHeight, float buttonPadding, float distanceFromTop)
 	{
 		Sizes sizes = getSizes(panel, distanceFromTop);
 		List<Button> buttons = new ArrayList<>();

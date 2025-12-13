@@ -11,7 +11,6 @@ import com.fs.starfarer.api.loading.HullModSpecAPI;
 import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.CustomPanelAPI;
 import pentarctagon.hmis.data.campaign.rulecmd.ui.plugin.BuildInPlugin;
-import pentarctagon.hmis.data.campaign.rulecmd.utils.Constants;
 import pentarctagon.hmis.data.campaign.rulecmd.utils.Costs;
 import pentarctagon.hmis.data.campaign.rulecmd.utils.Sizing;
 import pentarctagon.hmis.data.campaign.rulecmd.utils.ui.BuildInHullModDialogCreator;
@@ -68,10 +67,9 @@ implements CustomDialogDelegate
 		// credits and story points the player currently has
 		// don't need to store the return value since these don't change while the dialog is open
 		PanelCreator.createLabelWithVariables(panel, "Credits: %,d", Color.WHITE, 30f, Alignment.LMID, Costs.getPlayerCredits());
-		PanelCreator.createLabelWithVariables(panel, "Story points: %s", Color.WHITE, 50f, Alignment.LMID, Costs.getPlayerStoryPoints());
 		// Initialize the S-mod counter and costs at the top. This tracks the "pending" values that will be set when the player hits confirm.
-		LabelWithVariables countLabel = PanelCreator.createLabelWithVariables(panel, "S-mods: %s/%s", Color.WHITE, 70f, Alignment.LMID, selectedVariant.getSMods().size(), Constants.MAX_SMODS).created();
-		LabelWithVariables currentCostsLabel = PanelCreator.createLabelWithVariables(panel, "Cost: %s story points, %,d credits", Color.WHITE, 90f, Alignment.LMID, 0, 0).created();
+		LabelWithVariables countLabel = PanelCreator.createLabelWithVariables(panel, "S-mods: %s/%s", Color.WHITE, 50f, Alignment.LMID, selectedVariant.getSMods().size(), Costs.getTotalSmods(fleetMember)).created();
+		LabelWithVariables currentCostsLabel = PanelCreator.createLabelWithVariables(panel, "Cost: %,d credits", Color.WHITE, 70f, Alignment.LMID, 0).created();
 
 		// Static text at the top of the screen. The function positions it at the top of panel
 		CustomPanelAPI titlePanel = PanelCreator.createTitle(panel, titleString, titleHeight).panel();
@@ -131,59 +129,10 @@ implements CustomDialogDelegate
 			}
 		}
 
-		checkAndApplyParadePiece();
-		checkAndApplyOverburdened();
-		checkAndApplyMaintenanceNightmare();
-
 		int credits = plugin.getCreditCost();
-		int storyPoints = plugin.getStoryPointCost();
 		Global.getSector().getPlayerFleet().getCargo().getCredits().subtract(credits);
-		Global.getSector().getPlayerPerson().getStats().spendStoryPoints(storyPoints, false, null, false, null);
 
 		recreateShipPanel();
-	}
-
-	// add/remove parade piece hullmod
-	private void checkAndApplyParadePiece()
-	{
-		if(selectedVariant.getSMods().size() >= Constants.MAX_SMODS && !selectedVariant.hasHullMod(Constants.PARADE_PIECE))
-		{
-			selectedVariant.addPermaMod(Constants.PARADE_PIECE);
-			dialog.getTextPanel().addPara(selectedVariant.getFullDesignationWithHullNameForShip() + "'s hull is completely useless in your fleet").setHighlight(selectedVariant.getFullDesignationWithHullNameForShip());
-		}
-		else if(selectedVariant.getSMods().size() < Constants.MAX_SMODS && selectedVariant.hasHullMod(Constants.PARADE_PIECE))
-		{
-			selectedVariant.removePermaMod(Constants.PARADE_PIECE);
-			dialog.getTextPanel().addPara(selectedVariant.getFullDesignationWithHullNameForShip() + "'s hull is no longer completely useless in your fleet").setHighlight(selectedVariant.getFullDesignationWithHullNameForShip());
-		}
-	}
-	// add/remove overburdened hullmod
-	private void checkAndApplyOverburdened()
-	{
-		if(selectedVariant.getSMods().size() > Constants.MAX_SAFE_SMODS && selectedVariant.getSMods().size() < Constants.MAX_SMODS && !selectedVariant.hasHullMod(Constants.OVERBURDENED))
-		{
-			selectedVariant.addPermaMod(Constants.OVERBURDENED);
-			dialog.getTextPanel().addPara(selectedVariant.getFullDesignationWithHullNameForShip() + "'s hull is overburdened").setHighlight(selectedVariant.getFullDesignationWithHullNameForShip());
-		}
-		else if((selectedVariant.getSMods().size() <= Constants.MAX_SAFE_SMODS && selectedVariant.hasHullMod(Constants.OVERBURDENED)) || selectedVariant.hasHullMod(Constants.PARADE_PIECE))
-		{
-			selectedVariant.removePermaMod(Constants.OVERBURDENED);
-			dialog.getTextPanel().addPara(selectedVariant.getFullDesignationWithHullNameForShip() + "'s hull is no longer overburdened").setHighlight(selectedVariant.getFullDesignationWithHullNameForShip());
-		}
-	}
-	// add/remove maintenance nightmare hullmod
-	private void checkAndApplyMaintenanceNightmare()
-	{
-		if(selectedVariant.getSMods().size() >= Constants.MAX_SAFE_SMODS && !selectedVariant.hasHullMod(Constants.MAINTENANCE_NIGHTMARE))
-		{
-			selectedVariant.addPermaMod(Constants.MAINTENANCE_NIGHTMARE);
-			dialog.getTextPanel().addPara(selectedVariant.getFullDesignationWithHullNameForShip() + " now requires extensive maintenance").setHighlight(selectedVariant.getFullDesignationWithHullNameForShip());
-		}
-		else if(selectedVariant.getSMods().size() < Constants.MAX_SAFE_SMODS && selectedVariant.hasHullMod(Constants.MAINTENANCE_NIGHTMARE))
-		{
-			selectedVariant.removePermaMod(Constants.MAINTENANCE_NIGHTMARE);
-			dialog.getTextPanel().addPara(selectedVariant.getFullDesignationWithHullNameForShip() + " no longer requires extensive maintenance").setHighlight(selectedVariant.getFullDesignationWithHullNameForShip());
-		}
 	}
 
 	@Override
@@ -285,12 +234,9 @@ implements CustomDialogDelegate
 					hullMod.getId(),
 					hullMod.getDisplayName() + (isEnhanceOnly ? "*" : ""),
 					hullMod.getSpriteName(),
-					"",
 					hullMod.getDescription(selectedVariant.getHullSize()),
 					hullMod.getEffect(),
 					selectedVariant.getHullSize(),
-					0,
-					0,
 					isEnhanceOnly,
 					returnBuiltIn
 				)

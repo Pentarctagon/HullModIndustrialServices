@@ -1,3 +1,5 @@
 fieldID,fieldName,fieldType,defaultValue,secondaryValue,fieldDescription,minValue,maxValue,tab
-hmis_story-point-multiplier,Story Point Multiplier,Double,1,,Multiplier to apply to the story point cost of building in s-mods,0.1,,
-hmis_credits-multiplier,Credits Multiplier,Double,1,,Multiplier to apply to the credits cost of building in s-mods,0.1,,
+hmis_story-point-multiplier,Story Point Multiplier,Double,1,,Multiplier to apply to the story point cost of building in s-mods,0.1,2,
+hmis_credits-multiplier,Credits Multiplier,Double,1,,Multiplier to apply to the credits cost of building in s-mods,0.1,2,
+hmis_decrease-restoration,Decrease Restoration Costs,Boolean,TRUE,,Whether to decrease d-mod removal cost based on market ship quality,,,
+hmis_decrease-restoration-cap,Max Restoration Cost Reduction,Double,0.7,,The maximum amount the d-mod cost multiplier can be reduced to,0.1,2,

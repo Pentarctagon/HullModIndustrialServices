@@ -11,7 +11,7 @@ import java.awt.*;
  */
 public class LabelWithVariables
 {
-	public LabelAPI label;
+	private final LabelAPI label;
 	private final String text;
 	private final Integer[] vars;
 	private final String[] highlights;

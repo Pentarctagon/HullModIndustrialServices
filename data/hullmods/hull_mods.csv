@@ -1,4 +1,0 @@
-name,id,tier,rarity,tech/manufacturer,tags,uiTags,base value,unlocked,hidden,hiddenEverywhere,cost_frigate,cost_dest,cost_cruiser,cost_capital,script,desc,short,sModDesc,sprite
-Maintenance Nightmare,hmis_maintenance_nightmare,,,,,,,,TRUE,,0,0,0,0,pentarctagon.hmis.hullmods.MaintenanceNightmare,Increases the monthly maintenance supply cost by %s.,Increases maintenance cost.,,graphics/hullmods/high_maintenance.png
-Overburdened,hmis_overburdened,,,,,,,,TRUE,,0,0,0,0,pentarctagon.hmis.hullmods.Overburdened,Decreases most ship attributes by %s.,Decreases ship attributes.,,graphics/hullmods/high_maintenance.png
-Parade Piece,hmis_parade_piece,,,,,,,,TRUE,,0,0,0,0,pentarctagon.hmis.hullmods.ParadePiece,Decreases most ship attributes by %s.,Decreases ship attributes massively.,,graphics/hullmods/high_maintenance.png
