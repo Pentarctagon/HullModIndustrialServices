@@ -100,13 +100,6 @@ extends Selector<HullModButton>
 				continue;
 			}
 
-			// disable s-mods if s-mod limit reached by removing an existing s-mod and then clicking another regular hullmod
-			if(countLabel.getVar(0) == maxSmods && button.getData().isBuiltIn() && selectedRegularHullmod != -1)
-			{
-				disable(i, "Ship s-mod limit reached", false);
-				continue;
-			}
-
 			// handle case of: click s-mod -> click hullmod -> click s-mod again
 			// otherwise this let's you bypass the s-mod limit
 			if(countLabel.getVar(0) > maxSmods && button.getData().isBuiltIn() && selectedRegularHullmod != -1)
