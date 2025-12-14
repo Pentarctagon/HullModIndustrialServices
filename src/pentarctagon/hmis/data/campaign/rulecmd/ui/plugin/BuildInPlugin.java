@@ -101,7 +101,7 @@ extends Selector<HullModButton>
 			}
 
 			// handle case of: click s-mod -> click hullmod -> click s-mod again
-			// otherwise this let's you bypass the s-mod limit
+			// otherwise this lets you bypass the s-mod limit
 			if(countLabel.getVar(0) > maxSmods && button.getData().isBuiltIn() && selectedRegularHullmod != -1)
 			{
 				forceDeselect(selectedRegularHullmod);

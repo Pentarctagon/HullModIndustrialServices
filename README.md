@@ -17,6 +17,15 @@ The structure itself has the following effects:
 * Assigning an alpha core gives another +10% ship quality
 * Improving the structure with story points reduces s-mod related costs as well as ship restoration costs by 20% (does not affect ship quality)
 
+### Hint ###
+For otherwise vanilla games, you can get to 150% ship quality by:
+* 25% - hard coded doctrine bonus
+* 25% - 10 stability
+* 50% - Pristine Nanoforge
+* 20% - Orbital Works
+* 20% - Hull Mod Services
+* 10% - Alpha core installed in Hull Mod Services
+
 ## D-Mods ##
 The cost of restoring d-mods, which as per the wiki uses the formula `(baseShipHullCost*baseRestoreCostMult) * (baseRestoreCostMultPerDMod^dmodCount)`, is tweaked for colonies with the new structure:
 * `baseRestoreCostMult` is reduced by the colony's ship quality over 100% capped at 150%. As of 0.98 `baseRestoreCostMult` is 1.2, so it can be reduced to 0.7.
