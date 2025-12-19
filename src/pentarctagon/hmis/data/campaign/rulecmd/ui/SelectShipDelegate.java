@@ -3,8 +3,12 @@ package pentarctagon.hmis.data.campaign.rulecmd.ui;
 import com.fs.starfarer.api.campaign.CustomDialogDelegate;
 import com.fs.starfarer.api.campaign.CustomUIPanelPlugin;
 import com.fs.starfarer.api.campaign.InteractionDialogAPI;
+import com.fs.starfarer.api.campaign.econ.MarketAPI;
+import com.fs.starfarer.api.impl.campaign.ids.Factions;
 import com.fs.starfarer.api.ui.CustomPanelAPI;
+import com.fs.starfarer.api.util.Misc;
 import pentarctagon.hmis.data.campaign.rulecmd.ui.plugin.SelectShipPlugin;
+import pentarctagon.hmis.data.campaign.rulecmd.utils.Costs;
 import pentarctagon.hmis.data.campaign.rulecmd.utils.ui.PanelCreator;
 
 import java.util.List;
@@ -33,10 +37,18 @@ implements CustomDialogDelegate
 	{
 		this.callback = callback;
 
-		PanelCreator.createTitle(panel, "Select a ship", 30);
-		PanelCreator.PanelCreatorData<List<SelectShipButton>> createdButtonsData = PanelCreator.createShipButtonList(panel);
+		MarketAPI market = Costs.getPlayerMarket();
+		if(market.isPlayerOwned() || market.getFactionId().equals(Misc.getCommissionFactionId()) || market.getFaction().getRepInt(Factions.PLAYER) >= 50)
+		{
+			PanelCreator.createTitle(panel, "Select a ship", 30);
+			PanelCreator.PanelCreatorData<List<SelectShipButton>> createdButtonsData = PanelCreator.createShipButtonList(panel);
 
-		plugin.setData(createdButtonsData);
+			plugin.setData(createdButtonsData);
+		}
+		else
+		{
+			PanelCreator.createTitle(panel, "Requires one of:\n -player colony\n -faction commission\n -faction rep above 49", 30);
+		}
 	}
 
 	@Override

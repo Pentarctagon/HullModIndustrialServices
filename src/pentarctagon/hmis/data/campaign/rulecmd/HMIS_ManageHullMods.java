@@ -10,11 +10,6 @@ import pentarctagon.hmis.data.campaign.rulecmd.utils.Sizing;
 import java.util.List;
 import java.util.Map;
 
-// TODO: lunalib integration - update URLs in version file
-// TODO: how to package mod and where to upload? how to add it to a github release?
-//       add link to it to version file
-// TODO: create forum thread and add link to version file
-
 /**
  * Entry point for hull mod management dialog - see rules.csv
  */
