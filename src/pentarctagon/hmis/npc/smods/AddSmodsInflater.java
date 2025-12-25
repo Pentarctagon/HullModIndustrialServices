@@ -86,11 +86,10 @@ implements FleetInflater
 	{
 		originalFleetInflater.inflate(fleet);
 
-		List<String> factionHullmods = HullModIndustrialServices.vanillaHullmods.get(fleet.getFaction().getId());
-		if(factionHullmods == null)
+		ArrayList<String> factionHullmods;
+		synchronized(HullModIndustrialServices.class)
 		{
-			log.info("[HMIS] Skipping s-mod setup for faction's fleet with no hullmod setup: "+fleet.getFaction().getId());
-			return;
+			factionHullmods = new ArrayList<>(HullModIndustrialServices.vanillaHullmods.get(fleet.getFaction().getId()));
 		}
 		if(getQuality() < 1.0f)
 		{
@@ -103,7 +102,6 @@ implements FleetInflater
 			return;
 		}
 
-		ArrayList<String> hullmodIds = new ArrayList<>(factionHullmods);
 		for(FleetMemberAPI ship : fleet.getFleetData().getMembersListCopy())
 		{
 			ShipVariantAPI variant = ship.getVariant();
@@ -113,7 +111,6 @@ implements FleetInflater
 			}
 
 			// copy and shuffle so the choice of hullmods below isn't always the same
-			Collections.shuffle(hullmodIds);
 			Collections.shuffle(evaluators);
 
 			StringBuilder results = new StringBuilder();
@@ -125,7 +122,7 @@ implements FleetInflater
 			// ie:
 			//     quality (1.35 * 100) % 20 == 15, generated number is 10, then ship gets an extra s-mod
 			//     quality (1.25 * 100) % 20 == 5 , generated number is 10, then ship doesn't get an extra s-mod
-			int extraSmod = random.nextInt(20) < (getQuality() * 100) % 20 ? 1 : 0;
+			int extraSmod = random.nextInt(20) < (getQuality() * 100) % 20 && getAverageNumSMods() < 3 ? 1 : 0;
 
 			// s-mod non-built-in hullmods already on the ship that give a benefit
 			for(String id : new ArrayList<>(variant.getNonBuiltInHullmods()))
@@ -156,7 +153,7 @@ implements FleetInflater
 				}
 
 				HullModSpecAPI spec = Global.getSettings().getHullModSpec(eval.getId());
-				if(eval.evaluate(ship, true))
+				if(eval.evaluate(ship, true) && factionHullmods.contains(eval.getId()))
 				{
 					variant.addPermaMod(eval.getId(), true);
 					results.append("s-modded: ").append(eval.getId()).append("\n");
@@ -171,7 +168,7 @@ implements FleetInflater
 				for(HullModEvaluator eval : evaluators)
 				{
 					int cost = Global.getSettings().getHullModSpec(eval.getId()).getCostFor(variant.getHullSize());
-					if(eval.evaluate(ship, false) && cost <= freedOrdnance)
+					if(eval.evaluate(ship, false) && cost <= freedOrdnance && factionHullmods.contains(eval.getId()))
 					{
 						variant.addMod(eval.getId());
 						results.append("added: ").append(eval.getId()).append("\n");
@@ -269,6 +266,11 @@ implements FleetInflater
 		if(quality <= 0)
 		{
 			return 0;
+		}
+		// cap s-mods for modded factions
+		if(quality > 60)
+		{
+			return 3;
 		}
 
 		return (int)quality / 20;

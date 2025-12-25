@@ -3,6 +3,7 @@ package pentarctagon.hmis;
 import com.fs.starfarer.api.BaseModPlugin;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.ModSpecAPI;
+import com.fs.starfarer.api.campaign.FactionAPI;
 import com.fs.starfarer.api.impl.campaign.ids.Commodities;
 import com.fs.starfarer.api.impl.campaign.ids.Factions;
 import com.fs.starfarer.api.impl.campaign.ids.HullMods;
@@ -11,10 +12,12 @@ import com.fs.starfarer.api.util.Misc;
 import pentarctagon.hmis.dmods.RestorationCostListener;
 import pentarctagon.hmis.industries.HullModServices;
 import pentarctagon.hmis.npc.smods.AddSmodsListener;
+import pentarctagon.hmis.npc.smods.listener.UpdatePlayerBlueprints;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @SuppressWarnings("unused")
 public class HullModIndustrialServices
@@ -65,6 +68,7 @@ extends BaseModPlugin
 	{
 		Global.getSector().getListenerManager().addListener(new RestorationCostListener(), true);
 		Global.getSector().addTransientListener(new AddSmodsListener());
+		Global.getSector().getListenerManager().addListener(new UpdatePlayerBlueprints(), true);
 
 		Misc.getFactionMarkets(Factions.HEGEMONY)
 		    .stream()
@@ -87,27 +91,16 @@ extends BaseModPlugin
 			    market.getIndustry(HullModServices.ID).setAICoreId(Commodities.ALPHA_CORE);
 		    });
 
-		// TODO: player faction can't be calculated at runtime, would need to be updated periodically?
-		// TODO: modded factions, keep it to just vanilla hullmods for simplicity?
-		populateFactionHullmods(Factions.PIRATES);
-		populateFactionHullmods(Factions.PERSEAN);
-		populateFactionHullmods(Factions.TRITACHYON);
-		populateFactionHullmods(Factions.HEGEMONY);
-		populateFactionHullmods(Factions.DIKTAT);
-		populateFactionHullmods(Factions.KOL);
-		populateFactionHullmods(Factions.LUDDIC_CHURCH);
-		populateFactionHullmods(Factions.LUDDIC_PATH);
-		populateFactionHullmods(Factions.REMNANTS);
-		populateFactionHullmods(Factions.LIONS_GUARD);
-		populateFactionHullmods(Factions.DIKTAT);
-		populateFactionHullmods(Factions.INDEPENDENT);
-		populateFactionHullmods(Factions.MERCENARY);
-		populateFactionHullmods(Factions.REMNANTS);
-		populateFactionHullmods(Factions.PLAYER);
-		System.out.println(vanillaHullmods.get(Factions.PLAYER));
+		synchronized(HullModIndustrialServices.class)
+		{
+			for(FactionAPI faction : Global.getSector().getAllFactions())
+			{
+				populateFactionHullmods(faction.getId());
+			}
+		}
 	}
 
-	private void populateFactionHullmods(String faction)
+	public static void populateFactionHullmods(String faction)
 	{
 		vanillaHullmods.put(
 			faction,
@@ -129,7 +122,7 @@ extends BaseModPlugin
 						!neverBuildIn.contains(id) &&
 						(source == null || source.getId() == null || source.getId().isEmpty() || source.getId().equals("starsector"));
 				})
-				.toList()
+				.collect(Collectors.toList())
 		);
 	}
 }
