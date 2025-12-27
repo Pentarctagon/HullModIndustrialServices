@@ -9,11 +9,11 @@ import com.fs.starfarer.api.fleet.FleetMemberAPI;
 import com.fs.starfarer.api.loading.HullModSpecAPI;
 import org.apache.log4j.Logger;
 import pentarctagon.hmis.HullModIndustrialServices;
+import pentarctagon.hmis.data.campaign.rulecmd.utils.LunaHelper;
 import pentarctagon.hmis.npc.smods.hullcheck.*;
 
 import java.lang.invoke.MethodHandles;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class AddSmodsInflater
 implements FleetInflater
@@ -74,7 +74,7 @@ implements FleetInflater
 		new SolarShieldingEvaluator()
 	);
 
-	private static final Set<String> evaluatorIds = evaluators.stream().map(HullModEvaluator::getId).collect(Collectors.toSet());
+	private static final List<String> evaluatorIds = evaluators.stream().map(HullModEvaluator::getId).toList();
 
 	public AddSmodsInflater(FleetInflater originalFleetInflater)
 	{
@@ -96,9 +96,14 @@ implements FleetInflater
 			log.info("[HMIS] Skipping s-mod setup for faction's fleet due to low quality ("+getQuality()+"): "+fleet.getFaction().getId());
 			return;
 		}
-		if(factionHullmods.size() < 4)
+		if(Collections.disjoint(evaluatorIds, factionHullmods))
 		{
-			log.info("[HMIS] Skipping s-mod setup for faction's fleet due to not knowing enough hullmods: "+fleet.getFaction().getId());
+			log.info("[HMIS] Skipping s-mod setup for faction's fleet due to not knowing any hullmods: "+fleet.getFaction().getId());
+			return;
+		}
+		if(LunaHelper.getInteger("hmis-npc-smods-cap", 3) < 1)
+		{
+			log.info("[HMIS] NPC s-mods disabled");
 			return;
 		}
 
@@ -122,7 +127,7 @@ implements FleetInflater
 			// ie:
 			//     quality (1.35 * 100) % 20 == 15, generated number is 10, then ship gets an extra s-mod
 			//     quality (1.25 * 100) % 20 == 5 , generated number is 10, then ship doesn't get an extra s-mod
-			int extraSmod = random.nextInt(20) < (getQuality() * 100) % 20 && getAverageNumSMods() < 3 ? 1 : 0;
+			int extraSmod = random.nextInt(20) < (getQuality() * 100) % 20 && getAverageNumSMods() < LunaHelper.getInteger("hmis-npc-smods-cap", 3) ? 1 : 0;
 
 			// s-mod non-built-in hullmods already on the ship that give a benefit
 			for(String id : new ArrayList<>(variant.getNonBuiltInHullmods()))
@@ -268,9 +273,9 @@ implements FleetInflater
 			return 0;
 		}
 		// cap s-mods for modded factions
-		if(quality > 60)
+		if(quality > 20*LunaHelper.getInteger("hmis-npc-smods-cap", 3))
 		{
-			return 3;
+			return LunaHelper.getInteger("hmis-npc-smods-cap", 3);
 		}
 
 		return (int)quality / 20;

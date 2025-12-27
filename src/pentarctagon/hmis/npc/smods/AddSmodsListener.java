@@ -14,7 +14,7 @@ extends BaseCampaignEventListener
 	@Override
 	public void reportFleetSpawned(CampaignFleetAPI fleet)
 	{
-		if(LunaHelper.getBoolean("hmis_npc_smods", true))
+		if(LunaHelper.getBoolean("hmis-npc-smods", true))
 		{
 			FleetInflater originalFleetInflater = fleet.getInflater();
 			if(!(originalFleetInflater instanceof AddSmodsInflater) && originalFleetInflater != null)

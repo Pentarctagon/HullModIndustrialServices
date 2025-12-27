@@ -19,6 +19,17 @@ public class LunaHelper
 		return value != null ? value : def;
 	}
 
+	public static Integer getInteger(String key, Integer def)
+	{
+		if(!enabled)
+		{
+			return def;
+		}
+
+		Integer value = LunaSettings.getInt(mod, key);
+		return value != null ? value : def;
+	}
+
 	public static double getDouble(String key, double def)
 	{
 		if(!enabled)
