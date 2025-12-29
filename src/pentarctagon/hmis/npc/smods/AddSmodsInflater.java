@@ -165,7 +165,6 @@ implements FleetInflater
 					break;
 				}
 
-				HullModSpecAPI spec = Global.getSettings().getHullModSpec(eval.getId());
 				if(eval.evaluate(ship, true) && factionHullmods.contains(eval.getId()))
 				{
 					variant.addPermaMod(eval.getId(), true);
