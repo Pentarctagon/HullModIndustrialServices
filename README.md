@@ -17,6 +17,12 @@ The structure itself has the following effects:
 * Assigning an alpha core gives another +10% ship quality
 * Improving the structure with story points reduces s-mod related costs as well as ship restoration costs by 20% (does not affect ship quality)
 
+The following core worlds have this structure added:
+* Chicomoztoc
+* Kazeron
+* Culann (with an Alpha Core)
+Making use of this structure on these worlds requires either having 50+ reputation with the respective faction or currently being commissioned by them.
+
 ### Hint ###
 For otherwise vanilla games, you can get to 150% ship quality by:
 * 25% - hard coded doctrine bonus
@@ -33,6 +39,15 @@ The cost of restoring d-mods, which as per the wiki uses the formula `(baseShipH
   These are applied when you open a colony (aka click on a planet) and reset back to the default when you close the colony, so if you make changes that affect the ship quality value (ie: adding a nanoforge to your Orbital Works) you will need to close and reopen the colony to see them applied to the restoration cost.
 * A colony having ship quality under 100% does not increase d-mod restoration cost.
 
+## NPC s-mods ##
+This causes non-civilian ships in NPC fleets to have s-mods based on their faction's ship quality. This includes fleets spawned by your colonies. The formula is +1 s-mod per 20% ship quality over 100%, with each additional percent adding a 5% chance of getting an extra s-mod. For example, with just this mod added, Tri-Tachyon will have a ship quality of 145%, so each of their ships will be guaranteed 2 s-mods and a 25% chance of getting a third s-mod. 
+
+The hullmods chosen to be s-mods will first prioritize hullmods that are already on the ship by default. Then, if there aren't enough such hullmods, randomly add s-mods from the list of the faction's known hullmods based on whether they'd potentially be useful for the ship. For example, adding Adaptive Phase Coils to phase ships, Expanded Crew Deck if it has fighter bays, etc. For the sake of simplicity, only vanilla hullmods will be considered and only the subset of those that aren't purely logistical (ie: Expanded Cargo Holds) or are usually detrimental without building around them (ie: shield shunt). This does not mean that the s-mods or regular hullmods that are added are the most optimal possible choice, just that they provide some sort of benefit without being detrimental.
+
+After that, the ordnance points that have been freed up by s-modding hullmods that were already on the ship will be used to add regular hullmods from the same subset of vanilla hullmods. Any ordnance points left over after that will be added first to vents, or if the maximum number of vents have been reached, then added to capacitors. This does mean that there might still be ordnance points left over, but it should only be a few at most and I don't want to make this any more complicated.
+
+Increasing the s-mod limit in the Luna settings beyond 3 will only affect modded factions. For example, UAF spec ops fleets have a quality of 200%, and so depending on the s-mod cap may have up to 5 s-mods. This can also be disabled by changing the max s-mods value to 0 in the Luna settings. Either way, this setting should only affect s-mods that would have been added by this mod and not s-mods that get added as part of the base game or by other mods.
+
 ## Compatibility ##
 No compatibility issues that I know of.
 
@@ -43,6 +58,7 @@ No compatibility issues that I know of.
 * A lot of the initial code was taken from the Progressive S-Mods mod which I then modified/refactored/added to as needed, which helped a lot. It would have taken me a lot longer to figure all this out myself from scratch, especially the UI code.
 
 ## Future Plans ##
-* Add this structure to certain Core worlds (ie: Culann, Chicomoztoc, Kazeron) and have player access to it be determined by having a high faction relation or being commissioned.
 * Figure out a better way to handle the ship quality value set in the faction doctrine.
 * No idea if this is possible or what it would involve, but have ship quality be a "commodity", which would influence how many s-mods you'd see on the ships of other factions during gameplay. This is a service rather than a physical good which isn't something the base game has as much of a concept of, but it'd represent factions paying to send ships to have s-mods added. Potentially very profitable, but also problematic if you become hostile to them and need to fight fleets full of ships which they paid you to have s-mods added to. Probably not a super relevant downside for vanilla but could maybe play well with Nexerelin or something.
+* Add an option above a certain quality threshold to increase the s-mod limit of a specific ship to 3 that would lose its effect if the s-mod limit is increased by some other means (aka doesn't stack with other sources that increase s-mod limit).
+  * Replace the Best of the Best skill with something else for officers? Might be better to just leave it be and not risk compatibility issues with Second in Command in particular. Also wouldn't strictly replace it since it'd essentially be an expensive end-game functionality that applies per ship rather than Best of the Best which applies to all ships as early as level 5.
