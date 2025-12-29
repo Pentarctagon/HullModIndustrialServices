@@ -6,6 +6,7 @@ import com.fs.starfarer.api.campaign.FleetInflater;
 import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
+import com.fs.starfarer.api.impl.campaign.ids.Factions;
 import com.fs.starfarer.api.loading.HullModSpecAPI;
 import org.apache.log4j.Logger;
 import pentarctagon.hmis.HullModIndustrialServices;
@@ -76,6 +77,8 @@ implements FleetInflater
 
 	private static final List<String> evaluatorIds = evaluators.stream().map(HullModEvaluator::getId).toList();
 
+	private static final Set<String> ignoreFactions = Set.of(Factions.OMEGA, Factions.THREAT, Factions.DWELLER);
+
 	public AddSmodsInflater(FleetInflater originalFleetInflater)
 	{
 		this.originalFleetInflater = originalFleetInflater;
@@ -104,6 +107,11 @@ implements FleetInflater
 		if(LunaHelper.getInteger("hmis-npc-smods-cap", 3) < 1)
 		{
 			log.info("[HMIS] NPC s-mods disabled");
+			return;
+		}
+		if(ignoreFactions.contains(fleet.getFaction().getId()))
+		{
+			log.info("[HMIS] ignoring fleet for faction: "+fleet.getFaction().getId());
 			return;
 		}
 
