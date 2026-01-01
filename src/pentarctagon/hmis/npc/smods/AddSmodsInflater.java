@@ -148,7 +148,8 @@ implements FleetInflater
 				if(
 					spec.getEffect().hasSModEffect() &&
 					!spec.getEffect().isSModEffectAPenalty() &&
-					!variant.getPermaMods().contains(id)
+					!variant.getPermaMods().contains(id) &&
+					!HullModIndustrialServices.neverBuildIn.contains(id)
 				)
 				{
 					variant.removeMod(spec.getId());
