@@ -114,7 +114,7 @@ extends Selector<HullModButton>
 			int nextCost = Costs.getSmodCreditCost(checkerVariant, button.getData().isEnhanceOnly() || button.getData().isBuiltIn());
 			if(getCreditCost() + nextCost > Costs.getPlayerCredits())
 			{
-				disable(i, "Not enough credits", false);
+				disable(i, String.format("Not enough credits (%,d credits)", nextCost), false);
 				continue;
 			}
 

@@ -16,10 +16,8 @@ implements EconomyTickListener
 		// I assume it's technically possible for the inflator to trigger at the same moment as the month ends
 		synchronized(HullModIndustrialServices.class)
 		{
-			System.out.println(HullModIndustrialServices.vanillaHullmods.get(Factions.PLAYER));
 			HullModIndustrialServices.vanillaHullmods.get(Factions.PLAYER).clear();
 			HullModIndustrialServices.populateFactionHullmods(Factions.PLAYER);
-			System.out.println(HullModIndustrialServices.vanillaHullmods.get(Factions.PLAYER));
 		}
 	}
 }
