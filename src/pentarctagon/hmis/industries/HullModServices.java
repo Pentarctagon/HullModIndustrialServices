@@ -17,6 +17,7 @@ public class HullModServices
 extends BaseIndustry
 {
 	public static final String ID = "hullmodservices";
+	public static final int MAX_SMODS = 3;
 
     @Override
     public void apply()

@@ -3,9 +3,11 @@ package pentarctagon.hmis.data.campaign.rulecmd.utils.ui;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.*;
 import com.fs.starfarer.api.characters.MutableCharacterStatsAPI;
+import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
 import com.fs.starfarer.api.impl.campaign.ids.Skills;
+import com.fs.starfarer.api.impl.campaign.ids.Stats;
 import com.fs.starfarer.api.impl.campaign.ids.Tags;
 import com.fs.starfarer.api.impl.campaign.intel.TriTachyonDeal;
 import com.fs.starfarer.api.ui.*;
@@ -13,7 +15,10 @@ import com.fs.starfarer.api.util.Misc;
 import pentarctagon.hmis.data.campaign.rulecmd.ui.*;
 import pentarctagon.hmis.data.campaign.rulecmd.ui.Button;
 import pentarctagon.hmis.data.campaign.rulecmd.ui.plugin.BuildInPlugin;
+import pentarctagon.hmis.data.campaign.rulecmd.utils.Constants;
 import pentarctagon.hmis.data.campaign.rulecmd.utils.Costs;
+import pentarctagon.hmis.data.campaign.rulecmd.utils.LunaHelper;
+import pentarctagon.hmis.industries.HullModServices;
 
 import java.awt.*;
 import java.util.*;
@@ -25,9 +30,17 @@ public class PanelCreator
 	private static final String BUTTON_ALLOW_RESTORATION = "BUTTON_ALLOW_RESTORATION";
 	private static final String BUTTON_DEINTEGRATE_AI = "BUTTON_DEINTEGRATE_AI";
 	private static final String BUTTON_INTEGRATE_AI = "BUTTON_INTEGRATE_AI";
+	private static final String BUTTON_THIRD_SMOD = "BUTTON_THIRD_SMOD";
 	private static final int MAKE_RESTORABLE_COST = 500_000;
 	private static final int DEINTEGRATE_AI_COST = 150_000;
 	private static final int INTEGRATE_AI_COST = 50_000;
+	private static final Map<ShipAPI.HullSize, Integer> THIRD_SMOD_BY_SIZE = Map.of(
+		ShipAPI.HullSize.FRIGATE, 500_000,
+		ShipAPI.HullSize.DESTROYER, 750_000,
+		ShipAPI.HullSize.CRUISER, 1_000_000,
+		ShipAPI.HullSize.CAPITAL_SHIP, 1_500_000
+	);
+
 	private static final Set<String> captainSkills = Set.of(
 		Skills.HELMSMANSHIP,
 		Skills.TARGET_ANALYSIS,
@@ -143,6 +156,13 @@ public class PanelCreator
 					Global.getSector().getPlayerFleet().getCargo().getCredits().subtract(INTEGRATE_AI_COST);
 					callback.dismissCustomDialog(1);
 				}
+				else if(buttonId.equals(BUTTON_THIRD_SMOD))
+				{
+					// TODO: add Luna option to disable ever showing the button
+					ship.getVariant().addPermaMod(Constants.HMIS_CUSTOM_OPTIMIZATIONS, false);
+					Global.getSector().getPlayerFleet().getCargo().getCredits().subtract(THIRD_SMOD_BY_SIZE.get(ship.getHullSpec().getHullSize()));
+					callback.dismissCustomDialog(1);
+				}
 			}
 		};
 
@@ -223,6 +243,24 @@ public class PanelCreator
 			String creditsText = String.format("Integrate AI (%,d credits)", INTEGRATE_AI_COST);
 			ButtonAPI button = infoTextElement.addButton(creditsText, BUTTON_INTEGRATE_AI, infoTextWidth, 30f, 5f);
 			if(Costs.getPlayerCredits() < INTEGRATE_AI_COST)
+			{
+				button.setEnabled(false);
+			}
+		}
+		// add 3rd s-mod slot if ship doesn't already have 3 s-mods
+		int maxSmodsSetting = Global.getSettings().getInt("maxPermanentHullmods");
+		float bonusSmods = ship.getStats().getDynamic().getMod(Stats.MAX_PERMANENT_HULLMODS_MOD).getFlatBonus();
+		// hullmod effect doesn't seem to get applied immediately, so also need to check whether Custom Optimizations has been added already
+		if(
+			maxSmodsSetting+bonusSmods < HullModServices.MAX_SMODS &&
+			Costs.getAdjustedQuality(Costs.getPlayerMarket()) >= 1f &&
+			!ship.getVariant().hasHullMod(Constants.HMIS_CUSTOM_OPTIMIZATIONS) &&
+			LunaHelper.getBoolean("hmis_third-smod", true)
+		)
+		{
+			String creditsText = String.format("Allow third s-mod (%,d credits)", THIRD_SMOD_BY_SIZE.get(ship.getHullSpec().getHullSize()));
+			ButtonAPI button = infoTextElement.addButton(creditsText, BUTTON_THIRD_SMOD, infoTextWidth, 30f, 5f);
+			if(Costs.getPlayerCredits() < THIRD_SMOD_BY_SIZE.get(ship.getHullSpec().getHullSize()))
 			{
 				button.setEnabled(false);
 			}
