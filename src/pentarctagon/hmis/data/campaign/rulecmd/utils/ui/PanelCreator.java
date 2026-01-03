@@ -158,7 +158,6 @@ public class PanelCreator
 				}
 				else if(buttonId.equals(BUTTON_THIRD_SMOD))
 				{
-					// TODO: add Luna option to disable ever showing the button
 					ship.getVariant().addPermaMod(Constants.HMIS_CUSTOM_OPTIMIZATIONS, false);
 					Global.getSector().getPlayerFleet().getCargo().getCredits().subtract(THIRD_SMOD_BY_SIZE.get(ship.getHullSpec().getHullSize()));
 					callback.dismissCustomDialog(1);
