@@ -248,10 +248,9 @@ public class PanelCreator
 		}
 		// add 3rd s-mod slot if ship doesn't already have 3 s-mods
 		int maxSmodsSetting = Global.getSettings().getInt("maxPermanentHullmods");
-		float bonusSmods = ship.getStats().getDynamic().getMod(Stats.MAX_PERMANENT_HULLMODS_MOD).getFlatBonus();
 		// hullmod effect doesn't seem to get applied immediately, so also need to check whether Custom Optimizations has been added already
 		if(
-			maxSmodsSetting+bonusSmods < HullModServices.MAX_SMODS &&
+			maxSmodsSetting < HullModServices.MAX_SMODS &&
 			Costs.getAdjustedQuality(Costs.getPlayerMarket()) >= 1f &&
 			!ship.getVariant().hasHullMod(Constants.HMIS_CUSTOM_OPTIMIZATIONS) &&
 			LunaHelper.getBoolean("hmis_third-smod", true)
