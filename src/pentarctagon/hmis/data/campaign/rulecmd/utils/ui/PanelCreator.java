@@ -204,7 +204,11 @@ public class PanelCreator
 			infoTextElement.addButton("Manage a different module", BUTTON_MANAGE_MODULE, infoTextWidth, 30f, 5f);
 		}
 		// make ship restorable
-		if(ship.getVariant().getTags().contains("unrestorable") && Costs.getAdjustedQuality(Costs.getPlayerMarket()) >= 1.5f)
+		if
+		(
+			ship.getVariant().getTags().contains("unrestorable") &&
+			Costs.getAdjustedQuality(Costs.getCurrentMarket()) >= 1.5f
+		)
 		{
 			String creditsText = String.format("Allow Restoration (%,d credits)", MAKE_RESTORABLE_COST);
 			ButtonAPI button = infoTextElement.addButton(creditsText, BUTTON_ALLOW_RESTORATION, infoTextWidth, 30f, 5f);
@@ -219,7 +223,7 @@ public class PanelCreator
 			ship.getCaptain().isAICore() &&
 			ship.getCaptain().getMemory().getBoolean("$captain_unremovable") &&
 			TriTachyonDeal.hasDeal() &&
-			Costs.getAdjustedQuality(Costs.getPlayerMarket()) >= 1.5f
+			Costs.getAdjustedQuality(Costs.getCurrentMarket()) >= 1.5f
 		)
 		{
 			String creditsText = String.format("De-integrate AI (%,d credits)", DEINTEGRATE_AI_COST);
@@ -235,7 +239,7 @@ public class PanelCreator
 			ship.getCaptain().isAICore() &&
 			!ship.getCaptain().getMemory().getBoolean("$captain_unremovable") &&
 			TriTachyonDeal.hasDeal() &&
-			Costs.getAdjustedQuality(Costs.getPlayerMarket()) >= 1.5f
+			Costs.getAdjustedQuality(Costs.getCurrentMarket()) >= 1.5f
 		)
 		{
 			String creditsText = String.format("Integrate AI (%,d credits)", INTEGRATE_AI_COST);
@@ -246,11 +250,12 @@ public class PanelCreator
 			}
 		}
 		// add 3rd s-mod slot if ship doesn't already have 3 s-mods
-		int maxSmodsSetting = Global.getSettings().getInt("maxPermanentHullmods");
+		int maxSmodsSetting = Costs.getBaseSmods();
 		// hullmod effect doesn't seem to get applied immediately, so also need to check whether Custom Optimizations has been added already
-		if(
+		if
+		(
 			maxSmodsSetting < HullModServices.MAX_SMODS &&
-			Costs.getAdjustedQuality(Costs.getPlayerMarket()) >= 1f &&
+			Costs.getAdjustedQuality(Costs.getCurrentMarket()) >= 1f &&
 			!ship.getVariant().hasHullMod(Constants.HMIS_CUSTOM_OPTIMIZATIONS) &&
 			LunaHelper.getBoolean("hmis_third-smod", true)
 		)

@@ -37,7 +37,7 @@ implements CustomDialogDelegate
 	{
 		this.callback = callback;
 
-		MarketAPI market = Costs.getPlayerMarket();
+		MarketAPI market = Costs.getCurrentMarket();
 		if(market.isPlayerOwned() || market.getFactionId().equals(Misc.getCommissionFactionId()) || market.getFaction().getRepInt(Factions.PLAYER) >= 50)
 		{
 			PanelCreator.createTitle(panel, "Select a ship", 30);

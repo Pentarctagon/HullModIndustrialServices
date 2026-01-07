@@ -40,7 +40,7 @@ public class Costs
 	 */
 	private static float getCostMultiplier()
 	{
-		MarketAPI market = getPlayerMarket();
+		MarketAPI market = getCurrentMarket();
 		float adjustedQuality = getAdjustedQuality(market);
 
 		if(market.getIndustry(HullModServices.ID).isImproved())
@@ -69,7 +69,14 @@ public class Costs
 	public static float getAdjustedQuality(MarketAPI market)
 	{
 		float doctrineQuality = Global.getSector().getPlayerFaction().getProduction().getFaction().getDoctrine().getShipQualityContribution();
-		return market.getShipQualityFactor() - doctrineQuality + 0.25f;
+		if(market.isPlayerOwned())
+		{
+			return market.getShipQualityFactor() - doctrineQuality + 0.25f;
+		}
+		else
+		{
+			return doctrineQuality;
+		}
 	}
 
 	private static int shipSizeSmodCost(ShipVariantAPI ship)
@@ -120,7 +127,7 @@ public class Costs
 	{
 		return (int)Global.getSector().getPlayerFleet().getCargo().getCredits().get();
 	}
-	public static MarketAPI getPlayerMarket()
+	public static MarketAPI getCurrentMarket()
 	{
 		return Global.getSector().getCampaignUI().getCurrentInteractionDialog().getInteractionTarget().getMarket();
 	}
