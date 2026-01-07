@@ -7,6 +7,7 @@ import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
 import com.fs.starfarer.api.impl.campaign.ids.Skills;
+import com.fs.starfarer.api.impl.campaign.ids.Stats;
 import com.fs.starfarer.api.impl.campaign.ids.Tags;
 import com.fs.starfarer.api.impl.campaign.intel.TriTachyonDeal;
 import com.fs.starfarer.api.ui.*;
@@ -251,10 +252,11 @@ public class PanelCreator
 		}
 		// add 3rd s-mod slot if ship doesn't already have 3 s-mods
 		int maxSmodsSetting = Costs.getBaseSmods();
+		float bonusSmods = ship.getStats().getDynamic().getMod(Stats.MAX_PERMANENT_HULLMODS_MOD).getFlatBonus();
 		// hullmod effect doesn't seem to get applied immediately, so also need to check whether Custom Optimizations has been added already
 		if
 		(
-			maxSmodsSetting < HullModServices.MAX_SMODS &&
+			maxSmodsSetting+bonusSmods < HullModServices.MAX_SMODS &&
 			Costs.getAdjustedQuality(Costs.getCurrentMarket()) >= 1f &&
 			!ship.getVariant().hasHullMod(Constants.HMIS_CUSTOM_OPTIMIZATIONS) &&
 			LunaHelper.getBoolean("hmis_third-smod", true)

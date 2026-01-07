@@ -15,7 +15,8 @@ extends BaseHullMod
 	public void applyEffectsBeforeShipCreation(ShipAPI.HullSize hullSize, MutableShipStatsAPI stats, String id)
 	{
 		int maxSmodsSetting = Costs.getBaseSmods();
-		if(maxSmodsSetting < HullModServices.MAX_SMODS)
+		float bonusSmods = stats.getDynamic().getMod(Stats.MAX_PERMANENT_HULLMODS_MOD).getFlatBonus();
+		if(maxSmodsSetting+bonusSmods < HullModServices.MAX_SMODS)
 		{
 			stats.getDynamic().getMod(Stats.MAX_PERMANENT_HULLMODS_MOD).modifyFlat(HullModServices.ID, 1f);
 		}
