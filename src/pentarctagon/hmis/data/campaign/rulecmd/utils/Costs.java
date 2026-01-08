@@ -75,7 +75,7 @@ public class Costs
 		}
 		else
 		{
-			return doctrineQuality;
+			return market.getShipQualityFactor();
 		}
 	}
 
