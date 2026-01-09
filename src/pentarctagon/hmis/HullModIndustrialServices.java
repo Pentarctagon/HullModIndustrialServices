@@ -103,9 +103,7 @@ extends BaseModPlugin
 		    .stream()
 		    .filter(market -> market.getId().equals("sindria") && !market.hasIndustry(HullModServices.ID))
 		    .findFirst()
-		    .ifPresent(market -> {
-			    market.addIndustry(HullModServices.ID);
-		    });
+		    .ifPresent(market -> market.addIndustry(HullModServices.ID));
 
 		synchronized(HullModIndustrialServices.class)
 		{
