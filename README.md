@@ -21,6 +21,7 @@ The following core worlds have this structure added:
 * Chicomoztoc
 * Kazeron
 * Culann (with an Alpha Core)
+* Sindria
 Making use of this structure on these worlds requires either having 50+ reputation with the respective faction or currently being commissioned by them.
 
 ### Hint ###
@@ -52,6 +53,13 @@ Increasing the s-mod limit in the Luna settings beyond 3 will only affect modded
 At markets where you have access to a Hull Mod Services structure and the market's ship quality is at least 100%, there is an option to pay credits based on ship size (500,000/750,000/1,000,000/1,500,000) to allow building in an additional s-mod. This does not stack with the s-mod gained from the Best of the Best skill.
 
 This can be disabled via a Luna setting.
+
+## Exporting ship quality ##
+Markets that have the Hull Mod Services structure and have at least 110% ship quality will export one unit per 10% ship quality above 100%. Markets that have a Heavy Industry or Orbital Works and under 100% ship quality will "import" one unit per 5% ship quality under 100%, with demand capped at 5 (+25% ship quality).
+
+This doesn't work quite ideally since the economy in Starsector is based on commodities (physical goods that can be moved between locations) whereas this is really a service - essentially one faction sending ships to another faction to be restored to a higher level of functionality in exchange for money. It also doesn't really make sense that, for example, the ship quality exported by Chicomoztoc can be imported by Kapytan Starworks to increase Pirate ship quality, however the Starsector economy simulates hostile relations by reducing a colony's accessibility rather than preventing export/import between them so there's no provided way to exclude one faction from exporting to another faction. Otherwise export/import of ship quality between factions would be limited to being between factions that have very positive relationships with each other. It is probably possible to mostly get this to work anyway, but I don't want to hack my way around how Starsector's economy normally works just for this.
+
+This can be disabled via a Luna setting. The max demand can be adjusted via a Luna setting, but increasing it will tend to just create perpetual shortages and inflate the value unless there are additional sources of ship quality available from other mods.
 
 ## Compatibility ##
 No compatibility issues that I know of.
