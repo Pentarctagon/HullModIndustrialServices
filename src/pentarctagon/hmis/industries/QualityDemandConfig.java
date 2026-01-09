@@ -66,7 +66,7 @@ implements EconomyAPI.EconomyUpdateListener
 				{
 					// Java's handling of floating point variables is truly bizarre
 					int qualityDeficit = (int)Math.abs((baseQuality*100) - 100);
-					int demand = Math.min(qualityDeficit / 5, 5);
+					int demand = Math.min(qualityDeficit / 5, LunaHelper.getInteger("hmis_quality-import-cap", 5));
 					if(market.hasIndustry(Industries.ORBITALWORKS))
 					{
 						market.getIndustry(Industries.ORBITALWORKS).getDemand("ship_quality").getQuantity().modifyFlat(HullModServices.ID, demand);
