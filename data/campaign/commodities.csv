@@ -1,0 +1,2 @@
+name,id,demand class,base price,export value,price variability,utility,origin,tags,stack size,cargo space,icon,sound id,sound id drop,order,economyTier,econUnitOrigUnused,econUnit,baseRaidDanger,eU * base value,iconWidthMult,plugin,desc
+Ship Quality,ship_quality,ship_quality,2500,2500,1,1,,meta,1000,1,graphics/hull_quality.png,,,10,4,200,200,,,1,,

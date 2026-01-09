@@ -2,7 +2,6 @@ package pentarctagon.hmis.industries;
 
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.econ.CommoditySpecAPI;
-import com.fs.starfarer.api.campaign.econ.Industry;
 import com.fs.starfarer.api.impl.campaign.econ.impl.BaseIndustry;
 import com.fs.starfarer.api.impl.campaign.ids.Commodities;
 import com.fs.starfarer.api.impl.campaign.ids.Industries;
@@ -10,6 +9,8 @@ import com.fs.starfarer.api.impl.campaign.ids.Stats;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
 import pentarctagon.hmis.data.campaign.rulecmd.utils.Constants;
+import pentarctagon.hmis.data.campaign.rulecmd.utils.Costs;
+import pentarctagon.hmis.data.campaign.rulecmd.utils.LunaHelper;
 
 import java.awt.*;
 
@@ -26,24 +27,24 @@ extends BaseIndustry
 
         if(market.getPrevStability() >= 7)
         {
-            market.getStats().getDynamic().getMod(Stats.PRODUCTION_QUALITY_MOD).modifyFlat(getModId(0), 0.2f, "Hull Mod Services");
+            market.getStats().getDynamic().getMod(Stats.PRODUCTION_QUALITY_MOD).modifyFlat(ID, 0.2f, "Hull Mod Services");
         }
 		else if(market.hasIndustry(Industries.ORBITALWORKS) && market.hasIndustry(ID) && market.getIndustry(Industries.ORBITALWORKS).isDisrupted())
         {
-	        market.getStats().getDynamic().getMod(Stats.PRODUCTION_QUALITY_MOD).modifyFlat(getModId(0), 0f, "Hull Mod Services - Orbital Works disrupted");
+	        market.getStats().getDynamic().getMod(Stats.PRODUCTION_QUALITY_MOD).modifyFlat(ID, 0f, "Hull Mod Services - Orbital Works disrupted");
         }
         else
         {
-            market.getStats().getDynamic().getMod(Stats.PRODUCTION_QUALITY_MOD).modifyFlat(getModId(0), 0f, "Hull Mod Services - low stability");
+            market.getStats().getDynamic().getMod(Stats.PRODUCTION_QUALITY_MOD).modifyFlat(ID, 0f, "Hull Mod Services - low stability");
         }
 
 		if(Commodities.ALPHA_CORE.equals(getAICoreId()))
 		{
-			market.getStats().getDynamic().getMod(Stats.PRODUCTION_QUALITY_MOD).modifyFlat(getModId(1), 0.1f, "Hull Mod Services - Alpha Core");
+			market.getStats().getDynamic().getMod(Stats.PRODUCTION_QUALITY_MOD).modifyFlat(ID+"_alphacore", 0.1f, "Hull Mod Services - Alpha Core");
 		}
 		else
 		{
-			market.getStats().getDynamic().getMod(Stats.PRODUCTION_QUALITY_MOD).unmodify(getModId(1));
+			market.getStats().getDynamic().getMod(Stats.PRODUCTION_QUALITY_MOD).unmodify(ID+"_alphacore");
 		}
 
 		if(market.hasIndustry(Industries.ORBITALWORKS))
@@ -51,6 +52,14 @@ extends BaseIndustry
 			demand(Commodities.METALS, market.getIndustry(Industries.ORBITALWORKS).getDemand(Commodities.METALS).getQuantity().getModifiedInt()+2);
 			demand(Commodities.RARE_METALS, market.getIndustry(Industries.ORBITALWORKS).getDemand(Commodities.METALS).getQuantity().getModifiedInt());
 			demand(Commodities.FUEL, market.getIndustry(Industries.ORBITALWORKS).getDemand(Commodities.METALS).getQuantity().getModifiedInt()+2);
+		}
+
+	    // for every 10% ship quality, export a unit that improves other factions' ship quality by 5%, rounded down by integer division
+	    float marketQuality = market.getShipQualityFactor();
+		if(marketQuality >= 1.1f && LunaHelper.getBoolean("hmis_quality-export", true))
+		{
+			int qualityExported = (int)((marketQuality-1)*10);
+			supply("ship_quality", qualityExported);
 		}
     }
 

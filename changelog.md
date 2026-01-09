@@ -1,3 +1,7 @@
+## 1.0.3
+* Added functionality to "export" ship quality as a commodity, which allows a market to export 5% ship quality per 10% ship quality above 100%. Markets with an Orbital Works or Heavy Industry and a ship quality of less than 100% will have a demand for this "export" (capped at 5). Can be disabled via a Luna setting.
+* Added the Hull Mod Services structure to Sindria and Raesvelg to increase the supply and make it harder for the player to capture most of the market.
+
 ## 1.0.2
 * Adds functionality to pay credits per ship to have an additional s-mod slot if the market has 100%+ ship quality. Does not stack with Best of the Best.
 

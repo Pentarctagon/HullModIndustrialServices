@@ -11,6 +11,7 @@ import com.fs.starfarer.api.loading.HullModSpecAPI;
 import com.fs.starfarer.api.util.Misc;
 import pentarctagon.hmis.dmods.RestorationCostListener;
 import pentarctagon.hmis.industries.HullModServices;
+import pentarctagon.hmis.industries.QualityDemandConfig;
 import pentarctagon.hmis.npc.smods.AddSmodsListener;
 import pentarctagon.hmis.npc.smods.listener.UpdatePlayerBlueprints;
 
@@ -69,10 +70,11 @@ extends BaseModPlugin
 		Global.getSector().getListenerManager().addListener(new RestorationCostListener(), true);
 		Global.getSector().addTransientListener(new AddSmodsListener());
 		Global.getSector().getListenerManager().addListener(new UpdatePlayerBlueprints(), true);
+		Global.getSector().getEconomy().addUpdateListener(new QualityDemandConfig());
 
 		Misc.getFactionMarkets(Factions.HEGEMONY)
 		    .stream()
-		    .filter(market -> market.getId().equals("chicomoztoc") && !market.hasIndustry(HullModServices.ID))
+		    .filter(market -> (market.getId().equals("chicomoztoc") || market.getId().equals("raesvelg")) && !market.hasIndustry(HullModServices.ID))
 		    .findFirst()
 		    .ifPresent(market -> market.addIndustry(HullModServices.ID));
 
@@ -84,11 +86,25 @@ extends BaseModPlugin
 
 		Misc.getFactionMarkets(Factions.TRITACHYON)
 		    .stream()
-		    .filter(market -> market.getId().equals("culann") && !market.hasIndustry(HullModServices.ID))
+		    .filter(market -> market.getId().equals("culann"))
+		    .findFirst()
+		    .ifPresent(market -> {
+				if(!market.hasIndustry(HullModServices.ID))
+				{
+					market.addIndustry(HullModServices.ID);
+				}
+				if(market.getIndustry(HullModServices.ID).getAICoreId() == null)
+				{
+					market.getIndustry(HullModServices.ID).setAICoreId(Commodities.ALPHA_CORE);
+				}
+		    });
+
+		Misc.getFactionMarkets(Factions.DIKTAT)
+		    .stream()
+		    .filter(market -> market.getId().equals("sindria") && !market.hasIndustry(HullModServices.ID))
 		    .findFirst()
 		    .ifPresent(market -> {
 			    market.addIndustry(HullModServices.ID);
-			    market.getIndustry(HullModServices.ID).setAICoreId(Commodities.ALPHA_CORE);
 		    });
 
 		synchronized(HullModIndustrialServices.class)
