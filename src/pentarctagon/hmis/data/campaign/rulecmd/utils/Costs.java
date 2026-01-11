@@ -6,7 +6,10 @@ import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
 import com.fs.starfarer.api.impl.campaign.ids.Stats;
+import pentarctagon.hmis.doctrine.listener.PlayerFactionShipQuality;
 import pentarctagon.hmis.industries.HullModServices;
+
+import java.math.BigDecimal;
 
 public class Costs
 {
@@ -68,15 +71,20 @@ public class Costs
 	 */
 	public static float getAdjustedQuality(MarketAPI market)
 	{
-		float doctrineQuality = Global.getSector().getPlayerFaction().getProduction().getFaction().getDoctrine().getShipQualityContribution();
+		float doctrineQuality = getPlayerFactionDoctrineQuality();
 		if(market.isPlayerOwned())
 		{
-			return market.getShipQualityFactor() - doctrineQuality + 0.25f;
+			return new BigDecimal(market.getShipQualityFactor()).subtract(new BigDecimal(doctrineQuality)).add(PlayerFactionShipQuality.getQualityOnLastTick()).floatValue();
 		}
 		else
 		{
 			return market.getShipQualityFactor();
 		}
+	}
+
+	public static float getPlayerFactionDoctrineQuality()
+	{
+		return Global.getSector().getPlayerFaction().getProduction().getFaction().getDoctrine().getShipQualityContribution();
 	}
 
 	private static int shipSizeSmodCost(ShipVariantAPI ship)

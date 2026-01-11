@@ -6,7 +6,7 @@ This mod adds the Hull Mod Services colony structure which requires a size 5+ co
 
 The cost of doing these actions is reduced by the ship quality percentage of the colony over 100%. So if the colony has 125% ship quality, it reduces the cost by 25%. The cost will also increase if the colony's ship quality drops below 100%.
 
-**NOTE:** to avoid gaming the system, the ship quality from the faction doctrine is always considered to be 25%, regardless of what it's actually set to. This isn't a good solution, but I'm not sure how to implement something less confusing.
+**NOTE:** to avoid gaming the system, the ship quality from the faction doctrine does not immediately take effect when considering d-mod restoration costs or adding/removing s-mods. Instead, it adjusts by 2.5% approximately every week towards the new value. So if the faction ship quality doctrine is changed from 0% to 25%, it will take about 10 weeks for that 25% ship quality to be used for s-mod and d-mod cost reductions.
 
 Additionally:
 * At 150% ship quality, the option to make unrestorable ships (ie: the automated ships guarding the PK device in the Scythe of Orion quest) restorable for 500k credits becomes available.
@@ -25,13 +25,13 @@ The following core worlds have this structure added:
 Making use of this structure on these worlds requires either having 50+ reputation with the respective faction or currently being commissioned by them.
 
 ### Hint ###
-For otherwise vanilla games, you can get to 150% ship quality by:
-* 25% - hard coded doctrine bonus
+For otherwise vanilla games, there are the following sources of faction ship quality:
 * 25% - 10 stability
 * 50% - Pristine Nanoforge
 * 20% - Orbital Works
 * 20% - Hull Mod Services
 * 10% - Alpha core installed in Hull Mod Services
+This adds up to 125%, with the faction ship quality doctrine ranging from 0% to 50%.
 
 ## D-Mods ##
 The cost of restoring d-mods, which as per the wiki uses the formula `(baseShipHullCost*baseRestoreCostMult) * (baseRestoreCostMultPerDMod^dmodCount)`, is tweaked for colonies with the new structure:
@@ -69,6 +69,3 @@ No compatibility issues that I know of.
 
 ## Credits ##
 * A lot of the initial code was taken from the Progressive S-Mods mod which I then modified/refactored/added to as needed, which helped a lot. It would have taken me a lot longer to figure all this out myself from scratch, especially the UI code.
-
-## Future Plans ##
-* Figure out a better way to handle the ship quality value set in the faction doctrine.

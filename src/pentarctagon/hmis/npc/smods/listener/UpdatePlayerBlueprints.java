@@ -1,5 +1,6 @@
 package pentarctagon.hmis.npc.smods.listener;
 
+import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.listeners.EconomyTickListener;
 import com.fs.starfarer.api.impl.campaign.ids.Factions;
 import pentarctagon.hmis.HullModIndustrialServices;

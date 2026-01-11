@@ -9,21 +9,30 @@ import com.fs.starfarer.api.impl.campaign.ids.Factions;
 import com.fs.starfarer.api.impl.campaign.ids.HullMods;
 import com.fs.starfarer.api.loading.HullModSpecAPI;
 import com.fs.starfarer.api.util.Misc;
+import org.apache.log4j.Logger;
+import pentarctagon.hmis.data.campaign.rulecmd.utils.Costs;
 import pentarctagon.hmis.dmods.RestorationCostListener;
+import pentarctagon.hmis.doctrine.listener.PlayerFactionShipQuality;
 import pentarctagon.hmis.industries.HullModServices;
 import pentarctagon.hmis.industries.QualityDemandConfig;
 import pentarctagon.hmis.npc.smods.AddSmodsListener;
 import pentarctagon.hmis.npc.smods.listener.UpdatePlayerBlueprints;
 
+import java.lang.invoke.MethodHandles;
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+// TODO: review all usages of the float type since it's garbage and can't reliably represent simple floating point values
+//       replace with BigDecimal as much as possible?
 @SuppressWarnings("unused")
 public class HullModIndustrialServices
 extends BaseModPlugin
 {
+	private static final Logger log = Logger.getLogger(MethodHandles.lookup().lookupClass());
+
 	public static final HashMap<String, List<String>> vanillaHullmods = new HashMap<>();
 	public static final Set<String> neverBuildIn = Set.of(
 		// just adding shield shunt without respeccing the rest of the ship almost always just makes it worse
@@ -65,11 +74,25 @@ extends BaseModPlugin
 	);
 
 	@Override
+	public void beforeGameSave()
+	{
+		try
+		{
+			Global.getSettings().writeTextFileToCommon("hmis_values", PlayerFactionShipQuality.getQualityOnLastTick() + "\n" + PlayerFactionShipQuality.getLastTimestamp());
+		}
+		catch(Exception e)
+		{
+			log.error("[HMIS]: failed to write to hmis_values");
+		}
+	}
+
+	@Override
 	public void onGameLoad(boolean newGame)
 	{
 		Global.getSector().getListenerManager().addListener(new RestorationCostListener(), true);
 		Global.getSector().addTransientListener(new AddSmodsListener());
 		Global.getSector().getListenerManager().addListener(new UpdatePlayerBlueprints(), true);
+		Global.getSector().getListenerManager().addListener(new PlayerFactionShipQuality(), true);
 		Global.getSector().getEconomy().addUpdateListener(new QualityDemandConfig());
 
 		Misc.getFactionMarkets(Factions.HEGEMONY)
