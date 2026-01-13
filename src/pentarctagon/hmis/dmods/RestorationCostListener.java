@@ -8,7 +8,6 @@ import pentarctagon.hmis.Utils;
 import pentarctagon.hmis.constants.Luna;
 import pentarctagon.hmis.constants.Other;
 import pentarctagon.hmis.data.campaign.rulecmd.utils.LunaHelper;
-import pentarctagon.hmis.industries.HullModServices;
 
 import java.math.BigDecimal;
 

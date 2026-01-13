@@ -13,7 +13,6 @@ import org.apache.log4j.Logger;
 import pentarctagon.hmis.constants.Other;
 import pentarctagon.hmis.dmods.RestorationCostListener;
 import pentarctagon.hmis.doctrine.listener.PlayerFactionShipQuality;
-import pentarctagon.hmis.industries.HullModServices;
 import pentarctagon.hmis.industries.QualityDemandConfig;
 import pentarctagon.hmis.npc.smods.AddSmodsListener;
 import pentarctagon.hmis.npc.smods.listener.UpdatePlayerBlueprints;

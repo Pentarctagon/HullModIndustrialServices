@@ -18,7 +18,6 @@ import pentarctagon.hmis.data.campaign.rulecmd.ui.plugin.BuildInPlugin;
 import pentarctagon.hmis.constants.Other;
 import pentarctagon.hmis.Utils;
 import pentarctagon.hmis.data.campaign.rulecmd.utils.LunaHelper;
-import pentarctagon.hmis.industries.HullModServices;
 
 import java.awt.*;
 import java.util.*;

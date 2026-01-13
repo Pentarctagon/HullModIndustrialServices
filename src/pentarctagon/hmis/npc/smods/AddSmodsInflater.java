@@ -13,7 +13,6 @@ import pentarctagon.hmis.HullModIndustrialServices;
 import pentarctagon.hmis.constants.Luna;
 import pentarctagon.hmis.constants.Other;
 import pentarctagon.hmis.data.campaign.rulecmd.utils.LunaHelper;
-import pentarctagon.hmis.industries.HullModServices;
 import pentarctagon.hmis.npc.smods.hullcheck.*;
 
 import java.lang.invoke.MethodHandles;

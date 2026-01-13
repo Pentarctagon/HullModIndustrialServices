@@ -6,7 +6,6 @@ import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.impl.campaign.ids.Stats;
 import pentarctagon.hmis.Utils;
 import pentarctagon.hmis.constants.Other;
-import pentarctagon.hmis.industries.HullModServices;
 
 @SuppressWarnings("unused")
 public class CustomOptimizationsHullmod
