@@ -6,6 +6,8 @@ import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
 import com.fs.starfarer.api.impl.campaign.ids.Stats;
+import pentarctagon.hmis.constants.Luna;
+import pentarctagon.hmis.constants.Other;
 import pentarctagon.hmis.data.campaign.rulecmd.utils.LunaHelper;
 import pentarctagon.hmis.doctrine.listener.PlayerFactionShipQuality;
 import pentarctagon.hmis.industries.HullModServices;
@@ -32,7 +34,7 @@ public class Utils
 			cost = shipSizeSmodCost(ship);
 		}
 
-		double lunaMultiplier = LunaHelper.getDouble("hmis_credits-multiplier", 1d);
+		double lunaMultiplier = LunaHelper.getDouble(Luna.HMIS_CREDITS_MULTIPLIER, 1d);
 
 		return qualityModifier.multiply(new BigDecimal(cost)).multiply(new BigDecimal(lunaMultiplier)).intValue();
 	}
@@ -47,7 +49,7 @@ public class Utils
 		MarketAPI market = getCurrentMarket();
 		BigDecimal adjustedQuality = getAdjustedQuality(market);
 
-		if(market.getIndustry(HullModServices.ID).isImproved())
+		if(market.getIndustry(Other.HULL_MOD_SERVICES).isImproved())
 		{
 			adjustedQuality = adjustedQuality.add(new BigDecimal("0.2"));
 		}

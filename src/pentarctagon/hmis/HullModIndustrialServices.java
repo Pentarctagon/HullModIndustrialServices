@@ -10,6 +10,7 @@ import com.fs.starfarer.api.impl.campaign.ids.HullMods;
 import com.fs.starfarer.api.loading.HullModSpecAPI;
 import com.fs.starfarer.api.util.Misc;
 import org.apache.log4j.Logger;
+import pentarctagon.hmis.constants.Other;
 import pentarctagon.hmis.dmods.RestorationCostListener;
 import pentarctagon.hmis.doctrine.listener.PlayerFactionShipQuality;
 import pentarctagon.hmis.industries.HullModServices;
@@ -23,7 +24,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-// TODO: actually put things in Constants
 @SuppressWarnings("unused")
 public class HullModIndustrialServices
 extends BaseModPlugin
@@ -75,7 +75,7 @@ extends BaseModPlugin
 	{
 		try
 		{
-			Global.getSettings().writeTextFileToCommon("hmis_values", PlayerFactionShipQuality.getQualityOnLastTick() + "\n" + PlayerFactionShipQuality.getLastTimestamp());
+			Global.getSettings().writeTextFileToCommon(Other.HMIS_VALUES, PlayerFactionShipQuality.getQualityOnLastTick() + "\n" + PlayerFactionShipQuality.getLastTimestamp());
 		}
 		catch(Exception e)
 		{
@@ -94,36 +94,36 @@ extends BaseModPlugin
 
 		Misc.getFactionMarkets(Factions.HEGEMONY)
 		    .stream()
-		    .filter(market -> (market.getId().equals("chicomoztoc") || market.getId().equals("raesvelg")) && !market.hasIndustry(HullModServices.ID))
+		    .filter(market -> (market.getId().equals("chicomoztoc") || market.getId().equals("raesvelg")) && !market.hasIndustry(Other.HULL_MOD_SERVICES))
 		    .findFirst()
-		    .ifPresent(market -> market.addIndustry(HullModServices.ID));
+		    .ifPresent(market -> market.addIndustry(Other.HULL_MOD_SERVICES));
 
 		Misc.getFactionMarkets(Factions.PERSEAN)
 		    .stream()
-		    .filter(market -> market.getId().equals("kazeron") && !market.hasIndustry(HullModServices.ID))
+		    .filter(market -> market.getId().equals("kazeron") && !market.hasIndustry(Other.HULL_MOD_SERVICES))
 		    .findFirst()
-		    .ifPresent(market -> market.addIndustry(HullModServices.ID));
+		    .ifPresent(market -> market.addIndustry(Other.HULL_MOD_SERVICES));
 
 		Misc.getFactionMarkets(Factions.TRITACHYON)
 		    .stream()
 		    .filter(market -> market.getId().equals("culann"))
 		    .findFirst()
 		    .ifPresent(market -> {
-				if(!market.hasIndustry(HullModServices.ID))
+				if(!market.hasIndustry(Other.HULL_MOD_SERVICES))
 				{
-					market.addIndustry(HullModServices.ID);
+					market.addIndustry(Other.HULL_MOD_SERVICES);
 				}
-				if(market.getIndustry(HullModServices.ID).getAICoreId() == null)
+				if(market.getIndustry(Other.HULL_MOD_SERVICES).getAICoreId() == null)
 				{
-					market.getIndustry(HullModServices.ID).setAICoreId(Commodities.ALPHA_CORE);
+					market.getIndustry(Other.HULL_MOD_SERVICES).setAICoreId(Commodities.ALPHA_CORE);
 				}
 		    });
 
 		Misc.getFactionMarkets(Factions.DIKTAT)
 		    .stream()
-		    .filter(market -> market.getId().equals("sindria") && !market.hasIndustry(HullModServices.ID))
+		    .filter(market -> market.getId().equals("sindria") && !market.hasIndustry(Other.HULL_MOD_SERVICES))
 		    .findFirst()
-		    .ifPresent(market -> market.addIndustry(HullModServices.ID));
+		    .ifPresent(market -> market.addIndustry(Other.HULL_MOD_SERVICES));
 
 		synchronized(HullModIndustrialServices.class)
 		{

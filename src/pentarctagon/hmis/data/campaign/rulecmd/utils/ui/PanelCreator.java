@@ -11,11 +11,11 @@ import com.fs.starfarer.api.impl.campaign.ids.Stats;
 import com.fs.starfarer.api.impl.campaign.ids.Tags;
 import com.fs.starfarer.api.impl.campaign.intel.TriTachyonDeal;
 import com.fs.starfarer.api.ui.*;
-import com.fs.starfarer.api.util.Misc;
+import pentarctagon.hmis.constants.Luna;
 import pentarctagon.hmis.data.campaign.rulecmd.ui.*;
 import pentarctagon.hmis.data.campaign.rulecmd.ui.Button;
 import pentarctagon.hmis.data.campaign.rulecmd.ui.plugin.BuildInPlugin;
-import pentarctagon.hmis.data.campaign.rulecmd.utils.Constants;
+import pentarctagon.hmis.constants.Other;
 import pentarctagon.hmis.Utils;
 import pentarctagon.hmis.data.campaign.rulecmd.utils.LunaHelper;
 import pentarctagon.hmis.industries.HullModServices;
@@ -158,7 +158,7 @@ public class PanelCreator
 				}
 				else if(buttonId.equals(BUTTON_THIRD_SMOD))
 				{
-					ship.getVariant().addPermaMod(Constants.HMIS_CUSTOM_OPTIMIZATIONS, false);
+					ship.getVariant().addPermaMod(Other.HMIS_CUSTOM_OPTIMIZATIONS, false);
 					Global.getSector().getPlayerFleet().getCargo().getCredits().subtract(THIRD_SMOD_BY_SIZE.get(ship.getHullSpec().getHullSize()));
 					callback.dismissCustomDialog(1);
 				}
@@ -171,7 +171,7 @@ public class PanelCreator
 		// If editing a non-modular ship or a modular ship's base, add a fancy ship list image thing
 		if(ship.getVariant() == selectedVariant)
 		{
-			shipElement.addShipList(1, 1, shipSize, Misc.getBasePlayerColor(), Collections.singletonList(ship), 0f);
+			shipElement.addShipList(1, 1, shipSize, com.fs.starfarer.api.util.Misc.getBasePlayerColor(), Collections.singletonList(ship), 0f);
 		}
 		// Otherwise manually grab the module's image
 		else
@@ -195,7 +195,7 @@ public class PanelCreator
 			shipName += " - " + selectedVariant.getHullSpec().getHullName();
 		}
 		infoTextElement.setParaOrbitronLarge();
-		LabelAPI text = infoTextElement.addPara(shipName, Misc.getBasePlayerColor(), 0f);
+		LabelAPI text = infoTextElement.addPara(shipName, com.fs.starfarer.api.util.Misc.getBasePlayerColor(), 0f);
 		text.setHighlightColor(Color.WHITE);
 		text.setHighlight(ship.getHullSpec().getHullName());
 
@@ -256,10 +256,10 @@ public class PanelCreator
 		// hullmod effect doesn't seem to get applied immediately, so also need to check whether Custom Optimizations has been added already
 		if
 		(
-			maxSmodsSetting+bonusSmods < HullModServices.MAX_SMODS &&
+			maxSmodsSetting+bonusSmods < Other.MAX_SMODS &&
 			Utils.getAdjustedQuality(Utils.getCurrentMarket()).floatValue() >= 1f &&
-			!ship.getVariant().hasHullMod(Constants.HMIS_CUSTOM_OPTIMIZATIONS) &&
-			LunaHelper.getBoolean("hmis_third-smod", true)
+			!ship.getVariant().hasHullMod(Other.HMIS_CUSTOM_OPTIMIZATIONS) &&
+			LunaHelper.getBoolean(Luna.HMIS_THIRD_SMOD, true)
 		)
 		{
 			String creditsText = String.format("Allow third s-mod (%,d credits)", THIRD_SMOD_BY_SIZE.get(ship.getHullSpec().getHullSize()));
@@ -283,7 +283,7 @@ public class PanelCreator
 		TooltipMakerAPI buttonsElement = panel.createUIElement(sizes.width(), sizes.buttonListHeight(), true);
 		for(String text : buttonText)
 		{
-			Button button = new Button(text, Misc.getBasePlayerColor(), Misc.getDarkPlayerColor(), Misc.getBrightPlayerColor(), sizes.buttonWidth(), buttonHeight, buttonPadding);
+			Button button = new Button(text, com.fs.starfarer.api.util.Misc.getBasePlayerColor(), com.fs.starfarer.api.util.Misc.getDarkPlayerColor(), com.fs.starfarer.api.util.Misc.getBrightPlayerColor(), sizes.buttonWidth(), buttonHeight, buttonPadding);
 			button.init(buttonsElement);
 			buttons.add(button);
 		}
@@ -333,10 +333,10 @@ public class PanelCreator
 	public static HullModButton addHullModButtonToElement(TooltipMakerAPI tooltipMaker, HullModButtonData data, float buttonWidth)
 	{
 		HullModButton button = new HullModButton(data,
-			data.isBuiltIn() ? Misc.getStoryOptionColor() : Misc.getBasePlayerColor(),
-			data.isBuiltIn() ? Misc.getStoryDarkColor() : Misc.getDarkPlayerColor(),
-			Misc.getBrightPlayerColor(),
-			data.isBuiltIn() ? Misc.getStoryOptionColor() : Color.WHITE,
+			data.isBuiltIn() ? com.fs.starfarer.api.util.Misc.getStoryOptionColor() : com.fs.starfarer.api.util.Misc.getBasePlayerColor(),
+			data.isBuiltIn() ? com.fs.starfarer.api.util.Misc.getStoryDarkColor() : com.fs.starfarer.api.util.Misc.getDarkPlayerColor(),
+			com.fs.starfarer.api.util.Misc.getBrightPlayerColor(),
+			data.isBuiltIn() ? com.fs.starfarer.api.util.Misc.getStoryOptionColor() : Color.WHITE,
 			buttonWidth,
 			45f,
 			10f,
@@ -358,7 +358,7 @@ public class PanelCreator
 					{
 						highlights.add(descParam);
 					}
-					tooltip.addPara(data.tooltipDescription().replaceAll("%", "%%"), 0f, Misc.getHighlightColor(), highlights.toArray(new String[0]));
+					tooltip.addPara(data.tooltipDescription().replaceAll("%", "%%"), 0f, com.fs.starfarer.api.util.Misc.getHighlightColor(), highlights.toArray(new String[0]));
 				}
 				data.hullModEffect().addPostDescriptionSection(tooltip, data.hullSize(), null, getTooltipWidth(tooltipParam), true);
 				if(data.hullModEffect().hasSModEffectSection(data.hullSize(), null, false))

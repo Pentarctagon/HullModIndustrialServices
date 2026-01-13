@@ -4,6 +4,7 @@ import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.listeners.EconomyTickListener;
 import org.apache.log4j.Logger;
 import pentarctagon.hmis.Utils;
+import pentarctagon.hmis.constants.Other;
 
 import java.lang.invoke.MethodHandles;
 import java.math.BigDecimal;
@@ -20,7 +21,7 @@ implements EconomyTickListener
 		// set a value if none exists yet
 		try
 		{
-			String[] values = Global.getSettings().readTextFileFromCommon("hmis_values").split("\n");
+			String[] values = Global.getSettings().readTextFileFromCommon(Other.HMIS_VALUES).split("\n");
 			qualityOnLastTick = new BigDecimal(values[0]);
 			lastTimestamp = Long.parseLong(values[1]);
 		}

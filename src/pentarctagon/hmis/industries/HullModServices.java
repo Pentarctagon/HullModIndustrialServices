@@ -7,8 +7,8 @@ import com.fs.starfarer.api.impl.campaign.ids.Commodities;
 import com.fs.starfarer.api.impl.campaign.ids.Industries;
 import com.fs.starfarer.api.impl.campaign.ids.Stats;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
-import com.fs.starfarer.api.util.Misc;
-import pentarctagon.hmis.data.campaign.rulecmd.utils.Constants;
+import pentarctagon.hmis.constants.Luna;
+import pentarctagon.hmis.constants.Other;
 import pentarctagon.hmis.data.campaign.rulecmd.utils.LunaHelper;
 
 import java.awt.*;
@@ -16,9 +16,6 @@ import java.awt.*;
 public class HullModServices
 extends BaseIndustry
 {
-	public static final String ID = "hullmodservices";
-	public static final int MAX_SMODS = 3;
-
     @Override
     public void apply()
     {
@@ -26,24 +23,24 @@ extends BaseIndustry
 
         if(market.getPrevStability() >= 7)
         {
-            market.getStats().getDynamic().getMod(Stats.PRODUCTION_QUALITY_MOD).modifyFlat(ID, 0.2f, "Hull Mod Services");
+            market.getStats().getDynamic().getMod(Stats.PRODUCTION_QUALITY_MOD).modifyFlat(Other.HULL_MOD_SERVICES, 0.2f, "Hull Mod Services");
         }
-		else if(market.hasIndustry(Industries.ORBITALWORKS) && market.hasIndustry(ID) && market.getIndustry(Industries.ORBITALWORKS).isDisrupted())
+		else if(market.hasIndustry(Industries.ORBITALWORKS) && market.hasIndustry(Other.HULL_MOD_SERVICES) && market.getIndustry(Industries.ORBITALWORKS).isDisrupted())
         {
-	        market.getStats().getDynamic().getMod(Stats.PRODUCTION_QUALITY_MOD).modifyFlat(ID, 0f, "Hull Mod Services - Orbital Works disrupted");
+	        market.getStats().getDynamic().getMod(Stats.PRODUCTION_QUALITY_MOD).modifyFlat(Other.HULL_MOD_SERVICES, 0f, "Hull Mod Services - Orbital Works disrupted");
         }
         else
         {
-            market.getStats().getDynamic().getMod(Stats.PRODUCTION_QUALITY_MOD).modifyFlat(ID, 0f, "Hull Mod Services - low stability");
+            market.getStats().getDynamic().getMod(Stats.PRODUCTION_QUALITY_MOD).modifyFlat(Other.HULL_MOD_SERVICES, 0f, "Hull Mod Services - low stability");
         }
 
 		if(Commodities.ALPHA_CORE.equals(getAICoreId()))
 		{
-			market.getStats().getDynamic().getMod(Stats.PRODUCTION_QUALITY_MOD).modifyFlat(ID+"_alphacore", 0.1f, "Hull Mod Services - Alpha Core");
+			market.getStats().getDynamic().getMod(Stats.PRODUCTION_QUALITY_MOD).modifyFlat(Other.HULL_MOD_SERVICES+"_alphacore", 0.1f, "Hull Mod Services - Alpha Core");
 		}
 		else
 		{
-			market.getStats().getDynamic().getMod(Stats.PRODUCTION_QUALITY_MOD).unmodify(ID+"_alphacore");
+			market.getStats().getDynamic().getMod(Stats.PRODUCTION_QUALITY_MOD).unmodify(Other.HULL_MOD_SERVICES+"_alphacore");
 		}
 
 		if(market.hasIndustry(Industries.ORBITALWORKS))
@@ -55,10 +52,10 @@ extends BaseIndustry
 
 	    // for every 10% ship quality, export a unit that improves other factions' ship quality by 5%, rounded down by integer division
 	    float marketQuality = market.getShipQualityFactor();
-		if(marketQuality >= 1.1f && LunaHelper.getBoolean("hmis_quality-export", true))
+		if(marketQuality >= 1.1f && LunaHelper.getBoolean(Luna.HMIS_QUALITY_EXPORT, true))
 		{
 			int qualityExported = (int)((marketQuality-1)*10);
-			supply("ship_quality", qualityExported);
+			supply(Other.SHIP_QUALITY, qualityExported);
 		}
     }
 
@@ -72,21 +69,21 @@ extends BaseIndustry
     @Override
     public boolean isAvailableToBuild()
     {
-        return super.isAvailableToBuild() && market.hasIndustry(Industries.ORBITALWORKS) && market.getSize() >= Constants.HMIS_MIN_MARKET_SIZE;
+        return super.isAvailableToBuild() && market.hasIndustry(Industries.ORBITALWORKS) && market.getSize() >= Other.HMIS_MIN_MARKET_SIZE;
     }
 
     @Override
     public String getUnavailableReason()
     {
-	    if(!market.hasIndustry(Industries.ORBITALWORKS) && market.getSize() >= Constants.HMIS_MIN_MARKET_SIZE)
+	    if(!market.hasIndustry(Industries.ORBITALWORKS) && market.getSize() >= Other.HMIS_MIN_MARKET_SIZE)
 	    {
 		    return "Requires Orbital Works";
 	    }
-	    if(market.hasIndustry(Industries.ORBITALWORKS) && market.getSize() < Constants.HMIS_MIN_MARKET_SIZE)
+	    if(market.hasIndustry(Industries.ORBITALWORKS) && market.getSize() < Other.HMIS_MIN_MARKET_SIZE)
 	    {
 		    return "Requires at least size 5 colony";
 	    }
-	    if(!market.hasIndustry(Industries.ORBITALWORKS) && market.getSize() < Constants.HMIS_MIN_MARKET_SIZE)
+	    if(!market.hasIndustry(Industries.ORBITALWORKS) && market.getSize() < Other.HMIS_MIN_MARKET_SIZE)
 	    {
 		    return "Requires Orbital Works and at least a size 5 colony";
 	    }
@@ -119,11 +116,11 @@ extends BaseIndustry
         {
             if(mode == ImprovementDescriptionMode.INDUSTRY_TOOLTIP)
             {
-                info.addPara("Reduced hullmod costs by an additional %s%%.", initPad, Misc.getHighlightColor(), "20");
+                info.addPara("Reduced hullmod costs by an additional %s%%.", initPad, com.fs.starfarer.api.util.Misc.getHighlightColor(), "20");
             }
             else
             {
-                info.addPara("Reduces hullmod costs by an additional %s%%.", initPad, Misc.getHighlightColor(), "20");
+                info.addPara("Reduces hullmod costs by an additional %s%%.", initPad, com.fs.starfarer.api.util.Misc.getHighlightColor(), "20");
             }
             initPad = pad;
             addedSomething = true;
@@ -131,8 +128,8 @@ extends BaseIndustry
 
         if(mode != ImprovementDescriptionMode.INDUSTRY_TOOLTIP)
         {
-            info.addPara("Each improvement made at a colony doubles the number of " + Misc.STORY + " points required to make an additional improvement.", initPad,
-                    Misc.getStoryOptionColor(), Misc.STORY + " points");
+            info.addPara("Each improvement made at a colony doubles the number of " + com.fs.starfarer.api.util.Misc.STORY + " points required to make an additional improvement.", initPad,
+                    com.fs.starfarer.api.util.Misc.getStoryOptionColor(), com.fs.starfarer.api.util.Misc.STORY + " points");
             addedSomething = true;
         }
 
@@ -146,7 +143,7 @@ extends BaseIndustry
 	public void addAlphaCoreDescription(TooltipMakerAPI tooltip, AICoreDescriptionMode mode)
 	{
 		float pad = 10f;
-		Color highlight = Misc.getHighlightColor();
+		Color highlight = com.fs.starfarer.api.util.Misc.getHighlightColor();
 
 		String pre = "Alpha-level AI core currently assigned. ";
 		if(mode == AICoreDescriptionMode.MANAGE_CORE_DIALOG_LIST || mode == AICoreDescriptionMode.INDUSTRY_TOOLTIP)

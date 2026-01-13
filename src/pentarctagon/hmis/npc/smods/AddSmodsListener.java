@@ -1,6 +1,7 @@
 package pentarctagon.hmis.npc.smods;
 
 import com.fs.starfarer.api.campaign.*;
+import pentarctagon.hmis.constants.Luna;
 import pentarctagon.hmis.data.campaign.rulecmd.utils.LunaHelper;
 
 public class AddSmodsListener
@@ -14,7 +15,7 @@ extends BaseCampaignEventListener
 	@Override
 	public void reportFleetSpawned(CampaignFleetAPI fleet)
 	{
-		if(LunaHelper.getBoolean("hmis_npc-smods", true))
+		if(LunaHelper.getBoolean(Luna.HMIS_NPC_SMODS, true))
 		{
 			FleetInflater originalFleetInflater = fleet.getInflater();
 			if(!(originalFleetInflater instanceof AddSmodsInflater) && originalFleetInflater != null)
