@@ -10,7 +10,6 @@ import com.fs.starfarer.api.impl.campaign.ids.HullMods;
 import com.fs.starfarer.api.loading.HullModSpecAPI;
 import com.fs.starfarer.api.util.Misc;
 import org.apache.log4j.Logger;
-import pentarctagon.hmis.data.campaign.rulecmd.utils.Costs;
 import pentarctagon.hmis.dmods.RestorationCostListener;
 import pentarctagon.hmis.doctrine.listener.PlayerFactionShipQuality;
 import pentarctagon.hmis.industries.HullModServices;
@@ -19,13 +18,11 @@ import pentarctagon.hmis.npc.smods.AddSmodsListener;
 import pentarctagon.hmis.npc.smods.listener.UpdatePlayerBlueprints;
 
 import java.lang.invoke.MethodHandles;
-import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-// TODO: refactor Costs methods to something better named
 // TODO: actually put things in Constants
 @SuppressWarnings("unused")
 public class HullModIndustrialServices

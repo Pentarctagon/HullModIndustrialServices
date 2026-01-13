@@ -8,7 +8,7 @@ import com.fs.starfarer.api.impl.campaign.ids.Factions;
 import com.fs.starfarer.api.ui.CustomPanelAPI;
 import com.fs.starfarer.api.util.Misc;
 import pentarctagon.hmis.data.campaign.rulecmd.ui.plugin.SelectShipPlugin;
-import pentarctagon.hmis.data.campaign.rulecmd.utils.Costs;
+import pentarctagon.hmis.Utils;
 import pentarctagon.hmis.data.campaign.rulecmd.utils.ui.PanelCreator;
 
 import java.util.List;
@@ -37,7 +37,7 @@ implements CustomDialogDelegate
 	{
 		this.callback = callback;
 
-		MarketAPI market = Costs.getCurrentMarket();
+		MarketAPI market = Utils.getCurrentMarket();
 		if(market.isPlayerOwned() || market.getFactionId().equals(Misc.getCommissionFactionId()) || market.getFaction().getRepInt(Factions.PLAYER) >= 50)
 		{
 			PanelCreator.createTitle(panel, "Select a ship", 30);

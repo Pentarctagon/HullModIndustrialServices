@@ -4,7 +4,7 @@ import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.PlayerMarketTransaction;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.campaign.listeners.ColonyInteractionListener;
-import pentarctagon.hmis.data.campaign.rulecmd.utils.Costs;
+import pentarctagon.hmis.Utils;
 import pentarctagon.hmis.data.campaign.rulecmd.utils.LunaHelper;
 import pentarctagon.hmis.industries.HullModServices;
 
@@ -35,7 +35,7 @@ implements ColonyInteractionListener
 				Global.getSettings().setFloat("baseRestoreCostMultPerDMod", 1f);
 			}
 
-			BigDecimal adjustedQuality = Costs.getAdjustedQuality(market);
+			BigDecimal adjustedQuality = Utils.getAdjustedQuality(market);
 
 			// if ship quality is over 100%, decrease restoration cost by the amount over 100%
 			// ie:

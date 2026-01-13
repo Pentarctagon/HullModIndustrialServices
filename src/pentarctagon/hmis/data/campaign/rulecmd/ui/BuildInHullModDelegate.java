@@ -11,7 +11,7 @@ import com.fs.starfarer.api.loading.HullModSpecAPI;
 import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.CustomPanelAPI;
 import pentarctagon.hmis.data.campaign.rulecmd.ui.plugin.BuildInPlugin;
-import pentarctagon.hmis.data.campaign.rulecmd.utils.Costs;
+import pentarctagon.hmis.Utils;
 import pentarctagon.hmis.data.campaign.rulecmd.utils.Sizing;
 import pentarctagon.hmis.data.campaign.rulecmd.utils.ui.BuildInHullModDialogCreator;
 import pentarctagon.hmis.data.campaign.rulecmd.utils.ui.HullModButtonData;
@@ -66,9 +66,9 @@ implements CustomDialogDelegate
 
 		// credits and story points the player currently has
 		// don't need to store the return value since these don't change while the dialog is open
-		PanelCreator.createLabelWithVariables(panel, "Credits: %,d", Color.WHITE, 30f, Alignment.LMID, Costs.getPlayerCredits());
+		PanelCreator.createLabelWithVariables(panel, "Credits: %,d", Color.WHITE, 30f, Alignment.LMID, Utils.getPlayerCredits());
 		// Initialize the S-mod counter and costs at the top. This tracks the "pending" values that will be set when the player hits confirm.
-		LabelWithVariables countLabel = PanelCreator.createLabelWithVariables(panel, "S-mods: %s/%s", Color.WHITE, 50f, Alignment.LMID, selectedVariant.getSMods().size(), Costs.getTotalSmods(fleetMember)).created();
+		LabelWithVariables countLabel = PanelCreator.createLabelWithVariables(panel, "S-mods: %s/%s", Color.WHITE, 50f, Alignment.LMID, selectedVariant.getSMods().size(), Utils.getTotalSmods(fleetMember)).created();
 		LabelWithVariables currentCostsLabel = PanelCreator.createLabelWithVariables(panel, "Cost: %,d credits", Color.WHITE, 70f, Alignment.LMID, 0).created();
 
 		// Static text at the top of the screen. The function positions it at the top of panel

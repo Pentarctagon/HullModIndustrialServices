@@ -1,4 +1,4 @@
-package pentarctagon.hmis.data.campaign.rulecmd.utils;
+package pentarctagon.hmis;
 
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
@@ -6,12 +6,13 @@ import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
 import com.fs.starfarer.api.impl.campaign.ids.Stats;
+import pentarctagon.hmis.data.campaign.rulecmd.utils.LunaHelper;
 import pentarctagon.hmis.doctrine.listener.PlayerFactionShipQuality;
 import pentarctagon.hmis.industries.HullModServices;
 
 import java.math.BigDecimal;
 
-public class Costs
+public class Utils
 {
 	/**
 	 * added == true  -> adding an s-mod
@@ -144,7 +145,7 @@ public class Costs
 	{
 		return Global.getSettings().getInt("maxPermanentHullmods");
 	}
-	public static int getBonusSmods(FleetMemberAPI ship)
+	private static int getBonusSmods(FleetMemberAPI ship)
 	{
 		return (int)ship.getStats().getDynamic().getMod(Stats.MAX_PERMANENT_HULLMODS_MOD).getFlatBonus();
 	}

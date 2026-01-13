@@ -4,7 +4,7 @@ import com.fs.starfarer.api.combat.BaseHullMod;
 import com.fs.starfarer.api.combat.MutableShipStatsAPI;
 import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.impl.campaign.ids.Stats;
-import pentarctagon.hmis.data.campaign.rulecmd.utils.Costs;
+import pentarctagon.hmis.Utils;
 import pentarctagon.hmis.industries.HullModServices;
 
 @SuppressWarnings("unused")
@@ -14,7 +14,7 @@ extends BaseHullMod
 	@Override
 	public void applyEffectsBeforeShipCreation(ShipAPI.HullSize hullSize, MutableShipStatsAPI stats, String id)
 	{
-		int maxSmodsSetting = Costs.getBaseSmods();
+		int maxSmodsSetting = Utils.getBaseSmods();
 		float bonusSmods = stats.getDynamic().getMod(Stats.MAX_PERMANENT_HULLMODS_MOD).getFlatBonus();
 		if(maxSmodsSetting+bonusSmods < HullModServices.MAX_SMODS)
 		{

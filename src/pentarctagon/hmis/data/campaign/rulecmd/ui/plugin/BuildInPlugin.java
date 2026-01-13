@@ -19,7 +19,7 @@ import com.fs.starfarer.loading.specs.HullVariantSpec;
 import pentarctagon.hmis.data.campaign.rulecmd.utils.ui.PanelCreator;
 import pentarctagon.hmis.data.campaign.rulecmd.ui.HullModButton;
 import pentarctagon.hmis.data.campaign.rulecmd.ui.LabelWithVariables;
-import pentarctagon.hmis.data.campaign.rulecmd.utils.Costs;
+import pentarctagon.hmis.Utils;
 
 import java.util.BitSet;
 import java.util.List;
@@ -93,7 +93,7 @@ extends Selector<HullModButton>
 			}
 
 			// disable regular hullmod buttons if s-mod limit reached by clicking another regular hullmod
-			int maxSmods = Costs.getTotalSmods(fleetMember);
+			int maxSmods = Utils.getTotalSmods(fleetMember);
 			if(countLabel.getVar(0) >= maxSmods && !button.getData().isBuiltIn())
 			{
 				disable(i, "Ship s-mod limit reached", false);
@@ -111,8 +111,8 @@ extends Selector<HullModButton>
 
 			// enhancing a hullmod or removing an s-mod have the same cost
 			// else use the cost for adding a s-mod
-			int nextCost = Costs.getSmodCreditCost(checkerVariant, button.getData().isEnhanceOnly() || button.getData().isBuiltIn());
-			if(getCreditCost() + nextCost > Costs.getPlayerCredits())
+			int nextCost = Utils.getSmodCreditCost(checkerVariant, button.getData().isEnhanceOnly() || button.getData().isBuiltIn());
+			if(getCreditCost() + nextCost > Utils.getPlayerCredits())
 			{
 				disable(i, String.format("Not enough credits (%,d credits)", nextCost), false);
 				continue;
@@ -243,7 +243,7 @@ extends Selector<HullModButton>
 		{
 			countLabel.changeVar(0, countLabel.getVar(0) + 1);
 		}
-		currentCostsLabel.changeVar(0, currentCostsLabel.getVar(0)+Costs.getSmodCreditCost(originalVariant, hullModButton.getData().isEnhanceOnly() || hullModButton.getData().isBuiltIn()));
+		currentCostsLabel.changeVar(0, currentCostsLabel.getVar(0)+ Utils.getSmodCreditCost(originalVariant, hullModButton.getData().isEnhanceOnly() || hullModButton.getData().isBuiltIn()));
 
 		if(!hullModButton.getData().isBuiltIn())
 		{
@@ -293,7 +293,7 @@ extends Selector<HullModButton>
 		{
 			countLabel.changeVar(0, countLabel.getVar(0) - 1);
 		}
-		currentCostsLabel.changeVar(0, currentCostsLabel.getVar(0)-Costs.getSmodCreditCost(originalVariant, hullModButton.getData().isEnhanceOnly() || hullModButton.getData().isBuiltIn()));
+		currentCostsLabel.changeVar(0, currentCostsLabel.getVar(0)- Utils.getSmodCreditCost(originalVariant, hullModButton.getData().isEnhanceOnly() || hullModButton.getData().isBuiltIn()));
 
 		if(!hullModButton.getData().isBuiltIn())
 		{
@@ -315,7 +315,7 @@ extends Selector<HullModButton>
 		if(!button.getData().isEnhanceOnly())
 		{
 			countLabel.changeVar(0, countLabel.getVar(0) - 1);
-			currentCostsLabel.changeVar(0, currentCostsLabel.getVar(0)-Costs.getSmodCreditCost(originalVariant, button.getData().isBuiltIn() || button.getData().isEnhanceOnly()));
+			currentCostsLabel.changeVar(0, currentCostsLabel.getVar(0)- Utils.getSmodCreditCost(originalVariant, button.getData().isBuiltIn() || button.getData().isEnhanceOnly()));
 		}
 		String hullModId = items.get(index).getData().id();
 		// Don't remove hull mods that were already on the ship

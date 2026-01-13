@@ -16,7 +16,7 @@ import pentarctagon.hmis.data.campaign.rulecmd.ui.*;
 import pentarctagon.hmis.data.campaign.rulecmd.ui.Button;
 import pentarctagon.hmis.data.campaign.rulecmd.ui.plugin.BuildInPlugin;
 import pentarctagon.hmis.data.campaign.rulecmd.utils.Constants;
-import pentarctagon.hmis.data.campaign.rulecmd.utils.Costs;
+import pentarctagon.hmis.Utils;
 import pentarctagon.hmis.data.campaign.rulecmd.utils.LunaHelper;
 import pentarctagon.hmis.industries.HullModServices;
 
@@ -208,12 +208,12 @@ public class PanelCreator
 		if
 		(
 			ship.getVariant().getTags().contains("unrestorable") &&
-			Costs.getAdjustedQuality(Costs.getCurrentMarket()).floatValue() >= 1.5f
+			Utils.getAdjustedQuality(Utils.getCurrentMarket()).floatValue() >= 1.5f
 		)
 		{
 			String creditsText = String.format("Allow Restoration (%,d credits)", MAKE_RESTORABLE_COST);
 			ButtonAPI button = infoTextElement.addButton(creditsText, BUTTON_ALLOW_RESTORATION, infoTextWidth, 30f, 5f);
-			if(Costs.getPlayerCredits() < MAKE_RESTORABLE_COST)
+			if(Utils.getPlayerCredits() < MAKE_RESTORABLE_COST)
 			{
 				button.setEnabled(false);
 			}
@@ -224,12 +224,12 @@ public class PanelCreator
 			ship.getCaptain().isAICore() &&
 			ship.getCaptain().getMemory().getBoolean("$captain_unremovable") &&
 			TriTachyonDeal.hasDeal() &&
-			Costs.getAdjustedQuality(Costs.getCurrentMarket()).floatValue() >= 1.5f
+			Utils.getAdjustedQuality(Utils.getCurrentMarket()).floatValue() >= 1.5f
 		)
 		{
 			String creditsText = String.format("De-integrate AI (%,d credits)", DEINTEGRATE_AI_COST);
 			ButtonAPI button = infoTextElement.addButton(creditsText, BUTTON_DEINTEGRATE_AI, infoTextWidth, 30f, 5f);
-			if(Costs.getPlayerCredits() < DEINTEGRATE_AI_COST)
+			if(Utils.getPlayerCredits() < DEINTEGRATE_AI_COST)
 			{
 				button.setEnabled(false);
 			}
@@ -240,31 +240,31 @@ public class PanelCreator
 			ship.getCaptain().isAICore() &&
 			!ship.getCaptain().getMemory().getBoolean("$captain_unremovable") &&
 			TriTachyonDeal.hasDeal() &&
-			Costs.getAdjustedQuality(Costs.getCurrentMarket()).floatValue() >= 1.5f
+			Utils.getAdjustedQuality(Utils.getCurrentMarket()).floatValue() >= 1.5f
 		)
 		{
 			String creditsText = String.format("Integrate AI (%,d credits)", INTEGRATE_AI_COST);
 			ButtonAPI button = infoTextElement.addButton(creditsText, BUTTON_INTEGRATE_AI, infoTextWidth, 30f, 5f);
-			if(Costs.getPlayerCredits() < INTEGRATE_AI_COST)
+			if(Utils.getPlayerCredits() < INTEGRATE_AI_COST)
 			{
 				button.setEnabled(false);
 			}
 		}
 		// add 3rd s-mod slot if ship doesn't already have 3 s-mods
-		int maxSmodsSetting = Costs.getBaseSmods();
+		int maxSmodsSetting = Utils.getBaseSmods();
 		float bonusSmods = ship.getStats().getDynamic().getMod(Stats.MAX_PERMANENT_HULLMODS_MOD).getFlatBonus();
 		// hullmod effect doesn't seem to get applied immediately, so also need to check whether Custom Optimizations has been added already
 		if
 		(
 			maxSmodsSetting+bonusSmods < HullModServices.MAX_SMODS &&
-			Costs.getAdjustedQuality(Costs.getCurrentMarket()).floatValue() >= 1f &&
+			Utils.getAdjustedQuality(Utils.getCurrentMarket()).floatValue() >= 1f &&
 			!ship.getVariant().hasHullMod(Constants.HMIS_CUSTOM_OPTIMIZATIONS) &&
 			LunaHelper.getBoolean("hmis_third-smod", true)
 		)
 		{
 			String creditsText = String.format("Allow third s-mod (%,d credits)", THIRD_SMOD_BY_SIZE.get(ship.getHullSpec().getHullSize()));
 			ButtonAPI button = infoTextElement.addButton(creditsText, BUTTON_THIRD_SMOD, infoTextWidth, 30f, 5f);
-			if(Costs.getPlayerCredits() < THIRD_SMOD_BY_SIZE.get(ship.getHullSpec().getHullSize()))
+			if(Utils.getPlayerCredits() < THIRD_SMOD_BY_SIZE.get(ship.getHullSpec().getHullSize()))
 			{
 				button.setEnabled(false);
 			}

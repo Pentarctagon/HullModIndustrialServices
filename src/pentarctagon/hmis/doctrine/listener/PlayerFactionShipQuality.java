@@ -3,7 +3,7 @@ package pentarctagon.hmis.doctrine.listener;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.listeners.EconomyTickListener;
 import org.apache.log4j.Logger;
-import pentarctagon.hmis.data.campaign.rulecmd.utils.Costs;
+import pentarctagon.hmis.Utils;
 
 import java.lang.invoke.MethodHandles;
 import java.math.BigDecimal;
@@ -26,7 +26,7 @@ implements EconomyTickListener
 		}
 		catch(Exception e)
 		{
-			qualityOnLastTick = Costs.getPlayerFactionDoctrineQuality();
+			qualityOnLastTick = Utils.getPlayerFactionDoctrineQuality();
 			lastTimestamp = Global.getSector().getClock().getTimestamp();
 			log.error("[HMIS]: failed to read from hmis_values");
 		}
@@ -36,7 +36,7 @@ implements EconomyTickListener
 	@Override
 	public void reportEconomyTick(int iterIndex)
 	{
-		BigDecimal factionDoctrineQuality = Costs.getPlayerFactionDoctrineQuality();
+		BigDecimal factionDoctrineQuality = Utils.getPlayerFactionDoctrineQuality();
 		int daysSinceLastTimestamp = (int)Global.getSector().getClock().getElapsedDaysSince(lastTimestamp);
 
 		if(daysSinceLastTimestamp >= 7 && qualityOnLastTick.compareTo(factionDoctrineQuality) != 0)
