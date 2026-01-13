@@ -55,6 +55,7 @@ public class Utils
 		BigDecimal reduced = adjustedQuality.subtract(new BigDecimal(2)).abs();
 
 		// no, this isn't going to be completely free
+		//noinspection ComparatorResultComparison
 		if(reduced.compareTo(new BigDecimal("0.1")) == -1)
 		{
 			return new BigDecimal("0.1");

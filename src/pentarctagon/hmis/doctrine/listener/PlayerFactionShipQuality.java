@@ -43,6 +43,7 @@ implements EconomyTickListener
 		if(daysSinceLastTimestamp >= 7 && qualityOnLastTick.compareTo(factionDoctrineQuality) != 0)
 		{
 			lastTimestamp = Global.getSector().getClock().getTimestamp();
+			//noinspection ComparatorResultComparison
 			if(qualityOnLastTick.compareTo(factionDoctrineQuality) == -1)
 			{
 				qualityOnLastTick = qualityOnLastTick.add(new BigDecimal("0.025"));

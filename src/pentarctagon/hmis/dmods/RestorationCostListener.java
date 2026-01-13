@@ -42,6 +42,7 @@ implements ColonyInteractionListener
 			// ie:
 			// default of 1.2 and a ship quality of 150%
 			// 1.2 - (1.5 - 1) = 0.7 aka 70% of baseShipHullCost instead of 120%
+			//noinspection ComparatorResultComparison
 			if(adjustedQuality.compareTo(new BigDecimal(1)) == 1)
 			{
 				BigDecimal mult = new BigDecimal(Global.getSettings().getFloat("baseRestoreCostMult")).subtract(adjustedQuality.subtract(new BigDecimal(1)));

@@ -11,6 +11,7 @@ import pentarctagon.hmis.constants.Other;
 import pentarctagon.hmis.data.campaign.rulecmd.utils.LunaHelper;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 public class QualityDemandConfig
 implements EconomyAPI.EconomyUpdateListener
@@ -34,7 +35,7 @@ implements EconomyAPI.EconomyUpdateListener
 					if(maxDemand > 0)
 					{
 						int available = market.getCommodityData(commodityId).getAvailable();
-						float importedQuality = new BigDecimal(available).multiply(new BigDecimal(5)).divide(new BigDecimal(100)).floatValue();
+						float importedQuality = new BigDecimal(available).multiply(new BigDecimal(5)).divide(new BigDecimal(100), 4, RoundingMode.HALF_UP).floatValue();
 						market.getStats().getDynamic().getMod(Stats.PRODUCTION_QUALITY_MOD).modifyFlat(Other.HULL_MOD_SERVICES+"_imported", importedQuality, "Hull Mod Services - imported ship quality");
 					}
 					else
@@ -66,6 +67,7 @@ implements EconomyAPI.EconomyUpdateListener
 				BigDecimal baseQuality = marketQuality.subtract(importedQuality);
 
 				// if ship quality is under 100%, add a demand per 5% under 100%
+				//noinspection ComparatorResultComparison
 				if(baseQuality.compareTo(new BigDecimal(1)) == -1)
 				{
 					int qualityDeficit = baseQuality.multiply(new BigDecimal(100)).subtract(new BigDecimal(100)).abs().intValue();
