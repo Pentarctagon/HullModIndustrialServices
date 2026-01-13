@@ -25,8 +25,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-// TODO: review all usages of the float type since it's garbage and can't reliably represent simple floating point values
-//       replace with BigDecimal as much as possible?
+// TODO: refactor Costs methods to something better named
+// TODO: actually put things in Constants
 @SuppressWarnings("unused")
 public class HullModIndustrialServices
 extends BaseModPlugin

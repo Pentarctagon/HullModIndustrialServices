@@ -19,7 +19,7 @@ public class Costs
 	 */
 	public static int getSmodCreditCost(ShipVariantAPI ship, boolean enhancedRemoved)
 	{
-		float qualityModifier = getCostMultiplier();
+		BigDecimal qualityModifier = getCostMultiplier();
 
 		int cost;
 		if(enhancedRemoved)
@@ -33,7 +33,7 @@ public class Costs
 
 		double lunaMultiplier = LunaHelper.getDouble("hmis_credits-multiplier", 1d);
 
-		return (int)(cost*qualityModifier*lunaMultiplier);
+		return qualityModifier.multiply(new BigDecimal(cost)).multiply(new BigDecimal(lunaMultiplier)).intValue();
 	}
 
 	/**
@@ -41,21 +41,21 @@ public class Costs
 	 * Under 100% increases costs, over 100% decreases costs, by the percent under or over.
 	 * Under 100% returns a negative value, over 100% returns a positive value.
 	 */
-	private static float getCostMultiplier()
+	private static BigDecimal getCostMultiplier()
 	{
 		MarketAPI market = getCurrentMarket();
-		float adjustedQuality = getAdjustedQuality(market);
+		BigDecimal adjustedQuality = getAdjustedQuality(market);
 
 		if(market.getIndustry(HullModServices.ID).isImproved())
 		{
-			adjustedQuality += 0.2f;
+			adjustedQuality = adjustedQuality.add(new BigDecimal("0.2"));
 		}
-		float reduced = Math.abs(adjustedQuality-2);
+		BigDecimal reduced = adjustedQuality.subtract(new BigDecimal(2)).abs();
 
 		// no, this isn't going to be completely free
-		if(reduced < 0.1)
+		if(reduced.compareTo(new BigDecimal("0.1")) == -1)
 		{
-			return 0.1f;
+			return new BigDecimal("0.1");
 		}
 		else
 		{
@@ -69,22 +69,22 @@ public class Costs
 	 * ideal solution would be to have changes to faction doctrine ship quality fade in over time rather than taking effect instantly
 	 * but no idea if that's possible at all, how to convey that on the UI, etc
 	 */
-	public static float getAdjustedQuality(MarketAPI market)
+	public static BigDecimal getAdjustedQuality(MarketAPI market)
 	{
-		float doctrineQuality = getPlayerFactionDoctrineQuality();
 		if(market.isPlayerOwned())
 		{
-			return new BigDecimal(market.getShipQualityFactor()).subtract(new BigDecimal(doctrineQuality)).add(PlayerFactionShipQuality.getQualityOnLastTick()).floatValue();
+			BigDecimal doctrineQuality = getPlayerFactionDoctrineQuality();
+			return new BigDecimal(market.getShipQualityFactor()).subtract(doctrineQuality).add(PlayerFactionShipQuality.getQualityOnLastTick());
 		}
 		else
 		{
-			return market.getShipQualityFactor();
+			return new BigDecimal(market.getShipQualityFactor());
 		}
 	}
 
-	public static float getPlayerFactionDoctrineQuality()
+	public static BigDecimal getPlayerFactionDoctrineQuality()
 	{
-		return Global.getSector().getPlayerFaction().getProduction().getFaction().getDoctrine().getShipQualityContribution();
+		return new BigDecimal(Global.getSector().getPlayerFaction().getProduction().getFaction().getDoctrine().getShipQualityContribution());
 	}
 
 	private static int shipSizeSmodCost(ShipVariantAPI ship)

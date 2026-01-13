@@ -26,7 +26,7 @@ implements EconomyTickListener
 		}
 		catch(Exception e)
 		{
-			qualityOnLastTick = new BigDecimal(Costs.getPlayerFactionDoctrineQuality());
+			qualityOnLastTick = Costs.getPlayerFactionDoctrineQuality();
 			lastTimestamp = Global.getSector().getClock().getTimestamp();
 			log.error("[HMIS]: failed to read from hmis_values");
 		}
@@ -36,7 +36,7 @@ implements EconomyTickListener
 	@Override
 	public void reportEconomyTick(int iterIndex)
 	{
-		BigDecimal factionDoctrineQuality = new BigDecimal(Costs.getPlayerFactionDoctrineQuality());
+		BigDecimal factionDoctrineQuality = Costs.getPlayerFactionDoctrineQuality();
 		int daysSinceLastTimestamp = (int)Global.getSector().getClock().getElapsedDaysSince(lastTimestamp);
 
 		if(daysSinceLastTimestamp >= 7 && qualityOnLastTick.compareTo(factionDoctrineQuality) != 0)

@@ -208,7 +208,7 @@ public class PanelCreator
 		if
 		(
 			ship.getVariant().getTags().contains("unrestorable") &&
-			Costs.getAdjustedQuality(Costs.getCurrentMarket()) >= 1.5f
+			Costs.getAdjustedQuality(Costs.getCurrentMarket()).floatValue() >= 1.5f
 		)
 		{
 			String creditsText = String.format("Allow Restoration (%,d credits)", MAKE_RESTORABLE_COST);
@@ -224,7 +224,7 @@ public class PanelCreator
 			ship.getCaptain().isAICore() &&
 			ship.getCaptain().getMemory().getBoolean("$captain_unremovable") &&
 			TriTachyonDeal.hasDeal() &&
-			Costs.getAdjustedQuality(Costs.getCurrentMarket()) >= 1.5f
+			Costs.getAdjustedQuality(Costs.getCurrentMarket()).floatValue() >= 1.5f
 		)
 		{
 			String creditsText = String.format("De-integrate AI (%,d credits)", DEINTEGRATE_AI_COST);
@@ -240,7 +240,7 @@ public class PanelCreator
 			ship.getCaptain().isAICore() &&
 			!ship.getCaptain().getMemory().getBoolean("$captain_unremovable") &&
 			TriTachyonDeal.hasDeal() &&
-			Costs.getAdjustedQuality(Costs.getCurrentMarket()) >= 1.5f
+			Costs.getAdjustedQuality(Costs.getCurrentMarket()).floatValue() >= 1.5f
 		)
 		{
 			String creditsText = String.format("Integrate AI (%,d credits)", INTEGRATE_AI_COST);
@@ -257,7 +257,7 @@ public class PanelCreator
 		if
 		(
 			maxSmodsSetting+bonusSmods < HullModServices.MAX_SMODS &&
-			Costs.getAdjustedQuality(Costs.getCurrentMarket()) >= 1f &&
+			Costs.getAdjustedQuality(Costs.getCurrentMarket()).floatValue() >= 1f &&
 			!ship.getVariant().hasHullMod(Constants.HMIS_CUSTOM_OPTIMIZATIONS) &&
 			LunaHelper.getBoolean("hmis_third-smod", true)
 		)

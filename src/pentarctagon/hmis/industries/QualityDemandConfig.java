@@ -8,6 +8,8 @@ import com.fs.starfarer.api.impl.campaign.ids.Industries;
 import com.fs.starfarer.api.impl.campaign.ids.Stats;
 import pentarctagon.hmis.data.campaign.rulecmd.utils.LunaHelper;
 
+import java.math.BigDecimal;
+
 public class QualityDemandConfig
 implements EconomyAPI.EconomyUpdateListener
 {
@@ -27,10 +29,10 @@ implements EconomyAPI.EconomyUpdateListener
 				if(market.hasIndustry(Industries.ORBITALWORKS) || market.hasIndustry(Industries.HEAVYINDUSTRY))
 				{
 					int maxDemand = market.getCommodityData(commodityId).getMaxDemand();
-					int available = market.getCommodityData(commodityId).getAvailable();
-					float importedQuality = available*5/100.0f;
 					if(maxDemand > 0)
 					{
+						int available = market.getCommodityData(commodityId).getAvailable();
+						float importedQuality = new BigDecimal(available).multiply(new BigDecimal(5)).divide(new BigDecimal(100)).floatValue();
 						market.getStats().getDynamic().getMod(Stats.PRODUCTION_QUALITY_MOD).modifyFlat(HullModServices.ID+"_imported", importedQuality, "Hull Mod Services - imported ship quality");
 					}
 					else
@@ -55,17 +57,16 @@ implements EconomyAPI.EconomyUpdateListener
 			if(market.hasIndustry(Industries.ORBITALWORKS) || market.hasIndustry(Industries.HEAVYINDUSTRY))
 			{
 				// not sure how it makes any sense, but saw some cases of negative ship quality
-				float marketQuality = market.getShipQualityFactor() < 0 ? 0 : market.getShipQualityFactor();
+				BigDecimal marketQuality = market.getShipQualityFactor() < 0 ? new BigDecimal(0) : new BigDecimal(market.getShipQualityFactor());
 
 				MutableStat.StatMod qualityMod = market.getStats().getDynamic().getMod(Stats.PRODUCTION_QUALITY_MOD).getFlatBonus(HullModServices.ID+"_imported");
-				float importedQuality = qualityMod == null ? 0 : qualityMod.getValue();
-				float baseQuality = marketQuality - importedQuality;
+				BigDecimal importedQuality = qualityMod == null ? new BigDecimal(0) : new BigDecimal(qualityMod.getValue());
+				BigDecimal baseQuality = marketQuality.subtract(importedQuality);
 
 				// if ship quality is under 100%, add a demand per 5% under 100%
-				if(baseQuality < 1)
+				if(baseQuality.compareTo(new BigDecimal(1)) == -1)
 				{
-					// Java's handling of floating point variables is truly bizarre
-					int qualityDeficit = (int)Math.abs((baseQuality*100) - 100);
+					int qualityDeficit = baseQuality.multiply(new BigDecimal(100)).subtract(new BigDecimal(100)).abs().intValue();
 					int demand = Math.min(qualityDeficit / 5, LunaHelper.getInteger("hmis_quality-import-cap", 5));
 					if(market.hasIndustry(Industries.ORBITALWORKS))
 					{

@@ -8,6 +8,8 @@ import pentarctagon.hmis.data.campaign.rulecmd.utils.Costs;
 import pentarctagon.hmis.data.campaign.rulecmd.utils.LunaHelper;
 import pentarctagon.hmis.industries.HullModServices;
 
+import java.math.BigDecimal;
+
 public class RestorationCostListener
 implements ColonyInteractionListener
 {
@@ -33,21 +35,21 @@ implements ColonyInteractionListener
 				Global.getSettings().setFloat("baseRestoreCostMultPerDMod", 1f);
 			}
 
-			float adjustedQuality = Costs.getAdjustedQuality(market);
+			BigDecimal adjustedQuality = Costs.getAdjustedQuality(market);
 
 			// if ship quality is over 100%, decrease restoration cost by the amount over 100%
 			// ie:
 			// default of 1.2 and a ship quality of 150%
 			// 1.2 - (1.5 - 1) = 0.7 aka 70% of baseShipHullCost instead of 120%
-			if(adjustedQuality > 1f)
+			if(adjustedQuality.compareTo(new BigDecimal(1)) == 1)
 			{
-				float mult = Global.getSettings().getFloat("baseRestoreCostMult") - (adjustedQuality - 1);
+				BigDecimal mult = new BigDecimal(Global.getSettings().getFloat("baseRestoreCostMult")).subtract(adjustedQuality.subtract(new BigDecimal(1)));
 				if(market.getIndustry(HullModServices.ID).isImproved())
 				{
-					mult -= 0.2f;
+					mult = mult.subtract(new BigDecimal("0.2"));
 				}
-				mult = Math.max(mult, LunaHelper.getFloat("hmis_decrease-restoration-cap", 0.7f));
-				Global.getSettings().setFloat("baseRestoreCostMult", mult);
+				float fmult = Math.max(mult.floatValue(), LunaHelper.getFloat("hmis_decrease-restoration-cap", 0.7f));
+				Global.getSettings().setFloat("baseRestoreCostMult", fmult);
 			}
 		}
 	}
