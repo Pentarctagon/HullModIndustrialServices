@@ -1,3 +1,6 @@
+## 1.0.5
+* Have the Custom Optimizations hullmod more consistently handle not stacking with other sources of s-mods.
+
 ## 1.0.4
 * The player faction's ship quality doctrine now fades in over time at a rate of 2.5% about every week rather than being hard coded as 25% when calculating s-mod and d-mod restoration costs.
 

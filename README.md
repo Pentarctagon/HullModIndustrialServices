@@ -52,7 +52,7 @@ After that, the ordnance points that have been freed up by s-modding hullmods th
 Increasing the s-mod limit in the Luna settings beyond 3 will only affect modded factions. For example, UAF spec ops fleets have a quality of 200%, and so depending on the s-mod cap may have up to 5 s-mods. This can also be disabled in the Luna settings. Either way, this setting should only affect s-mods that would have been added by this mod and not s-mods that get added as part of the base game or by other mods.
 
 ## Increase s-mod limit ##
-At markets where you have access to a Hull Mod Services structure and the market's ship quality is at least 100%, there is an option to pay credits based on ship size (500,000/750,000/1,000,000/1,500,000) to allow building in an additional s-mod. This does not stack with the s-mod gained from the Best of the Best skill.
+At markets where you have access to a Hull Mod Services structure and the market's ship quality is at least 100%, there is an option to pay credits based on ship size (500,000/750,000/1,000,000/1,500,000) to allow building in an additional s-mod. This does not stack with the Best of the Best skill or other sources that increase the s-mod limit.
 
 This can be disabled via a Luna setting.
 
