@@ -13,6 +13,7 @@ import org.apache.log4j.Logger;
 import pentarctagon.hmis.constants.Other;
 import pentarctagon.hmis.dmods.RestorationCostListener;
 import pentarctagon.hmis.doctrine.listener.PlayerFactionShipQuality;
+import pentarctagon.hmis.hullmods.CustomOptimizationsReapplication;
 import pentarctagon.hmis.industries.QualityDemandConfig;
 import pentarctagon.hmis.npc.smods.AddSmodsListener;
 import pentarctagon.hmis.npc.smods.listener.UpdatePlayerBlueprints;
@@ -90,6 +91,7 @@ extends BaseModPlugin
 		Global.getSector().getListenerManager().addListener(new UpdatePlayerBlueprints(), true);
 		Global.getSector().getListenerManager().addListener(new PlayerFactionShipQuality(), true);
 		Global.getSector().getEconomy().addUpdateListener(new QualityDemandConfig());
+		Global.getSector().addTransientScript(new CustomOptimizationsReapplication());
 
 		Misc.getFactionMarkets(Factions.HEGEMONY)
 		    .stream()
