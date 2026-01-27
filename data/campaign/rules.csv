@@ -3,3 +3,10 @@ hmis_Start,PopulateOptions,"$menuState == main
 $market.ind:hullmodservices
 $market.ind:orbitalworks","SetShortcut hmis_OptionManage ""Q""",,17:hmis_OptionManage:Manage hull mods,
 hmis_Manage,DialogOptionSelected,$option == hmis_OptionManage,HMIS_ManageHullMods,,,
+,,,,,,
+#hull_engineer_greeting,PickGreeting,$hmis_hull_engineer score:10,"ShowPersonVisual
+SetShortcut cutCommLink ""ESCAPE""","Heya boss, what can I do for you?","hull_engineer_options:”Hull Mod Services”
+cutCommLink:""Thank you, that’s all for now""",
+hull_engineer_options,PopulateOptions,$hmis_hull_engineer,"ShowPersonVisual
+SetShortcut cutCommLink ""ESCAPE""",,hull_engineer_topic1:”Hull Mod Services”,
+hull_engineer_topic1,DialogOptionSelected,$option == hull_engineer_options,FireAll PopulateOptions,testing123,,
