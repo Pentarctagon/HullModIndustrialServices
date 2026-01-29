@@ -66,12 +66,6 @@ public class Utils
 		}
 	}
 
-	/**
-	 * can game the system by a significant margin by adjusting the ship quality in the player's faction doctrine
-	 * so while not a great solution, just ignore the actual value and pretend it's the middle setting (+25%)
-	 * ideal solution would be to have changes to faction doctrine ship quality fade in over time rather than taking effect instantly
-	 * but no idea if that's possible at all, how to convey that on the UI, etc
-	 */
 	public static BigDecimal getAdjustedQuality(MarketAPI market)
 	{
 		if(market.isPlayerOwned())
