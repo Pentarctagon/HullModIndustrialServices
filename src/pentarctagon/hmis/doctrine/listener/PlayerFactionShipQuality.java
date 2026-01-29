@@ -4,18 +4,13 @@ import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.listeners.EconomyTickListener;
 import com.fs.starfarer.api.campaign.rules.MemoryAPI;
 import com.fs.starfarer.api.impl.campaign.ids.Factions;
-import org.apache.log4j.Logger;
 import pentarctagon.hmis.Utils;
-import pentarctagon.hmis.constants.Other;
 
-import java.lang.invoke.MethodHandles;
 import java.math.BigDecimal;
 
 public class PlayerFactionShipQuality
 implements EconomyTickListener
 {
-	private static final Logger log = Logger.getLogger(MethodHandles.lookup().lookupClass());
-
 	private static BigDecimal qualityOnLastTick;
 	private static long lastTimestamp;
 
