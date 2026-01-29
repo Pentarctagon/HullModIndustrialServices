@@ -4,6 +4,9 @@ $market.ind:hullmodservices
 $market.ind:orbitalworks","SetShortcut hmis_OptionManage ""Q""",,17:hmis_OptionManage:Manage hull mods,
 hmis_Manage,DialogOptionSelected,$option == hmis_OptionManage,HMIS_ManageHullMods,,,
 ,,,,,,
+hull_engineer_greeting,PickGreeting,$hmis_hull_engineer score:1000,"ShowPersonVisual
+SetShortcut cutCommLink ""ESCAPE""
+FireAll PopulateOptions","Heya boss, what can I do for you?",,
 hull_engineer_options,PopulateOptions,$hmis_hull_engineer,"ShowPersonVisual
 SetShortcut cutCommLink ""ESCAPE""
 intro.IntroManager",,"hull_engineer_topic1:What services do you provide?
