@@ -73,14 +73,10 @@ extends BaseModPlugin
 	@Override
 	public void beforeGameSave()
 	{
-		try
-		{
-			Global.getSettings().writeTextFileToCommon(Other.HMIS_VALUES, PlayerFactionShipQuality.getQualityOnLastTick() + "\n" + PlayerFactionShipQuality.getLastTimestamp());
-		}
-		catch(Exception e)
-		{
-			log.error("[HMIS]: failed to write to hmis_values");
-		}
+		// save to faction memory
+		MemoryAPI memory = Global.getSector().getFaction(Factions.PLAYER).getMemory();
+		memory.set("$hmis_last_tick_quality", PlayerFactionShipQuality.getQualityOnLastTick().toString());
+		memory.set("$hmis_last_tick_timestamp", PlayerFactionShipQuality.getLastTimestamp());
 	}
 
 	@Override

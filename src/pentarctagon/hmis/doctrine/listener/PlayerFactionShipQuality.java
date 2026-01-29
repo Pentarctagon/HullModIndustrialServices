@@ -2,6 +2,8 @@ package pentarctagon.hmis.doctrine.listener;
 
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.listeners.EconomyTickListener;
+import com.fs.starfarer.api.campaign.rules.MemoryAPI;
+import com.fs.starfarer.api.impl.campaign.ids.Factions;
 import org.apache.log4j.Logger;
 import pentarctagon.hmis.Utils;
 import pentarctagon.hmis.constants.Other;
@@ -14,23 +16,24 @@ implements EconomyTickListener
 {
 	private static final Logger log = Logger.getLogger(MethodHandles.lookup().lookupClass());
 
-	private static long lastTimestamp;
 	private static BigDecimal qualityOnLastTick;
+	private static long lastTimestamp;
+
+	// load from faction memory
 	static
 	{
-		// set a value if none exists yet
-		try
+		MemoryAPI memory = Global.getSector().getFaction(Factions.PLAYER).getMemory();
+		if(!memory.contains("$hmis_last_tick_quality"))
 		{
-			String[] values = Global.getSettings().readTextFileFromCommon(Other.HMIS_VALUES).split("\n");
-			qualityOnLastTick = new BigDecimal(values[0]);
-			lastTimestamp = Long.parseLong(values[1]);
+			memory.set("$hmis_last_tick_quality", Utils.getPlayerFactionDoctrineQuality().toString());
 		}
-		catch(Exception e)
+		if(!memory.contains("$hmis_last_tick_timestamp"))
 		{
-			qualityOnLastTick = Utils.getPlayerFactionDoctrineQuality();
-			lastTimestamp = Global.getSector().getClock().getTimestamp();
-			log.error("[HMIS]: failed to read from hmis_values");
+			memory.set("$hmis_last_tick_timestamp", PlayerFactionShipQuality.getLastTimestamp());
 		}
+
+		qualityOnLastTick = new BigDecimal(memory.getString("$hmis_last_tick_quality"));
+		lastTimestamp = memory.getLong("$hmis_last_tick_timestamp");
 	}
 
 	// doesn't seem to necessarily trigger with a consistent frequency
