@@ -1,3 +1,8 @@
+## 1.0.6
+* Added an NPC to player markets with the Hull Mod Services structure who gives basic, general information about what the structure and increasing ship quality unlocks.
+* Added an achievement for getting to 160% ship quality on a player market.
+* Now requires MagicLib.
+
 ## 1.0.5
 * Have the Custom Optimizations hullmod more consistently handle not stacking with other sources of s-mods.
 
