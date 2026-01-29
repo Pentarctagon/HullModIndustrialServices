@@ -3,17 +3,14 @@ package pentarctagon.hmis;
 import com.fs.starfarer.api.BaseModPlugin;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.ModSpecAPI;
-import com.fs.starfarer.api.campaign.CommDirectoryEntryAPI;
 import com.fs.starfarer.api.campaign.FactionAPI;
-import com.fs.starfarer.api.campaign.SectorAPI;
-import com.fs.starfarer.api.campaign.econ.MarketAPI;
-import com.fs.starfarer.api.characters.ImportantPeopleAPI;
-import com.fs.starfarer.api.characters.PersonAPI;
+import com.fs.starfarer.api.campaign.rules.MemoryAPI;
 import com.fs.starfarer.api.impl.campaign.ids.*;
 import com.fs.starfarer.api.loading.HullModSpecAPI;
 import com.fs.starfarer.api.util.Misc;
 import org.apache.log4j.Logger;
 import pentarctagon.hmis.constants.Other;
+import pentarctagon.hmis.data.campaign.rulecmd.intro.HullEngineerListener;
 import pentarctagon.hmis.dmods.RestorationCostListener;
 import pentarctagon.hmis.doctrine.listener.PlayerFactionShipQuality;
 import pentarctagon.hmis.hullmods.CustomOptimizationsReapplication;
@@ -24,7 +21,6 @@ import pentarctagon.hmis.npc.smods.listener.UpdatePlayerBlueprints;
 import java.lang.invoke.MethodHandles;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -91,49 +87,12 @@ extends BaseModPlugin
 	public void onGameLoad(boolean newGame)
 	{
 		Global.getSector().getListenerManager().addListener(new RestorationCostListener(), true);
+		Global.getSector().getListenerManager().addListener(new HullEngineerListener(), true);
 		Global.getSector().addTransientListener(new AddSmodsListener());
 		Global.getSector().getListenerManager().addListener(new UpdatePlayerBlueprints(), true);
 		Global.getSector().getListenerManager().addListener(new PlayerFactionShipQuality(), true);
 		Global.getSector().getEconomy().addUpdateListener(new QualityDemandConfig());
 		Global.getSector().addTransientScript(new CustomOptimizationsReapplication());
-
-		Optional<MarketAPI> m = Misc.getFactionMarkets(Factions.PLAYER)
-            .stream()
-            .filter(market -> market.hasIndustry(Other.HULL_MOD_SERVICES))
-            .findFirst();
-
-		if(m.isPresent())
-		{
-			List<CommDirectoryEntryAPI> entries = m.get().getCommDirectory().getEntriesCopy();
-			boolean hasEngineer = false;
-			for(CommDirectoryEntryAPI entry : entries)
-			{
-				if(entry.getEntryData() instanceof PersonAPI person)
-				{
-					if(person.getMemory().getBoolean("hmis_hull_engineer"))
-					{
-						hasEngineer = true;
-					}
-				}
-			}
-
-			if(!hasEngineer)
-			{
-				ImportantPeopleAPI ip = Global.getSector().getImportantPeople();
-				PersonAPI engineer = Global.getSector().getFaction(Factions.PLAYER).createRandomPerson();
-
-				engineer.setRankId(Ranks.CITIZEN);
-				engineer.setPostId("hmis_hull_engineer");
-				engineer.setVoice(Voices.SPACER);
-				engineer.getMemory().set("$hmis_hull_engineer", true);
-
-				m.get().getCommDirectory().addPerson(engineer);
-				m.get().addPerson(engineer);
-
-				ip.addPerson(engineer);
-				ip.getData(engineer).getLocation().setMarket(m.get());
-			}
-		}
 
 		Misc.getFactionMarkets(Factions.HEGEMONY)
 		    .stream()

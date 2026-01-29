@@ -4,9 +4,19 @@ $market.ind:hullmodservices
 $market.ind:orbitalworks","SetShortcut hmis_OptionManage ""Q""",,17:hmis_OptionManage:Manage hull mods,
 hmis_Manage,DialogOptionSelected,$option == hmis_OptionManage,HMIS_ManageHullMods,,,
 ,,,,,,
-#hull_engineer_greeting,PickGreeting,$hmis_hull_engineer score:10,"ShowPersonVisual
-SetShortcut cutCommLink ""ESCAPE""","Heya boss, what can I do for you?","hull_engineer_options:”Hull Mod Services”
-cutCommLink:""Thank you, that’s all for now""",
 hull_engineer_options,PopulateOptions,$hmis_hull_engineer,"ShowPersonVisual
-SetShortcut cutCommLink ""ESCAPE""",,hull_engineer_topic1:”Hull Mod Services”,
-hull_engineer_topic1,DialogOptionSelected,$option == hull_engineer_options,FireAll PopulateOptions,testing123,,
+SetShortcut cutCommLink ""ESCAPE""
+intro.IntroManager",,"hull_engineer_topic1:What services do you provide?
+hull_engineer_topic2:Cheaper hull restoration?
+hull_engineer_topic3:How about improving ship quality?
+hull_engineer_topic4:Other benefits to improving ship quality?",
+hull_engineer_topic1,DialogOptionSelected,$option == hull_engineer_topic1,FireAll PopulateOptions,"Well, that depends on a few things, but at a minimum it becomes possible to add or remove s-mods from your ships. Ever add an s-mod and come to regret it later? We can fix that for you without needing to get a whole other ship.
+
+For, uh, credits, of course. You’re the boss and this is your colony, but this is expensive work.
+
+Also, once ship quality gets to the point where our ships don’t pop out of the forge with any d-mods, the cost of restoring the ships in your own fleet will start going down too.",,
+hull_engineer_topic2,DialogOptionSelected,$option == hull_engineer_topic2,FireAll PopulateOptions,"Right, so there’s a whole formula for calculating the cost to restore a ship, but what it comes down to is that as ship quality rises it’ll become cheaper to remove d-mods from your ships – production quality goes up and so it also gets easier to fix damaged ships, essentially. Streamlining and optimizing can only save you so many credits though, so no matter what you do you’ll never get more than about a 50% reduction in cost.",,
+hull_engineer_topic3,DialogOptionSelected,$option == hull_engineer_topic3,FireAll PopulateOptions,"You have several options for that. The Orbital Works and Hull Mod Services of course contribute, then obviously finding or uh, “otherwise obtaining” a Nanoforge will improve assembly output immensely. Keeping this colony as stable as possible also helps as does putting more priority on quality over quantity in your doctrine. And, well… an Alpha AI core would give a boost too, but I wouldn’t recommend it. Plugging an alien super intelligence into your entire ship building industry and hoping it only does what you tell it really seems like a bad idea to me. But, you’re the boss.",,
+hull_engineer_topic4,DialogOptionSelected,$option == hull_engineer_topic4,FireAll PopulateOptions,"Beyond reducing the cost of hull restoration, as ship quality increases we’ll be able to upgrade your ships to allow installing a third s-mod, restoring ships that are not otherwise restorable through regular means, and potentially integrating and de-integrating AI cores for automated ships should you happen to come into possession of any of those. You’d need to find a way to get access to some of the AI experts over at Tri-Tachyon for that last one though – no faction other than maybe the Hegemony would have anyone with that kind of expertise and there’s no way they’d help. They’d probably just arrest us all, actually.
+
+Oh, and one last thing, once ship quality gets even a bit above baseline, there’ll be interest in using our services to improve other faction’s ships. Nothing too crazy, but for the right price and the right ships, there’s definitely money to be made fixing up some of the garbage that gets assembled on other planets.",,

@@ -21,6 +21,11 @@ extends BaseIndustry
     {
         super.apply(true);
 
+		if(isBuilding())
+		{
+			return;
+		}
+
         if(market.getPrevStability() >= 7)
         {
             market.getStats().getDynamic().getMod(Stats.PRODUCTION_QUALITY_MOD).modifyFlat(Other.HULL_MOD_SERVICES, 0.2f, "Hull Mod Services");
