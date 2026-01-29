@@ -67,7 +67,8 @@ This can be disabled via a Luna setting. The max demand can be adjusted via a Lu
 No compatibility issues that I know of.
 
 ## Dependencies ##
-* LunaLib (optional): for the usual settings, version checker, etc
+* LunaLib (optional): for the usual settings, version checker, etc.
+* MagicLib (required): for achievements.
 
 ## Credits ##
 * A lot of the initial code was taken from the Progressive S-Mods mod which I then modified/refactored/added to as needed, which helped a lot. It would have taken me a lot longer to figure all this out myself from scratch, especially the UI code.
