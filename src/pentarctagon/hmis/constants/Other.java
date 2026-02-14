@@ -7,4 +7,5 @@ public class Other
 	public static final String SHIP_QUALITY = "ship_quality";
 	public static final int MAX_SMODS = 3;
 	public static final String HULL_MOD_SERVICES = "hullmodservices";
+	public static final String HMIS_ENGINEER = "$hmis_hull_engineer";
 }
