@@ -1,7 +1,7 @@
 id,trigger,conditions,script,text,options,notes
 hmis_Start,PopulateOptions,"$menuState == main
 $market.ind:hullmodservices
-$market.ind:orbitalworks","SetShortcut hmis_OptionManage ""Q""",,,
+$market.ind:orbitalworks","SetShortcut hmis_OptionManage ""Q""",,17:hmis_OptionManage:Manage hull mods,
 hmis_Manage,DialogOptionSelected,$option == hmis_OptionManage,HMIS_ManageHullMods,,,
 ,,,,,,
 ,,,,,,
@@ -9,7 +9,10 @@ hull_engineer_greeting,PickGreeting,$hmis_hull_engineer score:1000,"ShowPersonVi
 FireAll PopulateOptions","Heya boss, what can I do for you?",,
 hull_engineer_options,PopulateOptions,$hmis_hull_engineer,"RemoveOption cutCommLink
 AddOption 100 cutCommLink2""Thank you, that's all for now""
-SetShortcut cutCommLink2 ""ESCAPE""",,,
+SetShortcut cutCommLink2 ""ESCAPE""",,"hull_engineer_topic1:What services do you provide?
+hull_engineer_topic2:Cheaper hull restoration?
+hull_engineer_topic3:How about improving ship quality?
+hull_engineer_topic4:Other benefits to improving ship quality?",
 hull_engineer_topic1,DialogOptionSelected,$option == hull_engineer_topic1,FireAll PopulateOptions,"Well, that depends on a few things, but at a minimum it becomes possible to add or remove s-mods from your ships. Ever add an s-mod and come to regret it later? We can fix that for you without needing to get a whole other ship.
 
 For, uh, credits, of course. You’re the boss and this is your colony, but this is expensive work.
