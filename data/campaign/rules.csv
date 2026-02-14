@@ -4,12 +4,12 @@ $market.ind:hullmodservices
 $market.ind:orbitalworks","SetShortcut hmis_OptionManage ""Q""",,17:hmis_OptionManage:Manage hull mods,
 hmis_Manage,DialogOptionSelected,$option == hmis_OptionManage,HMIS_ManageHullMods,,,
 ,,,,,,
+,,,,,,
 hull_engineer_greeting,PickGreeting,$hmis_hull_engineer score:1000,"ShowPersonVisual
-SetShortcut cutCommLink ""ESCAPE""
 FireAll PopulateOptions","Heya boss, what can I do for you?",,
-hull_engineer_options,PopulateOptions,$hmis_hull_engineer,"ShowPersonVisual
-SetShortcut cutCommLink ""ESCAPE""
-intro.IntroManager",,"hull_engineer_topic1:What services do you provide?
+hull_engineer_options,PopulateOptions,$hmis_hull_engineer,"RemoveOption cutCommLink
+AddOption 100 cutCommLink2""Thank you, that's all for now""
+SetShortcut cutCommLink2 ""ESCAPE""",,"hull_engineer_topic1:What services do you provide?
 hull_engineer_topic2:Cheaper hull restoration?
 hull_engineer_topic3:How about improving ship quality?
 hull_engineer_topic4:Other benefits to improving ship quality?",
@@ -23,3 +23,18 @@ hull_engineer_topic3,DialogOptionSelected,$option == hull_engineer_topic3,FireAl
 hull_engineer_topic4,DialogOptionSelected,$option == hull_engineer_topic4,FireAll PopulateOptions,"Beyond reducing the cost of hull restoration, as ship quality increases we’ll be able to upgrade your ships to allow installing a third s-mod, restoring ships that are not otherwise restorable through regular means, and potentially integrating and de-integrating AI cores for automated ships should you happen to come into possession of any of those. You’d need to find a way to get access to some of the AI experts over at Tri-Tachyon for that last one though – no faction other than maybe the Hegemony would have anyone with that kind of expertise and there’s no way they’d help. They’d probably just arrest us all, actually.
 
 Oh, and one last thing, once ship quality gets even a bit above baseline, there’ll be interest in using our services to improve other faction’s ships. Nothing too crazy, but for the right price and the right ships, there’s definitely money to be made fixing up some of the garbage that gets assembled on other planets.",,
+,,,,,,
+,,,,,,
+hmis_test,MarketPostDock,"!$market.hmis_test_event
+$market.ind:hullmodservices
+$market.ind:orbitalworks
+$market.isPlayerOwned",BeginConversation POST:hmis_hull_engineer,aaaaaaaaaaaaaaaaaaaaaa,"hmis_test1:aa1
+hmis_test2:aa2",
+hmis_test1,DialogOptionSelected,$option == hmis_test1,"$market.hmis_test_event = true
+EndConversation DO_NOT_FIRE
+ShowDefaultVisual
+FireBest MarketPostDock",bbbbbbbbbbbbbbbbb,,
+hmis_test2,DialogOptionSelected,$option == hmis_test2,"$market.hmis_test_event = true
+EndConversation DO_NOT_FIRE
+ShowDefaultVisual
+FireBest MarketPostDock",cccccccccccccccccc,,

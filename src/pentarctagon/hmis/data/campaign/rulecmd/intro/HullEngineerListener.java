@@ -26,7 +26,7 @@ implements ColonyInteractionListener
 		{
 			if(entry.getEntryData() instanceof PersonAPI person)
 			{
-				if(person.getMemory().getBoolean("$hmis_hull_engineer"))
+				if(person.getMemory().getBoolean(Other.HULL_ENGINEER))
 				{
 					engineer = person;
 				}
@@ -55,7 +55,7 @@ implements ColonyInteractionListener
 				engineer.setRankId(Ranks.CITIZEN);
 				engineer.setPostId("hmis_hull_engineer");
 				engineer.setVoice(Voices.SPACER);
-				engineer.getMemory().set("$hmis_hull_engineer", true);
+				engineer.getMemory().set(Other.HULL_ENGINEER, true);
 
 				market.getCommDirectory().addPerson(engineer);
 				market.addPerson(engineer);

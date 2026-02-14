@@ -10,7 +10,9 @@ import com.fs.starfarer.api.loading.HullModSpecAPI;
 import com.fs.starfarer.api.util.Misc;
 import org.apache.log4j.Logger;
 import pentarctagon.hmis.constants.Other;
+import pentarctagon.hmis.data.campaign.rulecmd.intro.InAlphaSystemListener;
 import pentarctagon.hmis.data.campaign.rulecmd.intro.HullEngineerListener;
+import pentarctagon.hmis.data.campaign.rulecmd.intro.HullModServicesAlphaListener;
 import pentarctagon.hmis.dmods.RestorationCostListener;
 import pentarctagon.hmis.doctrine.listener.PlayerFactionShipQuality;
 import pentarctagon.hmis.hullmods.CustomOptimizationsReapplication;
@@ -87,6 +89,8 @@ extends BaseModPlugin
 		Global.getSector().addTransientListener(new AddSmodsListener());
 		Global.getSector().getListenerManager().addListener(new UpdatePlayerBlueprints(), true);
 		Global.getSector().getListenerManager().addListener(new PlayerFactionShipQuality(), true);
+		Global.getSector().getListenerManager().addListener(new HullModServicesAlphaListener(), true);
+		Global.getSector().getListenerManager().addListener(new InAlphaSystemListener(), true);
 		Global.getSector().getEconomy().addUpdateListener(new QualityDemandConfig());
 		Global.getSector().addTransientScript(new CustomOptimizationsReapplication());
 
