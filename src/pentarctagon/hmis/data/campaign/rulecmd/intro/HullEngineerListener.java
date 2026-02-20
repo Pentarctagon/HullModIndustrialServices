@@ -26,7 +26,7 @@ implements ColonyInteractionListener
 		{
 			if(entry.getEntryData() instanceof PersonAPI person)
 			{
-				if(person.getMemory().getBoolean(Other.HMIS_ENGINEER))
+				if(person.getMemoryWithoutUpdate().getBoolean(Other.HMIS_ENGINEER))
 				{
 					engineer = person;
 				}
