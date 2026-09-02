@@ -1,11 +1,14 @@
 package pentarctagon.hmis;
 
 import com.fs.starfarer.api.Global;
+import com.fs.starfarer.api.campaign.econ.Industry;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
+import com.fs.starfarer.api.impl.campaign.ids.Industries;
 import com.fs.starfarer.api.impl.campaign.ids.Stats;
+import com.fs.starfarer.api.loading.IndustrySpecAPI;
 import pentarctagon.hmis.constants.Luna;
 import pentarctagon.hmis.constants.Other;
 import pentarctagon.hmis.data.campaign.rulecmd.utils.LunaHelper;
@@ -152,5 +155,75 @@ public class Utils
 	public static int getTotalSmods(FleetMemberAPI ship)
 	{
 		return getBaseSmods()+getBonusSmods(ship);
+	}
+
+	/**
+	 * Some mods such as AotD add upgrades to the Orbital Works, so also need to check if any industry downgrades into an orbital works
+	 */
+	public static int findShipIndustryValue(MarketAPI market)
+	{
+		if(market.hasIndustry(Industries.ORBITALWORKS))
+		{
+			return market.getIndustry(Industries.ORBITALWORKS).isDisrupted() ? Other.NO_SHIP_INDUSTRY : Other.ORBITAL_INDUSTRY;
+		}
+		if(market.hasIndustry(Industries.HEAVYINDUSTRY))
+		{
+			return market.getIndustry(Industries.HEAVYINDUSTRY).isDisrupted() ? Other.NO_SHIP_INDUSTRY : Other.HEAVY_INDUSTRY;
+		}
+
+		for(Industry ind : market.getIndustries())
+		{
+			// vanilla covered above, no other vanilla industries matter
+			IndustrySpecAPI spec = ind.getSpec();
+			if(spec.getSourceMod() == null)
+			{
+				continue;
+			}
+
+			// check for modded industries that upgrade from an orbital works
+			while(spec.getDowngrade() != null && !Industries.ORBITALWORKS.equals(spec.getDowngrade()))
+			{
+				spec = Global.getSettings().getIndustrySpec(spec.getDowngrade());
+			}
+			if(spec.getDowngrade() != null)
+			{
+				return ind.isDisrupted() ? Other.NO_SHIP_INDUSTRY : Other.MOD_INDUSTRY;
+			}
+		}
+
+		return Other.NO_SHIP_INDUSTRY;
+	}
+	public static Industry findShipIndustry(MarketAPI market)
+	{
+		if(market.hasIndustry(Industries.ORBITALWORKS))
+		{
+			return market.getIndustry(Industries.ORBITALWORKS);
+		}
+		if(market.hasIndustry(Industries.HEAVYINDUSTRY))
+		{
+			return market.getIndustry(Industries.HEAVYINDUSTRY);
+		}
+
+		for(Industry ind : market.getIndustries())
+		{
+			// vanilla covered above, no other vanilla industries matter
+			IndustrySpecAPI spec = ind.getSpec();
+			if(spec.getSourceMod() == null)
+			{
+				continue;
+			}
+
+			// check for modded industries that upgrade from an orbital works
+			while(spec.getDowngrade() != null && !Industries.ORBITALWORKS.equals(spec.getDowngrade()))
+			{
+				spec = Global.getSettings().getIndustrySpec(spec.getDowngrade());
+			}
+			if(spec.getDowngrade() != null)
+			{
+				return ind;
+			}
+		}
+
+		return null;
 	}
 }

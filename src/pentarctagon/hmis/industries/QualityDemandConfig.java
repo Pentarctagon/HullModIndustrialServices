@@ -2,10 +2,12 @@ package pentarctagon.hmis.industries;
 
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.econ.EconomyAPI;
+import com.fs.starfarer.api.campaign.econ.Industry;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.combat.MutableStat;
 import com.fs.starfarer.api.impl.campaign.ids.Industries;
 import com.fs.starfarer.api.impl.campaign.ids.Stats;
+import pentarctagon.hmis.Utils;
 import pentarctagon.hmis.constants.Luna;
 import pentarctagon.hmis.constants.Other;
 import pentarctagon.hmis.data.campaign.rulecmd.utils.LunaHelper;
@@ -29,7 +31,7 @@ implements EconomyAPI.EconomyUpdateListener
 					continue;
 				}
 
-				if(market.hasIndustry(Industries.ORBITALWORKS) || market.hasIndustry(Industries.HEAVYINDUSTRY))
+				if(Utils.findShipIndustryValue(market) != Other.NO_SHIP_INDUSTRY)
 				{
 					int maxDemand = market.getCommodityData(commodityId).getMaxDemand();
 					if(maxDemand > 0)
@@ -57,7 +59,7 @@ implements EconomyAPI.EconomyUpdateListener
 
 		for(MarketAPI market : Global.getSector().getEconomy().getMarketsCopy())
 		{
-			if(market.hasIndustry(Industries.ORBITALWORKS) || market.hasIndustry(Industries.HEAVYINDUSTRY))
+			if(Utils.findShipIndustryValue(market) != Other.NO_SHIP_INDUSTRY)
 			{
 				// not sure how it makes any sense, but saw some cases of negative ship quality
 				BigDecimal marketQuality = market.getShipQualityFactor() < 0 ? new BigDecimal(0) : new BigDecimal(market.getShipQualityFactor());
@@ -72,24 +74,19 @@ implements EconomyAPI.EconomyUpdateListener
 				{
 					int qualityDeficit = baseQuality.multiply(new BigDecimal(100)).subtract(new BigDecimal(100)).abs().intValue();
 					int demand = Math.min(qualityDeficit / 5, LunaHelper.getInteger(Luna.HMIS_QUALITY_IMPORT_CAP, 5));
-					if(market.hasIndustry(Industries.ORBITALWORKS))
+
+					Industry ships = Utils.findShipIndustry(market);
+					if(ships != null)
 					{
-						market.getIndustry(Industries.ORBITALWORKS).getDemand(Other.SHIP_QUALITY).getQuantity().modifyFlat(Other.HULL_MOD_SERVICES, demand);
-					}
-					else if(market.hasIndustry(Industries.HEAVYINDUSTRY))
-					{
-						market.getIndustry(Industries.HEAVYINDUSTRY).getDemand(Other.SHIP_QUALITY).getQuantity().modifyFlat(Other.HULL_MOD_SERVICES, demand);
+						ships.getDemand(Other.SHIP_QUALITY).getQuantity().modifyFlat(Other.HULL_MOD_SERVICES, demand);
 					}
 				}
 				else
 				{
-					if(market.hasIndustry(Industries.ORBITALWORKS))
+					Industry ships = Utils.findShipIndustry(market);
+					if(ships != null)
 					{
-						market.getIndustry(Industries.ORBITALWORKS).getDemand(Other.SHIP_QUALITY).getQuantity().unmodifyFlat(Other.HULL_MOD_SERVICES);
-					}
-					else if(market.hasIndustry(Industries.HEAVYINDUSTRY))
-					{
-						market.getIndustry(Industries.HEAVYINDUSTRY).getDemand(Other.SHIP_QUALITY).getQuantity().unmodifyFlat(Other.HULL_MOD_SERVICES);
+						ships.getDemand(Other.SHIP_QUALITY).getQuantity().unmodifyFlat(Other.HULL_MOD_SERVICES);
 					}
 				}
 			}

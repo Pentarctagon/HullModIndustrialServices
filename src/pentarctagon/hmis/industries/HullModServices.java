@@ -2,11 +2,13 @@ package pentarctagon.hmis.industries;
 
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.econ.CommoditySpecAPI;
+import com.fs.starfarer.api.campaign.econ.Industry;
 import com.fs.starfarer.api.impl.campaign.econ.impl.BaseIndustry;
 import com.fs.starfarer.api.impl.campaign.ids.Commodities;
 import com.fs.starfarer.api.impl.campaign.ids.Industries;
 import com.fs.starfarer.api.impl.campaign.ids.Stats;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
+import pentarctagon.hmis.Utils;
 import pentarctagon.hmis.constants.Luna;
 import pentarctagon.hmis.constants.Other;
 import pentarctagon.hmis.data.campaign.rulecmd.utils.LunaHelper;
@@ -30,7 +32,7 @@ extends BaseIndustry
         {
             market.getStats().getDynamic().getMod(Stats.PRODUCTION_QUALITY_MOD).modifyFlat(Other.HULL_MOD_SERVICES, 0.2f, "Hull Mod Services");
         }
-		else if(market.hasIndustry(Industries.ORBITALWORKS) && market.hasIndustry(Other.HULL_MOD_SERVICES) && market.getIndustry(Industries.ORBITALWORKS).isDisrupted())
+		else if(Utils.findShipIndustryValue(market) < Other.ORBITAL_INDUSTRY && market.hasIndustry(Other.HULL_MOD_SERVICES))
         {
 	        market.getStats().getDynamic().getMod(Stats.PRODUCTION_QUALITY_MOD).modifyFlat(Other.HULL_MOD_SERVICES, 0f, "Hull Mod Services - Orbital Works disrupted");
         }
@@ -48,11 +50,13 @@ extends BaseIndustry
 			market.getStats().getDynamic().getMod(Stats.PRODUCTION_QUALITY_MOD).unmodify(Other.HULL_MOD_SERVICES+"_alphacore");
 		}
 
-		if(market.hasIndustry(Industries.ORBITALWORKS))
+		// only if orbital works or better
+	    Industry ships = Utils.findShipIndustry(market);
+		if(ships != null && !Industries.HEAVYINDUSTRY.equals(ships.getId()))
 		{
-			demand(Commodities.METALS, market.getIndustry(Industries.ORBITALWORKS).getDemand(Commodities.METALS).getQuantity().getModifiedInt()+2);
-			demand(Commodities.RARE_METALS, market.getIndustry(Industries.ORBITALWORKS).getDemand(Commodities.METALS).getQuantity().getModifiedInt());
-			demand(Commodities.FUEL, market.getIndustry(Industries.ORBITALWORKS).getDemand(Commodities.METALS).getQuantity().getModifiedInt()+2);
+			demand(Commodities.METALS, ships.getDemand(Commodities.METALS).getQuantity().getModifiedInt()+2);
+			demand(Commodities.RARE_METALS, ships.getDemand(Commodities.METALS).getQuantity().getModifiedInt());
+			demand(Commodities.FUEL, ships.getDemand(Commodities.METALS).getQuantity().getModifiedInt()+2);
 		}
 
 	    // for every 10% ship quality, export a unit that improves other factions' ship quality by 5%, rounded down by integer division
@@ -68,27 +72,28 @@ extends BaseIndustry
     public void unapply()
     {
         super.unapply();
-        market.getStats().getDynamic().getMod(Stats.PRODUCTION_QUALITY_MOD).unmodifyFlat(getModId(0));
+	    market.getStats().getDynamic().getMod(Stats.PRODUCTION_QUALITY_MOD).unmodify(Other.HULL_MOD_SERVICES);
+	    market.getStats().getDynamic().getMod(Stats.PRODUCTION_QUALITY_MOD).unmodify(Other.HULL_MOD_SERVICES+"_alphacore");
     }
 
     @Override
     public boolean isAvailableToBuild()
     {
-        return super.isAvailableToBuild() && market.hasIndustry(Industries.ORBITALWORKS) && market.getSize() >= Other.HMIS_MIN_MARKET_SIZE;
+        return super.isAvailableToBuild() && Utils.findShipIndustryValue(market) >= Other.ORBITAL_INDUSTRY && market.getSize() >= Other.HMIS_MIN_MARKET_SIZE;
     }
 
     @Override
     public String getUnavailableReason()
     {
-	    if(!market.hasIndustry(Industries.ORBITALWORKS) && market.getSize() >= Other.HMIS_MIN_MARKET_SIZE)
+	    if(Utils.findShipIndustryValue(market) < Other.ORBITAL_INDUSTRY && market.getSize() >= Other.HMIS_MIN_MARKET_SIZE)
 	    {
 		    return "Requires Orbital Works";
 	    }
-	    if(market.hasIndustry(Industries.ORBITALWORKS) && market.getSize() < Other.HMIS_MIN_MARKET_SIZE)
+	    if(Utils.findShipIndustryValue(market) >= Other.ORBITAL_INDUSTRY && market.getSize() < Other.HMIS_MIN_MARKET_SIZE)
 	    {
 		    return "Requires at least size 5 colony";
 	    }
-	    if(!market.hasIndustry(Industries.ORBITALWORKS) && market.getSize() < Other.HMIS_MIN_MARKET_SIZE)
+	    if(Utils.findShipIndustryValue(market) < Other.ORBITAL_INDUSTRY && market.getSize() < Other.HMIS_MIN_MARKET_SIZE)
 	    {
 		    return "Requires Orbital Works and at least a size 5 colony";
 	    }
@@ -160,11 +165,11 @@ extends BaseIndustry
 		{
 			CommoditySpecAPI coreSpec = Global.getSettings().getCommoditySpec(aiCoreId);
 			TooltipMakerAPI text = tooltip.beginImageWithText(coreSpec.getIconName(), 48);
-			text.addPara(pre + "Reduces upkeep cost by %s. Reduces demand by %s%% unit. Increases ship quality by 10%%.", pad, highlight, String.valueOf((int)((1f - UPKEEP_MULT) * 100f)), String.valueOf(DEMAND_REDUCTION));
+			text.addPara(pre + "Reduces upkeep cost by %s. Reduces demand by %s%% unit. Increases ship quality by %s%%.", pad, highlight, String.valueOf((int)((1f - UPKEEP_MULT) * 100f)), String.valueOf(DEMAND_REDUCTION), "10");
 			tooltip.addImageWithText(pad);
 			return;
 		}
 
-		tooltip.addPara(pre + "Reduces upkeep cost by %s%%. Reduces demand by %s unit. Increases ship quality by 10%%.", pad, highlight, String.valueOf((int)((1f - UPKEEP_MULT) * 100f)), String.valueOf(DEMAND_REDUCTION));
+		tooltip.addPara(pre + "Reduces upkeep cost by %s%%. Reduces demand by %s unit. Increases ship quality by %s%%.", pad, highlight, String.valueOf((int)((1f - UPKEEP_MULT) * 100f)), String.valueOf(DEMAND_REDUCTION), "10");
 	}
 }
