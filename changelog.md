@@ -1,3 +1,8 @@
+## 1.0.8
+* Fix for mods that provide an upgrade for the orbital works causing the Hull Mod Services effects to be disabled
+* Fix the '10' text in the alpha core description not being highlighted
+* Fix that the structure and alpha core effects weren't being removed if the structure is removed
+
 ## 1.0.7
 * Attempt to fix a crash when interacting with a planet with NPCs in the comm directory that don't have a faction.
 
