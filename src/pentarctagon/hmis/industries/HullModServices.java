@@ -57,6 +57,11 @@ extends BaseIndustry
 			demand(Commodities.METALS, ships.getDemand(Commodities.METALS).getQuantity().getModifiedInt()+2);
 			demand(Commodities.RARE_METALS, ships.getDemand(Commodities.METALS).getQuantity().getModifiedInt());
 			demand(Commodities.FUEL, ships.getDemand(Commodities.METALS).getQuantity().getModifiedInt()+2);
+			market.getMemory().set("$hmis_active", true);
+		}
+		else if(market.getMemoryWithoutUpdate().contains("$hmis_active"))
+		{
+			market.getMemory().unset("$hmis_active");
 		}
 
 	    // for every 10% ship quality, export a unit that improves other factions' ship quality by 5%, rounded down by integer division

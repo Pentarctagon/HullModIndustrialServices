@@ -173,9 +173,8 @@ public class Utils
 
 		for(Industry ind : market.getIndustries())
 		{
-			// vanilla covered above, no other vanilla industries matter
 			IndustrySpecAPI spec = ind.getSpec();
-			if(spec.getSourceMod() == null)
+			if(!spec.getTags().contains(Industries.HEAVYINDUSTRY))
 			{
 				continue;
 			}
@@ -206,9 +205,8 @@ public class Utils
 
 		for(Industry ind : market.getIndustries())
 		{
-			// vanilla covered above, no other vanilla industries matter
 			IndustrySpecAPI spec = ind.getSpec();
-			if(spec.getSourceMod() == null)
+			if(!spec.getTags().contains(Industries.HEAVYINDUSTRY))
 			{
 				continue;
 			}
