@@ -1,3 +1,6 @@
+## 1.0.9
+* Fix (again) for mods that provide an upgrade for the orbital works causing the Hull Mod Services effects to be disabled
+
 ## 1.0.8
 * Fix for mods that provide an upgrade for the orbital works causing the Hull Mod Services effects to be disabled
 * Fix the '10' text in the alpha core description not being highlighted
