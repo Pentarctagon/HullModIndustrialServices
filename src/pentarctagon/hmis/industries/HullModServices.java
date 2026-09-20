@@ -4,20 +4,29 @@ import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.econ.CommoditySpecAPI;
 import com.fs.starfarer.api.campaign.econ.Industry;
 import com.fs.starfarer.api.impl.campaign.econ.impl.BaseIndustry;
+import com.fs.starfarer.api.impl.campaign.econ.impl.ItemEffectsRepo;
 import com.fs.starfarer.api.impl.campaign.ids.Commodities;
 import com.fs.starfarer.api.impl.campaign.ids.Industries;
+import com.fs.starfarer.api.impl.campaign.ids.Items;
 import com.fs.starfarer.api.impl.campaign.ids.Stats;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import pentarctagon.hmis.Utils;
 import pentarctagon.hmis.constants.Luna;
 import pentarctagon.hmis.constants.Other;
 import pentarctagon.hmis.data.campaign.rulecmd.utils.LunaHelper;
+import pentarctagon.hmis.items.DeconstructionModuleItemEffect;
 
 import java.awt.*;
 
 public class HullModServices
 extends BaseIndustry
 {
+	static {
+		ItemEffectsRepo.ITEM_EFFECTS.put(Other.HMIS_DECONSTRUCTION_MODULE, new DeconstructionModuleItemEffect(Other.HMIS_DECONSTRUCTION_MODULE));
+	}
+
+	private int domainGradePartsProduction = 0;
+
     @Override
     public void apply()
     {
@@ -28,18 +37,24 @@ extends BaseIndustry
 			return;
 		}
 
-        if(market.getPrevStability() >= 7)
+		if(!LunaHelper.getBoolean(Luna.HMIS_DOMAIN_GRADE_PARTS_PRODUCTION, true))
+		{
+			domainGradePartsProduction = 0;
+		}
+
+	    int shipsValue = Utils.findShipIndustryValue(market);
+		if(shipsValue < Other.ORBITAL_INDUSTRY && market.hasIndustry(Other.HULL_MOD_SERVICES))
         {
-            market.getStats().getDynamic().getMod(Stats.PRODUCTION_QUALITY_MOD).modifyFlat(Other.HULL_MOD_SERVICES, 0.2f, "Hull Mod Services");
+	        market.getStats().getDynamic().getMod(Stats.PRODUCTION_QUALITY_MOD).modifyFlat(Other.HULL_MOD_SERVICES, 0f, "Hull Mod Services - no Orbital Works");
         }
-		else if(Utils.findShipIndustryValue(market) < Other.ORBITAL_INDUSTRY && market.hasIndustry(Other.HULL_MOD_SERVICES))
-        {
-	        market.getStats().getDynamic().getMod(Stats.PRODUCTION_QUALITY_MOD).modifyFlat(Other.HULL_MOD_SERVICES, 0f, "Hull Mod Services - Orbital Works disrupted");
-        }
-        else
+        else if(market.getPrevStability() < 7)
         {
             market.getStats().getDynamic().getMod(Stats.PRODUCTION_QUALITY_MOD).modifyFlat(Other.HULL_MOD_SERVICES, 0f, "Hull Mod Services - low stability");
         }
+		else
+		{
+			market.getStats().getDynamic().getMod(Stats.PRODUCTION_QUALITY_MOD).modifyFlat(Other.HULL_MOD_SERVICES, 0.2f, "Hull Mod Services");
+		}
 
 		if(Commodities.ALPHA_CORE.equals(getAICoreId()))
 		{
@@ -47,17 +62,36 @@ extends BaseIndustry
 		}
 		else
 		{
-			market.getStats().getDynamic().getMod(Stats.PRODUCTION_QUALITY_MOD).unmodify(Other.HULL_MOD_SERVICES+"_alphacore");
+			market.getStats().getDynamic().getMod(Stats.PRODUCTION_QUALITY_MOD).unmodifyFlat(Other.HULL_MOD_SERVICES+"_alphacore");
 		}
 
 		// only if orbital works or better
 	    Industry ships = Utils.findShipIndustry(market);
+
+		// reset domain grade parts production if the player changes other things in the colony
+	    if(ships == null || Industries.HEAVYINDUSTRY.equals(ships.getId()))
+	    {
+		    domainGradePartsProduction = 0;
+	    }
+	    else if(ships.getSpecialItem() == null || !Items.PRISTINE_NANOFORGE.equals(ships.getSpecialItem().getId()))
+	    {
+		    domainGradePartsProduction = 0;
+	    }
+
 		if(ships != null && !Industries.HEAVYINDUSTRY.equals(ships.getId()))
 		{
 			demand(Commodities.METALS, ships.getDemand(Commodities.METALS).getQuantity().getModifiedInt()+2);
 			demand(Commodities.RARE_METALS, ships.getDemand(Commodities.METALS).getQuantity().getModifiedInt());
 			demand(Commodities.FUEL, ships.getDemand(Commodities.METALS).getQuantity().getModifiedInt()+2);
+
 			market.getMemory().set("$hmis_active", true);
+
+			if(domainGradePartsProduction > 0)
+			{
+				// TODO: add domain grade parts supply
+				market.getStats().getDynamic().getMod(Stats.COMBAT_FLEET_SIZE_MULT).modifyMult(Other.HULL_MOD_SERVICES+"_deconmod_fleet", 1f-(0.15f*domainGradePartsProduction), "Hull Mod Services - domain grade parts");
+				ships.getSupply(Commodities.SHIPS).getQuantity().modifyFlat(Other.HULL_MOD_SERVICES+"_deconmod_ships", -4*domainGradePartsProduction, "Hull Mod Services - domain grade parts");
+			}
 		}
 		else if(market.getMemoryWithoutUpdate().contains("$hmis_active"))
 		{
@@ -66,10 +100,14 @@ extends BaseIndustry
 
 	    // for every 10% ship quality, export a unit that improves other factions' ship quality by 5%, rounded down by integer division
 	    float marketQuality = market.getShipQualityFactor();
-		if(marketQuality >= 1.1f && LunaHelper.getBoolean(Luna.HMIS_QUALITY_EXPORT, true))
+		if(marketQuality >= 1.1f && LunaHelper.getBoolean(Luna.HMIS_QUALITY_EXPORT, true) && shipsValue >= Other.ORBITAL_INDUSTRY)
 		{
 			int qualityExported = (int)((marketQuality-1)*10);
 			supply(Other.SHIP_QUALITY, qualityExported);
+		}
+		else
+		{
+			supply(Other.SHIP_QUALITY, 0);
 		}
     }
 
@@ -77,8 +115,18 @@ extends BaseIndustry
     public void unapply()
     {
         super.unapply();
-	    market.getStats().getDynamic().getMod(Stats.PRODUCTION_QUALITY_MOD).unmodify(Other.HULL_MOD_SERVICES);
-	    market.getStats().getDynamic().getMod(Stats.PRODUCTION_QUALITY_MOD).unmodify(Other.HULL_MOD_SERVICES+"_alphacore");
+	    market.getStats().getDynamic().getMod(Stats.PRODUCTION_QUALITY_MOD).unmodifyFlat(Other.HULL_MOD_SERVICES);
+	    market.getStats().getDynamic().getMod(Stats.PRODUCTION_QUALITY_MOD).unmodifyFlat(Other.HULL_MOD_SERVICES+"_alphacore");
+		if(domainGradePartsProduction == 0)
+		{
+			// TODO: remove domain grade parts supply
+			market.getStats().getDynamic().getMod(Stats.COMBAT_FLEET_SIZE_MULT).unmodifyMult(Other.HULL_MOD_SERVICES+"_deconmod_fleet");
+			Industry ships = Utils.findShipIndustry(market);
+			if(ships != null && !ships.getId().equals(Industries.HEAVYINDUSTRY))
+			{
+				ships.getSupply(Commodities.SHIPS).getQuantity().unmodifyFlat(Other.HULL_MOD_SERVICES+"_deconmod_ships");
+			}
+		}
     }
 
     @Override
@@ -90,15 +138,16 @@ extends BaseIndustry
     @Override
     public String getUnavailableReason()
     {
-	    if(Utils.findShipIndustryValue(market) < Other.ORBITAL_INDUSTRY && market.getSize() >= Other.HMIS_MIN_MARKET_SIZE)
+		int shipsValue = Utils.findShipIndustryValue(market);
+	    if(shipsValue < Other.ORBITAL_INDUSTRY && market.getSize() >= Other.HMIS_MIN_MARKET_SIZE)
 	    {
 		    return "Requires Orbital Works";
 	    }
-	    if(Utils.findShipIndustryValue(market) >= Other.ORBITAL_INDUSTRY && market.getSize() < Other.HMIS_MIN_MARKET_SIZE)
+	    if(shipsValue >= Other.ORBITAL_INDUSTRY && market.getSize() < Other.HMIS_MIN_MARKET_SIZE)
 	    {
 		    return "Requires at least size 5 colony";
 	    }
-	    if(Utils.findShipIndustryValue(market) < Other.ORBITAL_INDUSTRY && market.getSize() < Other.HMIS_MIN_MARKET_SIZE)
+	    if(shipsValue < Other.ORBITAL_INDUSTRY && market.getSize() < Other.HMIS_MIN_MARKET_SIZE)
 	    {
 		    return "Requires Orbital Works and at least a size 5 colony";
 	    }
@@ -176,5 +225,15 @@ extends BaseIndustry
 		}
 
 		tooltip.addPara(pre + "Reduces upkeep cost by %s%%. Reduces demand by %s unit. Increases ship quality by %s%%.", pad, highlight, String.valueOf((int)((1f - UPKEEP_MULT) * 100f)), String.valueOf(DEMAND_REDUCTION), "10");
+	}
+
+	public int getDomainGradePartsProduction()
+	{
+		return domainGradePartsProduction;
+	}
+
+	public void setDomainGradePartsProduction(int domainGradePartsProduction)
+	{
+		this.domainGradePartsProduction = domainGradePartsProduction;
 	}
 }

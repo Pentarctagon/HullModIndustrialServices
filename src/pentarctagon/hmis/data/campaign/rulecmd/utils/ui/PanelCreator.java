@@ -10,7 +10,9 @@ import com.fs.starfarer.api.impl.campaign.ids.Skills;
 import com.fs.starfarer.api.impl.campaign.ids.Stats;
 import com.fs.starfarer.api.impl.campaign.ids.Tags;
 import com.fs.starfarer.api.impl.campaign.intel.TriTachyonDeal;
+import com.fs.starfarer.api.loading.WeaponSpecAPI;
 import com.fs.starfarer.api.ui.*;
+import com.fs.starfarer.api.util.Misc;
 import pentarctagon.hmis.constants.Luna;
 import pentarctagon.hmis.data.campaign.rulecmd.ui.*;
 import pentarctagon.hmis.data.campaign.rulecmd.ui.Button;
@@ -30,6 +32,7 @@ public class PanelCreator
 	private static final String BUTTON_DEINTEGRATE_AI = "BUTTON_DEINTEGRATE_AI";
 	private static final String BUTTON_INTEGRATE_AI = "BUTTON_INTEGRATE_AI";
 	private static final String BUTTON_THIRD_SMOD = "BUTTON_THIRD_SMOD";
+	private static final String BUTTON_XIV_UPGRADE = "BUTTON_XIV_UPGRADE";
 	private static final int MAKE_RESTORABLE_COST = 500_000;
 	private static final int DEINTEGRATE_AI_COST = 150_000;
 	private static final int INTEGRATE_AI_COST = 50_000;
@@ -38,6 +41,21 @@ public class PanelCreator
 		ShipAPI.HullSize.DESTROYER, 750_000,
 		ShipAPI.HullSize.CRUISER, 1_000_000,
 		ShipAPI.HullSize.CAPITAL_SHIP, 1_500_000
+	);
+	private static final Map<ShipAPI.HullSize, Integer> XIV_UPGRADE_BY_SIZE = Map.of(
+		ShipAPI.HullSize.FRIGATE, 50,
+		ShipAPI.HullSize.DESTROYER, 100,
+		ShipAPI.HullSize.CRUISER, 150,
+		ShipAPI.HullSize.CAPITAL_SHIP, 200
+	);
+
+	private static final Map<String, String> xivPrecursors = Map.of(
+		"enforcer", "enforcer_xiv",
+		"dominator", "dominator_xiv",
+		"falcon", "falcon_xiv",
+		"eagle", "eagle_xiv",
+		"legion", "legion_xiv",
+		"onslaught", "onslaught_xiv"
 	);
 
 	private static final Set<String> captainSkills = Set.of(
@@ -161,6 +179,54 @@ public class PanelCreator
 					Global.getSector().getPlayerFleet().getCargo().getCredits().subtract(THIRD_SMOD_BY_SIZE.get(ship.getHullSpec().getHullSize()));
 					callback.dismissCustomDialog(1);
 				}
+				else if(buttonId.equals(BUTTON_XIV_UPGRADE))
+				{
+					FleetDataAPI fleet = Global.getSector().getPlayerFleet().getFleetData();
+					// add xiv ship
+					// not actually sure if just appending "_Hull" is always accurate, but so far seems to be fine
+					FleetMemberAPI xivShip = fleet.addFleetMember(xivPrecursors.get(ship.getHullSpec().getHullId())+"_Hull");
+					// keep name
+					xivShip.setShipName(ship.getShipName());
+					// keep weapons
+					for(String slot : ship.getVariant().getFittedWeaponSlots())
+					{
+						WeaponSpecAPI weapon = ship.getVariant().getWeaponSpec(slot);
+						xivShip.getVariant().addWeapon(slot, weapon.getWeaponId());
+					}
+					// keep vents and capacitors
+					xivShip.getVariant().setNumFluxVents(ship.getVariant().getNumFluxVents());
+					xivShip.getVariant().setNumFluxCapacitors(ship.getVariant().getNumFluxCapacitors());
+					// keep captain
+					xivShip.setCaptain(ship.getCaptain());
+					// keep hullmods
+					HashMap<String, HashSet<String>> hullmods = Utils.getDistinctHullmods(ship);
+					for(String hullmod : hullmods.get(Utils.SMODS))
+					{
+						xivShip.getVariant().addPermaMod(hullmod, true);
+					}
+					for(String hullmod : hullmods.get(Utils.PERMAMODS))
+					{
+						xivShip.getVariant().addPermaMod(hullmod, false);
+					}
+//					for(String hullmod : hullmods.get(Utils.BUILTIN_SMODS))
+//					{
+//						// not relevant for these ships
+//						// also not exactly sure how to programmatically s-mod a built-in hullmod - doesn't seem any way to specify that
+//					}
+					for(String hullmod : hullmods.get(Utils.SUPPRESSEDMODS))
+					{
+						xivShip.getVariant().addSuppressedMod(hullmod);
+					}
+					for(String hullmod : hullmods.get(Utils.HULLMODS))
+					{
+						xivShip.getVariant().addMod(hullmod);
+					}
+
+					// remove non-xiv original
+					fleet.removeFleetMember(ship);
+
+					callback.dismissCustomDialog(1);
+				}
 			}
 		};
 
@@ -170,7 +236,7 @@ public class PanelCreator
 		// If editing a non-modular ship or a modular ship's base, add a fancy ship list image thing
 		if(ship.getVariant() == selectedVariant)
 		{
-			shipElement.addShipList(1, 1, shipSize, com.fs.starfarer.api.util.Misc.getBasePlayerColor(), Collections.singletonList(ship), 0f);
+			shipElement.addShipList(1, 1, shipSize, Misc.getBasePlayerColor(), Collections.singletonList(ship), 0f);
 		}
 		// Otherwise manually grab the module's image
 		else
@@ -194,7 +260,7 @@ public class PanelCreator
 			shipName += " - " + selectedVariant.getHullSpec().getHullName();
 		}
 		infoTextElement.setParaOrbitronLarge();
-		LabelAPI text = infoTextElement.addPara(shipName, com.fs.starfarer.api.util.Misc.getBasePlayerColor(), 0f);
+		LabelAPI text = infoTextElement.addPara(shipName, Misc.getBasePlayerColor(), 0f);
 		text.setHighlightColor(Color.WHITE);
 		text.setHighlight(ship.getHullSpec().getHullName());
 
@@ -268,6 +334,16 @@ public class PanelCreator
 				button.setEnabled(false);
 			}
 		}
+		// XIV upgrade package
+		if(xivPrecursors.containsKey(ship.getHullSpec().getHullId()) && LunaHelper.getBoolean(Luna.HMIS_XIV_UPGRADE_PACKAGE, true))
+		{
+			String domainGradePartsText = String.format("XIV upgrade package (%,d domain grade parts)", XIV_UPGRADE_BY_SIZE.get(ship.getHullSpec().getHullSize()));
+			ButtonAPI button = infoTextElement.addButton(domainGradePartsText, BUTTON_XIV_UPGRADE, infoTextWidth, 30f, 5f);
+			if(Utils.getPlayerDomainGradeParts() < XIV_UPGRADE_BY_SIZE.get(ship.getHullSpec().getHullSize()))
+			{
+				button.setEnabled(false);
+			}
+		}
 
 		shipInfoPanel.addUIElement(infoTextElement).rightOfTop(shipElement, infoTextPad);
 		panel.addComponent(shipInfoPanel);
@@ -282,7 +358,7 @@ public class PanelCreator
 		TooltipMakerAPI buttonsElement = panel.createUIElement(sizes.width(), sizes.buttonListHeight(), true);
 		for(String text : buttonText)
 		{
-			Button button = new Button(text, com.fs.starfarer.api.util.Misc.getBasePlayerColor(), com.fs.starfarer.api.util.Misc.getDarkPlayerColor(), com.fs.starfarer.api.util.Misc.getBrightPlayerColor(), sizes.buttonWidth(), buttonHeight, buttonPadding);
+			Button button = new Button(text, Misc.getBasePlayerColor(), Misc.getDarkPlayerColor(), Misc.getBrightPlayerColor(), sizes.buttonWidth(), buttonHeight, buttonPadding);
 			button.init(buttonsElement);
 			buttons.add(button);
 		}
@@ -332,10 +408,10 @@ public class PanelCreator
 	public static HullModButton addHullModButtonToElement(TooltipMakerAPI tooltipMaker, HullModButtonData data, float buttonWidth)
 	{
 		HullModButton button = new HullModButton(data,
-			data.isBuiltIn() ? com.fs.starfarer.api.util.Misc.getStoryOptionColor() : com.fs.starfarer.api.util.Misc.getBasePlayerColor(),
-			data.isBuiltIn() ? com.fs.starfarer.api.util.Misc.getStoryDarkColor() : com.fs.starfarer.api.util.Misc.getDarkPlayerColor(),
-			com.fs.starfarer.api.util.Misc.getBrightPlayerColor(),
-			data.isBuiltIn() ? com.fs.starfarer.api.util.Misc.getStoryOptionColor() : Color.WHITE,
+			data.isBuiltIn() ? Misc.getStoryOptionColor() : Misc.getBasePlayerColor(),
+			data.isBuiltIn() ? Misc.getStoryDarkColor() : Misc.getDarkPlayerColor(),
+			Misc.getBrightPlayerColor(),
+			data.isBuiltIn() ? Misc.getStoryOptionColor() : Color.WHITE,
 			buttonWidth,
 			45f,
 			10f,
@@ -357,7 +433,7 @@ public class PanelCreator
 					{
 						highlights.add(descParam);
 					}
-					tooltip.addPara(data.tooltipDescription().replaceAll("%", "%%"), 0f, com.fs.starfarer.api.util.Misc.getHighlightColor(), highlights.toArray(new String[0]));
+					tooltip.addPara(data.tooltipDescription().replaceAll("%", "%%"), 0f, Misc.getHighlightColor(), highlights.toArray(new String[0]));
 				}
 				data.hullModEffect().addPostDescriptionSection(tooltip, data.hullSize(), null, getTooltipWidth(tooltipParam), true);
 				if(data.hullModEffect().hasSModEffectSection(data.hullSize(), null, false))

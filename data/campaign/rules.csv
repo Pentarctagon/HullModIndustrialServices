@@ -11,7 +11,9 @@ AddOption 100 cutCommLink2""Thank you, that's all for now""
 SetShortcut cutCommLink2 ""ESCAPE""",,"hull_engineer_topic1:What services do you provide?
 hull_engineer_topic2:Cheaper hull restoration?
 hull_engineer_topic3:How about improving ship quality?
-hull_engineer_topic4:Other benefits to improving ship quality?",
+hull_engineer_topic4:Other benefits to improving ship quality?
+hull_engineer_topic5:Producing domain grade parts?
+hull_engineer_topic6:What’s the XIV upgrade package?",
 hull_engineer_topic1,DialogOptionSelected,$option == hull_engineer_topic1,FireAll PopulateOptions,"Well, that depends on a few things, but at a minimum it becomes possible to add or remove s-mods from your ships. Ever add an s-mod and come to regret it later? We can fix that for you without needing to get a whole other ship.
 
 For, uh, credits, of course. You’re the boss and this is your colony, but this is expensive work.
@@ -22,3 +24,5 @@ hull_engineer_topic3,DialogOptionSelected,$option == hull_engineer_topic3,FireAl
 hull_engineer_topic4,DialogOptionSelected,$option == hull_engineer_topic4,FireAll PopulateOptions,"Beyond reducing the cost of hull restoration, as ship quality increases we’ll be able to upgrade your ships to allow installing a third s-mod, restoring ships that are not otherwise restorable through regular means, and potentially integrating and de-integrating AI cores for automated ships should you happen to come into possession of any of those. You’d need to find a way to get access to some of the AI experts over at Tri-Tachyon for that last one though – no faction other than maybe the Hegemony would have anyone with that kind of expertise and there’s no way they’d help. They’d probably just arrest us all, actually.
 
 Oh, and one last thing, once ship quality gets even a bit above baseline, there’ll be interest in using our services to improve other faction’s ships. Nothing too crazy, but for the right price and the right ships, there’s definitely money to be made fixing up some of the garbage that gets assembled on other planets.",,
+hull_engineer_topic5,DialogOptionSelected,$option == hull_engineer_topic5,FireAll PopulateOptions,"It’s, well, something we can do, sure. You need to understand though that nanoforges - and you’d need a pristine one for this – don’t print the individual parts, they print whole ships and then we’d try to carefully rip them apart to extract as many individual pieces as we can without damaging them. So we can do that, but it’s going to hurt everything else that depends on ship production. Hull exports will take a major hit, we’ll lose some capacity for fixing up other factions’ ships as a service, and there will be fewer ships available for this colony’s trade and military fleets.",,
+hull_engineer_topic6,DialogOptionSelected,$option == hull_engineer_topic6,FireAll PopulateOptions,"It’s pretty straightforward: for ships that have a known XIV Battlegroup variant, we can upgrade the base model to the XIV version as long as you have enough domain grade parts for us to substitute in and the ship doesn’t have any major damage. But, uh, keep it to yourself if you decide to upgrade anything. Just because it’s something we can do doesn’t mean the Hegemony’ll be happy about us doing it. Otherwise you can bet the Church would’ve been allowed to use them too, especially during the AI wars.",,

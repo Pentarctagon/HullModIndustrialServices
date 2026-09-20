@@ -15,6 +15,8 @@ import pentarctagon.hmis.data.campaign.rulecmd.utils.LunaHelper;
 import pentarctagon.hmis.doctrine.listener.PlayerFactionShipQuality;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.HashSet;
 
 public class Utils
 {
@@ -129,6 +131,58 @@ public class Utils
 			return 150_000;
 		}
 		return 100_000;
+	}
+
+	public static int getPlayerDomainGradeParts()
+	{
+		return 1000;
+	}
+
+	public static final String SMODS = "SMODS";
+	public static final String BUILTIN_SMODS = "BUILTIN_SMODS";
+	public static final String PERMAMODS = "PERMAMODS";
+	public static final String SUPPRESSEDMODS = "SUPPRESSEDMODS";
+	public static final String HULLMODS = "HULLMODS";
+	public static HashMap<String, HashSet<String>> getDistinctHullmods(FleetMemberAPI ship)
+	{
+		HashMap<String, HashSet<String>> hullmods = new HashMap<>();
+		hullmods.put(SMODS, new HashSet<>());
+		hullmods.put(BUILTIN_SMODS, new HashSet<>());
+		hullmods.put(PERMAMODS, new HashSet<>());
+		hullmods.put(SUPPRESSEDMODS, new HashSet<>());
+		hullmods.put(HULLMODS, new HashSet<>());
+
+		for(String hullmod : ship.getVariant().getSMods())
+		{
+			hullmods.get(SMODS).add(hullmod);
+		}
+		for(String hullmod : ship.getVariant().getPermaMods())
+		{
+			if(!hullmods.get(SMODS).contains(hullmod))
+			{
+				hullmods.get(PERMAMODS).add(hullmod);
+			}
+		}
+		for(String hullmod : ship.getVariant().getSModdedBuiltIns())
+		{
+			if(!hullmods.get(SMODS).contains(hullmod) && !hullmods.get(PERMAMODS).contains(hullmod))
+			{
+				hullmods.get(BUILTIN_SMODS).add(hullmod);
+			}
+		}
+		for(String hullmod : ship.getVariant().getSuppressedMods())
+		{
+			hullmods.get(SUPPRESSEDMODS).add(hullmod);
+		}
+		for(String hullmod : ship.getVariant().getHullMods())
+		{
+			if(!hullmods.get(SMODS).contains(hullmod) && !hullmods.get(PERMAMODS).contains(hullmod) && !hullmods.get(BUILTIN_SMODS).contains(hullmod) && !hullmods.get(SUPPRESSEDMODS).contains(hullmod))
+			{
+				hullmods.get(HULLMODS).add(hullmod);
+			}
+		}
+
+		return hullmods;
 	}
 
 	public static int getPlayerCredits()
