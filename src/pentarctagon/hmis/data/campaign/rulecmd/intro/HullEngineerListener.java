@@ -20,6 +20,9 @@ implements ColonyInteractionListener
 	@Override
 	public void reportPlayerOpenedMarket(MarketAPI market)
 	{
+		Global.getSector().getMemory().set(Other.HMIS_MARKET_FACTION_ID, market.getFaction().getId());
+		Global.getSector().getMemory().set(Other.HMIS_CURRENT_MARKET_REP, market.getFaction().getRelToPlayer().getRepInt());
+
 		List<CommDirectoryEntryAPI> entries = market.getCommDirectory().getEntriesCopy();
 		PersonAPI engineer = null;
 		for(CommDirectoryEntryAPI entry : entries)
@@ -34,7 +37,7 @@ implements ColonyInteractionListener
 		}
 
 		// if the market has a hull engineer and shouldn't anymore, remove them
-		if(!market.isPlayerOwned() || !market.hasIndustry(Other.HULL_MOD_SERVICES) || market.getIndustry(Other.HULL_MOD_SERVICES).isBuilding())
+		if(!market.hasIndustry(Other.HULL_MOD_SERVICES) || market.getIndustry(Other.HULL_MOD_SERVICES).isBuilding())
 		{
 			if(engineer != null)
 			{
@@ -67,7 +70,11 @@ implements ColonyInteractionListener
 	}
 
 	@Override
-	public void reportPlayerClosedMarket(MarketAPI market){}
+	public void reportPlayerClosedMarket(MarketAPI market)
+	{
+		Global.getSector().getMemory().unset(Other.HMIS_MARKET_FACTION_ID);
+		Global.getSector().getMemory().unset(Other.HMIS_CURRENT_MARKET_REP);
+	}
 
 	@Override
 	public void reportPlayerOpenedMarketAndCargoUpdated(MarketAPI market){}

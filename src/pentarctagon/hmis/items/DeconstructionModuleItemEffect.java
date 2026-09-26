@@ -4,11 +4,9 @@ import com.fs.starfarer.api.campaign.SpecialItemData;
 import com.fs.starfarer.api.campaign.econ.Industry;
 import com.fs.starfarer.api.campaign.econ.InstallableIndustryItemPlugin;
 import com.fs.starfarer.api.impl.campaign.econ.impl.BaseInstallableItemEffect;
-import com.fs.starfarer.api.impl.campaign.ids.Commodities;
 import com.fs.starfarer.api.impl.campaign.ids.Industries;
 import com.fs.starfarer.api.impl.campaign.ids.Stats;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
-import pentarctagon.hmis.Utils;
 import pentarctagon.hmis.constants.Other;
 
 import java.util.ArrayList;
@@ -28,7 +26,7 @@ extends BaseInstallableItemEffect
 	@Override
 	public void apply(Industry industry)
 	{
-		industry.getMarket().getStats().getDynamic().getMod(Stats.GROUND_DEFENSES_MOD).modifyFlat(Other.HULL_MOD_SERVICES+"_deconmod_gdef", -5, "Hull Mod Services - Deconstruction Module");
+		industry.getMarket().getStats().getDynamic().getMod(Stats.GROUND_DEFENSES_MOD).modifyFlat(Other.HULL_MOD_SERVICES+"_deconmod_gdef", -10, "Hull Mod Services - Deconstruction Module");
 	}
 
 	@Override
@@ -46,6 +44,13 @@ extends BaseInstallableItemEffect
 		{
 			reqs.add("Heavy Batteries");
 		}
+		if(
+			!industry.getMarket().hasIndustry(Industries.BATTLESTATION) && !industry.getMarket().hasIndustry(Industries.BATTLESTATION_MID) && !industry.getMarket().hasIndustry(Industries.BATTLESTATION_HIGH) &&
+			!industry.getMarket().hasIndustry(Industries.STARFORTRESS) && !industry.getMarket().hasIndustry(Industries.STARFORTRESS_MID) && !industry.getMarket().hasIndustry(Industries.STARFORTRESS_HIGH)
+		)
+		{
+			reqs.add("Battlestation");
+		}
 
 		return reqs;
 	}
@@ -61,6 +66,7 @@ extends BaseInstallableItemEffect
 	{
 		ArrayList<String> reqs = new ArrayList<>();
 		reqs.add("Heavy Batteries");
+		reqs.add("Battlestation");
 		return reqs;
 	}
 

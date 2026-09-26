@@ -4,9 +4,11 @@ $market.hmis_active","SetShortcut hmis_OptionManage ""Q""",,17:hmis_OptionManage
 hmis_Manage,DialogOptionSelected,$option == hmis_OptionManage,HMIS_ManageHullMods,,,
 ,,,,,,
 ,,,,,,
-hull_engineer_greeting,PickGreeting,$hmis_hull_engineer score:1000,"ShowPersonVisual
+hull_engineer_greeting,PickGreeting,"$hmis_hull_engineer score:1000
+$market.isPlayerOwned","ShowPersonVisual
 FireAll PopulateOptions","Heya boss, what can I do for you?",,
-hull_engineer_options,PopulateOptions,$hmis_hull_engineer,"RemoveOption cutCommLink
+hull_engineer_options,PopulateOptions,"$hmis_hull_engineer
+$market.isPlayerOwned","RemoveOption cutCommLink
 AddOption 100 cutCommLink2""Thank you, that's all for now""
 SetShortcut cutCommLink2 ""ESCAPE""",,"hull_engineer_topic1:What services do you provide?
 hull_engineer_topic2:Cheaper hull restoration?
@@ -14,6 +16,9 @@ hull_engineer_topic3:How about improving ship quality?
 hull_engineer_topic4:Other benefits to improving ship quality?
 hull_engineer_topic5:Producing domain grade parts?
 hull_engineer_topic6:What’s the XIV upgrade package?",
+hull_engineer_options_threat,PopulateOptions,"$hmis_hull_engineer
+$market.isPlayerOwned
+$player.encounteredThreat ",,,hull_engineer_topic7:Can Threat-tech be used for ship deconstruction?,
 hull_engineer_topic1,DialogOptionSelected,$option == hull_engineer_topic1,FireAll PopulateOptions,"Well, that depends on a few things, but at a minimum it becomes possible to add or remove s-mods from your ships. Ever add an s-mod and come to regret it later? We can fix that for you without needing to get a whole other ship.
 
 For, uh, credits, of course. You’re the boss and this is your colony, but this is expensive work.
@@ -26,3 +31,26 @@ hull_engineer_topic4,DialogOptionSelected,$option == hull_engineer_topic4,FireAl
 Oh, and one last thing, once ship quality gets even a bit above baseline, there’ll be interest in using our services to improve other faction’s ships. Nothing too crazy, but for the right price and the right ships, there’s definitely money to be made fixing up some of the garbage that gets assembled on other planets.",,
 hull_engineer_topic5,DialogOptionSelected,$option == hull_engineer_topic5,FireAll PopulateOptions,"It’s, well, something we can do, sure. You need to understand though that nanoforges - and you’d need a pristine one for this – don’t print the individual parts, they print whole ships and then we’d try to carefully rip them apart to extract as many individual pieces as we can without damaging them. So we can do that, but it’s going to hurt everything else that depends on ship production. Hull exports will take a major hit, we’ll lose some capacity for fixing up other factions’ ships as a service, and there will be fewer ships available for this colony’s trade and military fleets.",,
 hull_engineer_topic6,DialogOptionSelected,$option == hull_engineer_topic6,FireAll PopulateOptions,"It’s pretty straightforward: for ships that have a known XIV Battlegroup variant, we can upgrade the base model to the XIV version as long as you have enough domain grade parts for us to substitute in and the ship doesn’t have any major damage. But, uh, keep it to yourself if you decide to upgrade anything. Just because it’s something we can do doesn’t mean the Hegemony’ll be happy about us doing it. Otherwise you can bet the Church would’ve been allowed to use them too, especially during the AI wars.",,
+hull_engineer_topic7,DialogOptionSelected,$option == hull_engineer_topic7,FireAll PopulateOptions,"That’s – what? You want to take the out of control murderbots from the Abyss and… well, I can see the logic there but, I mean… hmm.
+
+Alright, look. Yes, it can probably be done IF you can bring a lot back from the Abyss, and I mean A LOT – those Fragment Fabricators especially seeing as they tear themselves apart as soon as you glance at them wrong. And I absolutely will not be part of any of this without a lot of guns pointing at the thing. I don’t mean a few marines and mechs, I mean heavy fixed ground emplacements and a battlestation overhead ready to vaporize the thing the moment it spits out something we didn’t tell it to.",,
+,,,,,,
+,,,,,,
+hull_engineer_greeting_tritachyon,PickGreeting,"$hmis_hull_engineer score:1000
+$global.hmis_market_faction_id == tritachyon
+$global.hmis_current_market_rep < 50",ShowPersonVisual,"Greetings captain, unfortunately Tri-Tachyon’s advanced hull services are only available to those who have proven themselves to be valuable assets to the Company. Please return once you have provided adequate assistance to the Company’s endeavors.",,
+hull_engineer_greeting_tritachyon_good,PickGreeting,"$hmis_hull_engineer score:1000
+$global.hmis_market_faction_id == tritachyon
+$global.hmis_current_market_rep >= 50","ShowPersonVisual
+FireAll PopulateOptions","Greetings valued customer, how can I be of assistance?",,
+hull_engineer_tritachyon_options,PopulateOptions,"$hmis_hull_engineer
+$global.hmis_market_faction_id == tritachyon","RemoveOption cutCommLink
+AddOption 100 cutCommLink2""Thank you, that's all for now""
+SetShortcut cutCommLink2 ""ESCAPE""",,"hull_engineer_tritachyon_topic1:What services do you provide?
+hull_engineer_tritachyon_topic2:Cheaper hull restoration?
+hull_engineer_tritachyon_topic3:How about improving ship quality?
+hull_engineer_tritachyon_topic4:Other benefits to improving ship quality?",
+hull_engineer_tritachyon_topic1,DialogOptionSelected,$option == hull_engineer_tritachyon_topic1,FireAll PopulateOptions,a,,
+hull_engineer_tritachyon_topic2,DialogOptionSelected,$option == hull_engineer_tritachyon_topic2,FireAll PopulateOptions,b,,
+hull_engineer_tritachyon_topic3,DialogOptionSelected,$option == hull_engineer_tritachyon_topic3,FireAll PopulateOptions,c,,
+hull_engineer_tritachyon_topic4,DialogOptionSelected,$option == hull_engineer_tritachyon_topic4,FireAll PopulateOptions,d,,

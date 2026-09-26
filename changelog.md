@@ -1,10 +1,17 @@
+## 1.0.10 (WIP)
+* Hull engineers are now available in the Comm Directory for non-player faction markets that have a Hull Mod Services structure.
+* Added per-faction dialogue text for the hull engineer. The information is the same, but it adds some flavor.
+* Added the XIV upgrade package option for base non-XIV ships.
+* Added the domain grade parts production option to the Hull Mod Services structure.
+* Added the Deconstruction Module colony item.
+
 ## 1.0.9
-* Fix (again) for mods that provide an upgrade for the orbital works causing the Hull Mod Services effects to be disabled
+* Fix (again) for mods that provide an upgrade for the orbital works causing the Hull Mod Services effects to be disabled.
 
 ## 1.0.8
-* Fix for mods that provide an upgrade for the orbital works causing the Hull Mod Services effects to be disabled
-* Fix the '10' text in the alpha core description not being highlighted
-* Fix that the structure and alpha core effects weren't being removed if the structure is removed
+* Fix for mods that provide an upgrade for the orbital works causing the Hull Mod Services effects to be disabled.
+* Fix the '10' text in the alpha core description not being highlighted.
+* Fix that the structure and alpha core effects weren't being removed if the structure is removed.
 
 ## 1.0.7
 * Attempt to fix a crash when interacting with a planet with NPCs in the comm directory that don't have a faction.

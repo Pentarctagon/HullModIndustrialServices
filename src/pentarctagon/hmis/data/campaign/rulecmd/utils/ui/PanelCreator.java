@@ -6,6 +6,7 @@ import com.fs.starfarer.api.characters.MutableCharacterStatsAPI;
 import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
+import com.fs.starfarer.api.impl.campaign.ids.Factions;
 import com.fs.starfarer.api.impl.campaign.ids.Skills;
 import com.fs.starfarer.api.impl.campaign.ids.Stats;
 import com.fs.starfarer.api.impl.campaign.ids.Tags;
@@ -153,7 +154,7 @@ public class PanelCreator
 				{
 					List<MutableCharacterStatsAPI.SkillLevelAPI> skills = ship.getCaptain().getStats().getSkillsCopy();
 					long skillsCount = skills.stream().filter(skill -> skill.getLevel() > 0).count();
-					ship.getCaptain().getMemory().unset("$captain_unremovable");
+					ship.getCaptain().getMemory().unset(Other.CAPTAIN_UNREMOVABLE);
 					ship.getCaptain().getStats().setLevel(ship.getCaptain().getStats().getLevel()-1);
 					// if they have skills and they have more skills than levels
 					if(!skills.isEmpty() && skillsCount > ship.getCaptain().getStats().getLevel())
@@ -168,7 +169,7 @@ public class PanelCreator
 				}
 				else if(buttonId.equals(BUTTON_INTEGRATE_AI))
 				{
-					ship.getCaptain().getMemory().set("$captain_unremovable", true);
+					ship.getCaptain().getMemory().set(Other.CAPTAIN_UNREMOVABLE, true);
 					ship.getCaptain().getStats().setLevel(ship.getCaptain().getStats().getLevel()+1);
 					Global.getSector().getPlayerFleet().getCargo().getCredits().subtract(INTEGRATE_AI_COST);
 					callback.dismissCustomDialog(1);
@@ -287,7 +288,7 @@ public class PanelCreator
 		if
 		(
 			ship.getCaptain().isAICore() &&
-			ship.getCaptain().getMemory().getBoolean("$captain_unremovable") &&
+			ship.getCaptain().getMemory().getBoolean(Other.CAPTAIN_UNREMOVABLE) &&
 			TriTachyonDeal.hasDeal() &&
 			Utils.getAdjustedQuality(Utils.getCurrentMarket()).floatValue() >= 1.5f
 		)
@@ -303,7 +304,7 @@ public class PanelCreator
 		if
 		(
 			ship.getCaptain().isAICore() &&
-			!ship.getCaptain().getMemory().getBoolean("$captain_unremovable") &&
+			!ship.getCaptain().getMemory().getBoolean(Other.CAPTAIN_UNREMOVABLE) &&
 			TriTachyonDeal.hasDeal() &&
 			Utils.getAdjustedQuality(Utils.getCurrentMarket()).floatValue() >= 1.5f
 		)
@@ -335,7 +336,11 @@ public class PanelCreator
 			}
 		}
 		// XIV upgrade package
-		if(xivPrecursors.containsKey(ship.getHullSpec().getHullId()) && LunaHelper.getBoolean(Luna.HMIS_XIV_UPGRADE_PACKAGE, true))
+		if(
+			xivPrecursors.containsKey(ship.getHullSpec().getHullId()) &&
+			LunaHelper.getBoolean(Luna.HMIS_XIV_UPGRADE_PACKAGE, true) &&
+			Factions.PLAYER.equals(Utils.getCurrentMarket().getFaction().getId())
+		)
 		{
 			String domainGradePartsText = String.format("XIV upgrade package (%,d domain grade parts)", XIV_UPGRADE_BY_SIZE.get(ship.getHullSpec().getHullSize()));
 			ButtonAPI button = infoTextElement.addButton(domainGradePartsText, BUTTON_XIV_UPGRADE, infoTextWidth, 30f, 5f);

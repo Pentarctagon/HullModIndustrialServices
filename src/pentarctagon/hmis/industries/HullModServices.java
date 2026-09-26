@@ -84,7 +84,7 @@ extends BaseIndustry
 			demand(Commodities.RARE_METALS, ships.getDemand(Commodities.METALS).getQuantity().getModifiedInt());
 			demand(Commodities.FUEL, ships.getDemand(Commodities.METALS).getQuantity().getModifiedInt()+2);
 
-			market.getMemory().set("$hmis_active", true);
+			market.getMemory().set(Other.HMIS_ACTIVE, true);
 
 			if(domainGradePartsProduction > 0)
 			{
@@ -93,9 +93,9 @@ extends BaseIndustry
 				ships.getSupply(Commodities.SHIPS).getQuantity().modifyFlat(Other.HULL_MOD_SERVICES+"_deconmod_ships", -4*domainGradePartsProduction, "Hull Mod Services - domain grade parts");
 			}
 		}
-		else if(market.getMemoryWithoutUpdate().contains("$hmis_active"))
+		else if(market.getMemoryWithoutUpdate().contains(Other.HMIS_ACTIVE))
 		{
-			market.getMemory().unset("$hmis_active");
+			market.getMemory().unset(Other.HMIS_ACTIVE);
 		}
 
 	    // for every 10% ship quality, export a unit that improves other factions' ship quality by 5%, rounded down by integer division

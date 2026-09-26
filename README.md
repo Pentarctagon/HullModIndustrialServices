@@ -63,6 +63,17 @@ This doesn't work quite ideally since the economy in Starsector is based on comm
 
 This can be disabled via a Luna setting. The max demand can be adjusted via a Luna setting, but increasing it will tend to just create perpetual shortages and inflate the value unless there are additional sources of ship quality available from other mods.
 
+## XIV Upgrade Package (not available yet) ##
+At one of your own colonies where you have a Hull Mod Services structure, you can upgrade any base hull into its XIV variant (ie: Dominator -> XIV Dominator) in exchange for 50/100/150/200 domain grade parts.
+
+## Domain grade parts production (not available yet) ##
+For player-owned markets with a Pristine Nanoforge, an option is available by clicking on the Hull Mod Services structure to produce domain grade parts. This costs four units of ship hulls and weapons and decreases the size of the fleets spawned by that colony by 15% per unit of domain grade parts produced.
+
+NOTE: Faction-wide ship quality is determined based on which colony produces the most ship hulls and weapons.
+
+## Deconstruction module (not yet available) ##
+After encountering the Threat, another option is available by clicking on the Hull Mod Services structure to create a Deconstruction Module colony item. This costs 25 fragment fabricators and 10 threat processing units. When installed in the Hull Mod Services structure it increases domain grade parts production by one, but decreases the colony's base ground defense value by 10.
+
 ## Compatibility ##
 No compatibility issues that I know of.
 
@@ -72,23 +83,3 @@ No compatibility issues that I know of.
 
 ## Credits ##
 * A lot of the initial code was taken from the Progressive S-Mods mod which I then modified/refactored/added to as needed, which helped a lot. It would have taken me a lot longer to figure all this out myself from scratch, especially the UI code.
-
-## Future Plans
-* Add an option to upgrade normal ships to their XIV version using domain grade parts.
-  * 50/100/150/200 based on hull size (waiting on 0.99)
-  * Any other requirements, particularly for the legion?
-* Add an option to produce domain grade parts from the hull mod services structure in exchange for (waiting on 0.99 to add DGP production):
-  * Requires pristine nanoforge in the orbital works
-  * Reducing ship+weapons production from colony's orbital works by 4 per unit
-  * Reducing ship quality production from colony's orbital works by 1 per unit
-  * Reducing colony fleet size by 15% per unit
-  * Does not benefit from story point enhancement, assigning an alpha core, or having an administrator with the Industrial Planning skill
-* Add dialog options for both new features to the hull services engineer in the comm directory
-  * Will make the point producing domain grade parts is very much not cost effective since nanoforges only print out full ships and weapons, so the only way to "produce" domain grade parts is by taking the nanoforge output and carefully breaking it apart while trying not to damage the individual pieces.
-  * Basically it's more a way to show off (vanity project) than anything else.
-* Colony item?
-  * Ship deconstruction module - increases domain grade parts production by 1 unit, constructed from a large amount of threat processing units and fragment fabricators, requires the heavy batteries structure to install
-    * Reducing base ground defense strength by 5
-* Luna settings for the above.
-  * XIV upgrade package enable/disable
-  * domain grade parts production
