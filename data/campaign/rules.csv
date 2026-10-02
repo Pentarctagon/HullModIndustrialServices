@@ -3,7 +3,7 @@ hmis_Start,PopulateOptions,"$menuState == main
 $market.hmis_active","SetShortcut hmis_OptionManage ""Q""",,17:hmis_OptionManage:Manage hull mods,
 hmis_Manage,DialogOptionSelected,$option == hmis_OptionManage,HMIS_ManageHullMods,,,
 ,,,,,,
-,,,,,,
+# player colony,,,,,,
 hull_engineer_greeting,PickGreeting,"$hmis_hull_engineer score:1000
 $market.isPlayerOwned","ShowPersonVisual
 FireAll PopulateOptions","Heya boss, what can I do for you?",,
@@ -19,7 +19,7 @@ hull_engineer_topic6:What’s the XIV upgrade package?",
 hull_engineer_options_threat,PopulateOptions,"$hmis_hull_engineer
 $market.isPlayerOwned
 $player.encounteredThreat ",,,hull_engineer_topic7:Can Threat-tech be used for ship deconstruction?,
-hull_engineer_topic1,DialogOptionSelected,$option == hull_engineer_topic1,FireAll PopulateOptions,"Well, that depends on a few things, but at a minimum it becomes possible to add or remove s-mods from your ships. Ever add an s-mod and come to regret it later? We can fix that for you without needing to get a whole other ship.
+hull_engineer_topic1,DialogOptionSelected,$option == hull_engineer_topic1,FireAll PopulateOptions,"Well, that depends on a few things, but at a minimum it becomes possible to add or remove s-mods from your ships. Ever add an s-mod and come to regret it later? We can fix that for you.
 
 For, uh, credits, of course. You’re the boss and this is your colony, but this is expensive work.
 
@@ -35,7 +35,7 @@ hull_engineer_topic7,DialogOptionSelected,$option == hull_engineer_topic7,FireAl
 
 Alright, look. Yes, it can probably be done IF you can bring a lot back from the Abyss, and I mean A LOT – those Fragment Fabricators especially seeing as they tear themselves apart as soon as you glance at them wrong. And I absolutely will not be part of any of this without a lot of guns pointing at the thing. I don’t mean a few marines and mechs, I mean heavy fixed ground emplacements and a battlestation overhead ready to vaporize the thing the moment it spits out something we didn’t tell it to.",,
 ,,,,,,
-,,,,,,
+# tri-tachyon colony,,,,,,
 hull_engineer_greeting_tritachyon,PickGreeting,"$hmis_hull_engineer score:1000
 $global.hmis_market_faction_id == tritachyon
 $global.hmis_current_market_rep < 50",ShowPersonVisual,"Greetings captain, unfortunately Tri-Tachyon’s advanced hull services are only available to those who have proven themselves to be valuable assets to the Company. Please return once you have provided adequate assistance to the Company’s endeavors.",,
@@ -46,11 +46,78 @@ FireAll PopulateOptions","Greetings valued customer, how can I be of assistance?
 hull_engineer_tritachyon_options,PopulateOptions,"$hmis_hull_engineer
 $global.hmis_market_faction_id == tritachyon","RemoveOption cutCommLink
 AddOption 100 cutCommLink2""Thank you, that's all for now""
-SetShortcut cutCommLink2 ""ESCAPE""",,"hull_engineer_tritachyon_topic1:What services do you provide?
-hull_engineer_tritachyon_topic2:Cheaper hull restoration?
-hull_engineer_tritachyon_topic3:How about improving ship quality?
-hull_engineer_tritachyon_topic4:Other benefits to improving ship quality?",
-hull_engineer_tritachyon_topic1,DialogOptionSelected,$option == hull_engineer_tritachyon_topic1,FireAll PopulateOptions,a,,
-hull_engineer_tritachyon_topic2,DialogOptionSelected,$option == hull_engineer_tritachyon_topic2,FireAll PopulateOptions,b,,
-hull_engineer_tritachyon_topic3,DialogOptionSelected,$option == hull_engineer_tritachyon_topic3,FireAll PopulateOptions,c,,
-hull_engineer_tritachyon_topic4,DialogOptionSelected,$option == hull_engineer_tritachyon_topic4,FireAll PopulateOptions,d,,
+SetShortcut cutCommLink2 ""ESCAPE""",,hull_engineer_tritachyon_topic1:What services do you provide?,
+hull_engineer_tritachyon_topic1,DialogOptionSelected,$option == hull_engineer_tritachyon_topic1,FireAll PopulateOptions,"The Tri-Tachyon Corporation prides itself on providing the highest quality hull services in the entire sector. As long as you have sufficient credits at your disposal, any hullmod whose blueprint you are in possession of can be built-in to any ship in your fleet. Built in the wrong hullmod? Not a problem! Tri-Tachyon can also remove any built-in hullmod as well.
+
+Additionally, Tri-Tachyon d-mod removal services can restore any ship you have at significantly better prices than you’ll find anywhere else!",,
+,,,,,,
+# hegemony colony,,,,,,
+hull_engineer_greeting_hegemony,PickGreeting,"$hmis_hull_engineer score:1000
+$global.hmis_market_faction_id == hegemony
+$global.hmis_current_market_rep < 50",ShowPersonVisual,"Comms ID confirmed. You do not have clearance to make use of excess Hegemony shipyard capacity, captain. Ending transmission.",,
+hull_engineer_greeting_hegemony_good,PickGreeting,"$hmis_hull_engineer score:1000
+$global.hmis_market_faction_id == hegemony
+$global.hmis_current_market_rep >= 50","ShowPersonVisual
+FireAll PopulateOptions","Comms ID confirmed. Welcome captain, what can I help you with today?",,
+hull_engineer_hegemony_options,PopulateOptions,"$hmis_hull_engineer
+$global.hmis_market_faction_id == hegemony","RemoveOption cutCommLink
+AddOption 100 cutCommLink2""Thank you, that's all for now""
+SetShortcut cutCommLink2 ""ESCAPE""",,hull_engineer_hegemony_topic1:What services do you provide?,
+hull_engineer_hegemony_topic1,DialogOptionSelected,$option == hull_engineer_hegemony_topic1,FireAll PopulateOptions,"While the Hegemony navy has many times demonstrated its primacy, maintaining that industrial base during a time of relative peace is costly. As such, excess capacity can be granted to those who have demonstrated their loyalty to the Domain’s legitimate successor state in the Persean sector.
+
+For you, captain, that grants access to our specialized services for adding or removing built-in hullmods to any ship in your fleet, along with restoring heavily damaged ships at a lower price than you will find on most other inhabited worlds.",,
+# persean league colony,,,,,,
+hull_engineer_greeting_persean,PickGreeting,"$hmis_hull_engineer score:1000
+$global.hmis_market_faction_id == persean
+$global.hmis_current_market_rep < 50",ShowPersonVisual,"Yes, captain? Is there some reason you thought to contact me?",,
+hull_engineer_greeting_persean_good,PickGreeting,"$hmis_hull_engineer score:1000
+$global.hmis_market_faction_id == persean
+$global.hmis_current_market_rep >= 50","ShowPersonVisual
+FireAll PopulateOptions",Why hello captain! How may I assist you?,,
+hull_engineer_persean_options,PopulateOptions,"$hmis_hull_engineer
+$global.hmis_market_faction_id == persean","RemoveOption cutCommLink
+AddOption 100 cutCommLink2""Thank you, that's all for now""
+SetShortcut cutCommLink2 ""ESCAPE""",,hull_engineer_persean_topic1:What services do you provide?,
+hull_engineer_persean_topic1,DialogOptionSelected,$option == hull_engineer_persean_topic1,FireAll PopulateOptions,"As I’m sure you are already aware, the League, like those Hegemony warmongers, controls one of only two pristine nanoforges left in the core worlds after the Collapse. It mostly serves the needs of the great Gens of Kazeron, but its capabilities are shared amongst all worlds that are part of the League. And for allied captains such as yourself, that same courtesy is extended.
+
+So, while you are on Kazeron, the League’s services are at your disposal: for any ship in your fleet, built-in hullmods can be added or removed, and you’ll find that ship restoration is far cheaper here than at most other ports.",,
+# sindrian colony,,,,,,
+hull_engineer_greeting_sindrian,PickGreeting,"$hmis_hull_engineer score:1000
+$global.hmis_market_faction_id == sindrian_diktat
+$global.hmis_current_market_rep < 50",ShowPersonVisual,"Why have you contacted me? Your loyalty to the Lion of Sindria has not yet been proven, and so there is nothing for us to discuss.",,
+hull_engineer_greeting_sindrian_good,PickGreeting,"$hmis_hull_engineer score:1000
+$global.hmis_market_faction_id == sindrian_diktat
+$global.hmis_current_market_rep >= 50","ShowPersonVisual
+FireAll PopulateOptions","Hail, friend of Sindria! What can I do for you today?",,
+hull_engineer_sindrian_options,PopulateOptions,"$hmis_hull_engineer
+$global.hmis_market_faction_id == sindrian_diktat","RemoveOption cutCommLink
+AddOption 100 cutCommLink2""Thank you, that's all for now""
+SetShortcut cutCommLink2 ""ESCAPE""",,hull_engineer_sindrian_topic1:What services do you provide?,
+hull_engineer_sindrian_topic1,DialogOptionSelected,$option == hull_engineer_sindrian_topic1,FireAll PopulateOptions,"Despite the near constant interference of Hegemony spies and saboteurs, the Sindrian Diktat has forged an industrial juggernaut to support and enforce the Lion’s will. Your subservience to that will allows me to grant you access to those same facilities used by the Lion’s Guard itself!
+
+There you will be able to add or remove any built-in hullmods of any ship in your fleet as well as restoring damaged vessels at a reduced cost, so that you may adapt to better serve the Andradan movement.",,
+# any others,,,,,,
+hull_engineer_greeting_other,PickGreeting,"$hmis_hull_engineer score:900
+$global.hmis_current_market_rep < 50
+!$market.isPlayerOwned
+$global.hmis_market_faction_id != tritachyon
+$global.hmis_market_faction_id != hegemony
+$global.hmis_market_faction_id != persean
+$global.hmis_market_faction_id != sindrian_diktat",ShowPersonVisual,Go away.,,
+hull_engineer_greeting_other_good,PickGreeting,"$hmis_hull_engineer score:900
+$global.hmis_current_market_rep >= 50
+!$market.isPlayerOwned
+$global.hmis_market_faction_id != tritachyon
+$global.hmis_market_faction_id != hegemony
+$global.hmis_market_faction_id != persean
+$global.hmis_market_faction_id != sindrian_diktat","ShowPersonVisual
+FireAll PopulateOptions",Hello captain.,,
+hull_engineer_other_options,PopulateOptions,"$hmis_hull_engineer
+!$market.isPlayerOwned
+$global.hmis_market_faction_id != tritachyon
+$global.hmis_market_faction_id != hegemony
+$global.hmis_market_faction_id != persean
+$global.hmis_market_faction_id != sindrian_diktat","RemoveOption cutCommLink
+AddOption 100 cutCommLink2""Thank you, that's all for now""
+SetShortcut cutCommLink2 ""ESCAPE""",,hull_engineer_other_topic1:What services do you provide?,
+hull_engineer_other_topic1,DialogOptionSelected,$option == hull_engineer_other_topic1,FireAll PopulateOptions,Built-in hullmods can be added or removed from ships in your fleet and ship restoration is cheaper.,,
