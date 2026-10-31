@@ -80,9 +80,10 @@ extends BaseIndustry
 
 		if(ships != null && !Industries.HEAVYINDUSTRY.equals(ships.getId()))
 		{
-			demand(Commodities.METALS, ships.getDemand(Commodities.METALS).getQuantity().getModifiedInt()+2);
-			demand(Commodities.RARE_METALS, ships.getDemand(Commodities.METALS).getQuantity().getModifiedInt());
-			demand(Commodities.FUEL, ships.getDemand(Commodities.METALS).getQuantity().getModifiedInt()+2);
+			demand(Commodities.METALS, ships.getDemand(Commodities.METALS).getQuantity().getModifiedInt()+1);
+			demand(Commodities.RARE_METALS, ships.getDemand(Commodities.RARE_METALS).getQuantity().getModifiedInt());
+			demand(Commodities.FUEL, ships.getDemand(Commodities.METALS).getQuantity().getModifiedInt()+1);
+			demand(Commodities.HEAVY_MACHINERY, ships.getDemand(Commodities.METALS).getQuantity().getModifiedInt()+2);
 
 			market.getMemory().set(Other.HMIS_ACTIVE, true);
 

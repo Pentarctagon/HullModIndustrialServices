@@ -19,6 +19,7 @@ The structure itself has the following effects:
 
 The following core worlds have this structure added:
 * Chicomoztoc
+* Raesvelg
 * Kazeron
 * Culann (with an Alpha Core)
 * Sindria

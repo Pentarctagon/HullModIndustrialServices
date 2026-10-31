@@ -4,6 +4,11 @@
 * Added the XIV upgrade package option for base non-XIV ships.
 * Added the domain grade parts production option to the Hull Mod Services structure.
 * Added the Deconstruction Module colony item.
+* Update the Hull Mod Services structure's demands so it doesn't result in permanent shortages core worlds that are size 7+ (Chocomoztoc, Kazeron, Sindria)
+  * Metals demand decreased by 1
+  * Fuel demand decreased by 1
+  * Transplutonics demand decreased by 2
+  * Added Heavy Machinery demand
 
 ## 1.0.9
 * Fix (again) for mods that provide an upgrade for the orbital works causing the Hull Mod Services effects to be disabled.
