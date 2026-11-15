@@ -84,15 +84,15 @@ extends BaseModPlugin
 		HullMods.CONVERTED_HANGAR,
 		// reduces crew loss, which NPC fleets don't care about
 		HullMods.RECOVERY_SHUTTLES,
-		// commented out in HullMods for some reason
 		// I doubt the AI would actually make use of this effectively on its own
-		"escort_package",
+		HullMods.ESCORT_PACKAGE,
 		// no purpose for NPC fleets, but might show up in known hullmods list for Player faction
 		HullMods.NEURAL_INTEGRATOR,
 		HullMods.NEURAL_INTERFACE,
-		// not in HullMods for some reason
 		// not sure this is relevant for NPC fleets
-		"hiressensors"
+		HullMods.HIRESSENSORS,
+		// shield is terrible so probably just makes the ship worse by itself
+		HullMods.MAKESHIFT_GENERATOR
 	);
 
 	@Override
