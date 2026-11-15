@@ -25,6 +25,30 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+// TODO: add/remove s-mods dialog
+//  align pricing to match the costs from the "Change s-mods" vanilla functionality
+//  add functionality to have the vanilla "Change s-mods" pricing also be affected by colony ship quality
+
+// TODO: allowing restoration of unrestorable ships - no change
+
+// TODO: AI core integration/de-integration - no change
+
+// TODO: d-mod restoration cost - unsure
+//  either reduce the number of DGPs is costs or if possible remove this and instead reduce the cost of purchasing DGPs at this colony based on ship quality
+
+// TODO: NPC s-mods - review if any hullmod updates change when/whether any hullmods should be built-it, otherwise no change
+
+// TODO: increase s-mod limit - remove, don't like it anyway as power creep since it can be used to replace best of the best
+
+// TODO: exporting ship quality - no change
+
+// TODO: XIV upgrade package - review DGP cost (should probably be pretty high), otherwise implement as planned
+
+// TODO: DGP production - remove, already happens in vanilla
+
+// TODO: deconstruction module - unsure
+//  don't know yet how to modify its supply value and unsure if it matters since they seem to stockpile pretty fast already
+//  maybe instead have a small number added to player storage at the colony each month
 @SuppressWarnings("unused")
 public class HullModIndustrialServices
 extends BaseModPlugin
