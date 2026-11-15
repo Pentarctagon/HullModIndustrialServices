@@ -32,28 +32,22 @@ import java.util.stream.Collectors;
 //    changeSmodsCost_CAPITAL_SHIP = 250_000
 //  add functionality to have the vanilla "Change s-mods" pricing also be affected by colony ship quality
 
-// TODO: allowing restoration of unrestorable ships - no change
-
-// TODO: AI core integration/de-integration - no change
-
 // TODO: d-mod restoration cost - unsure
 //  either reduce the number of DGPs is costs or if possible remove this and instead reduce the cost of purchasing DGPs at this colony based on ship quality
 //  DGP cost formula: max(minDModRepairCostInParts, hullPrice/defaultDModRepairPartsBaseValueDivisor)
 //  requires updating the values settable via Luna as well if keeping
 
-// TODO: NPC s-mods - done
-
-// TODO: remove increase s-mod limit - done
-
-// TODO: exporting ship quality - no change
+// TODO: deconstruction module - change to add 1 unit of DGP to player storage per unit of ship production reduced
 
 // TODO: XIV upgrade package - implement as planned
 
-// TODO: remove DGP production - done
+// TODO: allowing restoration of unrestorable ships - no change
+// TODO: AI core integration/de-integration - no change
+// TODO: NPC s-mods - done
+// TODO: exporting ship quality - no change
 
-// TODO: deconstruction module - unsure
-//  don't know yet how to modify its supply value and unsure if it matters since they seem to stockpile pretty fast already
-//  maybe instead have a small number added to player storage at the colony each month
+// TODO: remove increase s-mod limit - done
+// TODO: remove DGP production - done
 @SuppressWarnings("unused")
 public class HullModIndustrialServices
 extends BaseModPlugin
