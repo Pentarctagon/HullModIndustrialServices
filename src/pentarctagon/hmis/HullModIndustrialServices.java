@@ -13,7 +13,6 @@ import pentarctagon.hmis.constants.Other;
 import pentarctagon.hmis.data.campaign.rulecmd.intro.HullEngineerListener;
 import pentarctagon.hmis.dmods.RestorationCostListener;
 import pentarctagon.hmis.doctrine.listener.PlayerFactionShipQuality;
-import pentarctagon.hmis.hullmods.CustomOptimizationsReapplication;
 import pentarctagon.hmis.industries.HullModServicesOptions;
 import pentarctagon.hmis.industries.QualityDemandConfig;
 import pentarctagon.hmis.npc.smods.AddSmodsListener;
@@ -27,6 +26,10 @@ import java.util.stream.Collectors;
 
 // TODO: add/remove s-mods dialog
 //  align pricing to match the costs from the "Change s-mods" vanilla functionality
+//    changeSmodsCost_FRIGATE = 75_000
+//    changeSmodsCost_DESTROYER = 100_000
+//    changeSmodsCost_CRUISER = 150_000
+//    changeSmodsCost_CAPITAL_SHIP = 250_000
 //  add functionality to have the vanilla "Change s-mods" pricing also be affected by colony ship quality
 
 // TODO: allowing restoration of unrestorable ships - no change
@@ -35,16 +38,18 @@ import java.util.stream.Collectors;
 
 // TODO: d-mod restoration cost - unsure
 //  either reduce the number of DGPs is costs or if possible remove this and instead reduce the cost of purchasing DGPs at this colony based on ship quality
+//  DGP cost formula: max(minDModRepairCostInParts, hullPrice/defaultDModRepairPartsBaseValueDivisor)
+//  requires updating the values settable via Luna as well if keeping
 
-// TODO: NPC s-mods - review if any hullmod updates change when/whether any hullmods should be built-it, otherwise no change
+// TODO: NPC s-mods - done
 
-// TODO: increase s-mod limit - remove, don't like it anyway as power creep since it can be used to replace best of the best
+// TODO: remove increase s-mod limit - done
 
 // TODO: exporting ship quality - no change
 
-// TODO: XIV upgrade package - review DGP cost (should probably be pretty high), otherwise implement as planned
+// TODO: XIV upgrade package - implement as planned
 
-// TODO: DGP production - remove, already happens in vanilla
+// TODO: remove DGP production - done
 
 // TODO: deconstruction module - unsure
 //  don't know yet how to modify its supply value and unsure if it matters since they seem to stockpile pretty fast already
@@ -113,7 +118,6 @@ extends BaseModPlugin
 		Global.getSector().getListenerManager().addListener(new UpdatePlayerBlueprints(), true);
 		Global.getSector().getListenerManager().addListener(new PlayerFactionShipQuality(), true);
 		Global.getSector().getEconomy().addUpdateListener(new QualityDemandConfig());
-		Global.getSector().addTransientScript(new CustomOptimizationsReapplication());
 		Global.getSector().getListenerManager().addListener(new HullModServicesOptions(), true);
 
 		Misc.getFactionMarkets(Factions.HEGEMONY)

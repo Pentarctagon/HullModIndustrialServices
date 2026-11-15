@@ -77,7 +77,6 @@ extends BaseIndustryOptionProvider
 						@Override
 						public void buttonPressed(Object buttonId)
 						{
-							((HullModServices) opt.ind).setDomainGradePartsProduction(Integer.parseInt(buttonId.toString().substring(UNITS.length())));
 							callback.dismissCustomDialog(1);
 						}
 					};
@@ -89,7 +88,7 @@ extends BaseIndustryOptionProvider
 					Industry ships = Utils.findShipIndustry(opt.ind.getMarket());
 					if(ships != null)
 					{
-						int originalShipsProduction = (int) ships.getSupply(Commodities.SHIPS).getQuantity().getModifiedValue() + (4 * ((HullModServices) opt.ind).getDomainGradePartsProduction());
+						int originalShipsProduction = (int) ships.getSupply(Commodities.SHIPS).getQuantity().getModifiedValue();
 						for(int i = 0; i <= originalShipsProduction / 4; i++)
 						{
 							info.addButton(String.valueOf(i), UNITS + i, 30f, 30f, 0).getPosition().inBL((i * 30) + (i * 5), 0);

@@ -52,11 +52,6 @@ After that, the ordnance points that have been freed up by s-modding hullmods th
 
 Increasing the s-mod limit in the Luna settings beyond 3 will only affect modded factions. For example, UAF spec ops fleets have a quality of 200%, and so depending on the s-mod cap may have up to 5 s-mods. This can also be disabled in the Luna settings. Either way, this setting should only affect s-mods that would have been added by this mod and not s-mods that get added as part of the base game or by other mods.
 
-## Increase s-mod limit ##
-At markets where you have access to a Hull Mod Services structure and the market's ship quality is at least 100%, there is an option to pay credits based on ship size (500,000/750,000/1,000,000/1,500,000) to allow building in an additional s-mod. This does not stack with the Best of the Best skill or other sources that increase the s-mod limit.
-
-This can be disabled via a Luna setting.
-
 ## Exporting ship quality ##
 Markets that have the Hull Mod Services structure and have at least 110% ship quality will export one unit per 10% ship quality above 100%. Markets that have a Heavy Industry or Orbital Works and under 100% ship quality will "import" one unit per 5% ship quality under 100%, with demand capped at 5 (+25% ship quality).
 
@@ -66,11 +61,6 @@ This can be disabled via a Luna setting. The max demand can be adjusted via a Lu
 
 ## XIV upgrade package (not available yet) ##
 At one of your own colonies where you have a Hull Mod Services structure, you can upgrade any base hull into its XIV variant (ie: Dominator -> XIV Dominator) in exchange for 50/100/150/200 domain grade parts.
-
-## Domain grade parts production (not available yet) ##
-For player-owned markets with a Pristine Nanoforge, an option is available by clicking on the Hull Mod Services structure to produce domain grade parts. This costs four units of ship hulls and weapons and decreases the size of the fleets spawned by that colony by 15% per unit of domain grade parts produced.
-
-NOTE: Faction-wide ship quality is determined based on which colony produces the most ship hulls and weapons.
 
 ## Deconstruction module (not yet available) ##
 After encountering the Threat, another option is available by clicking on the Hull Mod Services structure to create a Deconstruction Module colony item. This costs 25 fragment fabricators and 10 threat processing units. When installed in the Hull Mod Services structure it increases domain grade parts production by one, but decreases the colony's base ground defense value by 10.

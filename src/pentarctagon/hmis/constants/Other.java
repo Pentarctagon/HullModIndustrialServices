@@ -9,7 +9,6 @@ public class Other
 	public static final String HMIS_CURRENT_MARKET_REP = "$hmis_current_market_rep";
 
 	public static final int HMIS_MIN_MARKET_SIZE = 5;
-	public static final String HMIS_CUSTOM_OPTIMIZATIONS = "hmis_custom_optimizations";
 	public static final String HMIS_DECONSTRUCTION_MODULE = "hmis_deconstruction_module";
 	public static final String SHIP_QUALITY = "ship_quality";
 	public static final int MAX_SMODS = 3;

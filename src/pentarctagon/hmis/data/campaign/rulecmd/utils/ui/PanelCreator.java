@@ -32,22 +32,16 @@ public class PanelCreator
 	private static final String BUTTON_ALLOW_RESTORATION = "BUTTON_ALLOW_RESTORATION";
 	private static final String BUTTON_DEINTEGRATE_AI = "BUTTON_DEINTEGRATE_AI";
 	private static final String BUTTON_INTEGRATE_AI = "BUTTON_INTEGRATE_AI";
-	private static final String BUTTON_THIRD_SMOD = "BUTTON_THIRD_SMOD";
 	private static final String BUTTON_XIV_UPGRADE = "BUTTON_XIV_UPGRADE";
 	private static final int MAKE_RESTORABLE_COST = 500_000;
 	private static final int DEINTEGRATE_AI_COST = 150_000;
 	private static final int INTEGRATE_AI_COST = 50_000;
-	private static final Map<ShipAPI.HullSize, Integer> THIRD_SMOD_BY_SIZE = Map.of(
-		ShipAPI.HullSize.FRIGATE, 500_000,
-		ShipAPI.HullSize.DESTROYER, 750_000,
-		ShipAPI.HullSize.CRUISER, 1_000_000,
-		ShipAPI.HullSize.CAPITAL_SHIP, 1_500_000
-	);
+
 	private static final Map<ShipAPI.HullSize, Integer> XIV_UPGRADE_BY_SIZE = Map.of(
-		ShipAPI.HullSize.FRIGATE, 50,
-		ShipAPI.HullSize.DESTROYER, 100,
-		ShipAPI.HullSize.CRUISER, 150,
-		ShipAPI.HullSize.CAPITAL_SHIP, 200
+		ShipAPI.HullSize.FRIGATE, 100,
+		ShipAPI.HullSize.DESTROYER, 200,
+		ShipAPI.HullSize.CRUISER, 300,
+		ShipAPI.HullSize.CAPITAL_SHIP, 400
 	);
 
 	private static final Map<String, String> xivPrecursors = Map.of(
@@ -172,12 +166,6 @@ public class PanelCreator
 					ship.getCaptain().getMemory().set(Other.CAPTAIN_UNREMOVABLE, true);
 					ship.getCaptain().getStats().setLevel(ship.getCaptain().getStats().getLevel()+1);
 					Global.getSector().getPlayerFleet().getCargo().getCredits().subtract(INTEGRATE_AI_COST);
-					callback.dismissCustomDialog(1);
-				}
-				else if(buttonId.equals(BUTTON_THIRD_SMOD))
-				{
-					ship.getVariant().addPermaMod(Other.HMIS_CUSTOM_OPTIMIZATIONS, false);
-					Global.getSector().getPlayerFleet().getCargo().getCredits().subtract(THIRD_SMOD_BY_SIZE.get(ship.getHullSpec().getHullSize()));
 					callback.dismissCustomDialog(1);
 				}
 				else if(buttonId.equals(BUTTON_XIV_UPGRADE))
@@ -312,25 +300,6 @@ public class PanelCreator
 			String creditsText = String.format("Integrate AI (%,d credits)", INTEGRATE_AI_COST);
 			ButtonAPI button = infoTextElement.addButton(creditsText, BUTTON_INTEGRATE_AI, infoTextWidth, 30f, 5f);
 			if(Utils.getPlayerCredits() < INTEGRATE_AI_COST)
-			{
-				button.setEnabled(false);
-			}
-		}
-		// add 3rd s-mod slot if ship doesn't already have 3 s-mods
-		int maxSmodsSetting = Utils.getBaseSmods();
-		float bonusSmods = ship.getStats().getDynamic().getMod(Stats.MAX_PERMANENT_HULLMODS_MOD).getFlatBonus();
-		// hullmod effect doesn't seem to get applied immediately, so also need to check whether Custom Optimizations has been added already
-		if
-		(
-			maxSmodsSetting+bonusSmods < Other.MAX_SMODS &&
-			Utils.getAdjustedQuality(Utils.getCurrentMarket()).floatValue() >= 1f &&
-			!ship.getVariant().hasHullMod(Other.HMIS_CUSTOM_OPTIMIZATIONS) &&
-			LunaHelper.getBoolean(Luna.HMIS_THIRD_SMOD, true)
-		)
-		{
-			String creditsText = String.format("Allow third s-mod (%,d credits)", THIRD_SMOD_BY_SIZE.get(ship.getHullSpec().getHullSize()));
-			ButtonAPI button = infoTextElement.addButton(creditsText, BUTTON_THIRD_SMOD, infoTextWidth, 30f, 5f);
-			if(Utils.getPlayerCredits() < THIRD_SMOD_BY_SIZE.get(ship.getHullSpec().getHullSize()))
 			{
 				button.setEnabled(false);
 			}
