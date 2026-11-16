@@ -39,8 +39,7 @@ import java.util.stream.Collectors;
 
 // TODO: deconstruction module - change to add 1 unit of DGP to player storage per unit of ship production reduced
 
-// TODO: XIV upgrade package - implement as planned
-
+// TODO: XIV upgrade package - done
 // TODO: allowing restoration of unrestorable ships - no change
 // TODO: AI core integration/de-integration - no change
 // TODO: NPC s-mods - done

@@ -6,9 +6,9 @@ import com.fs.starfarer.api.characters.MutableCharacterStatsAPI;
 import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
+import com.fs.starfarer.api.impl.campaign.ids.Commodities;
 import com.fs.starfarer.api.impl.campaign.ids.Factions;
 import com.fs.starfarer.api.impl.campaign.ids.Skills;
-import com.fs.starfarer.api.impl.campaign.ids.Stats;
 import com.fs.starfarer.api.impl.campaign.ids.Tags;
 import com.fs.starfarer.api.impl.campaign.intel.TriTachyonDeal;
 import com.fs.starfarer.api.loading.WeaponSpecAPI;
@@ -214,6 +214,9 @@ public class PanelCreator
 					// remove non-xiv original
 					fleet.removeFleetMember(ship);
 
+					// subtract domain grade parts from player inventory
+					Global.getSector().getPlayerFleet().getCargo().removeCommodity(Commodities.PARTS, XIV_UPGRADE_BY_SIZE.get(xivShip.getHullSpec().getHullSize()));
+
 					callback.dismissCustomDialog(1);
 				}
 			}
@@ -313,7 +316,7 @@ public class PanelCreator
 		{
 			String domainGradePartsText = String.format("XIV upgrade package (%,d domain grade parts)", XIV_UPGRADE_BY_SIZE.get(ship.getHullSpec().getHullSize()));
 			ButtonAPI button = infoTextElement.addButton(domainGradePartsText, BUTTON_XIV_UPGRADE, infoTextWidth, 30f, 5f);
-			if(Utils.getPlayerDomainGradeParts() < XIV_UPGRADE_BY_SIZE.get(ship.getHullSpec().getHullSize()))
+			if(Utils.getPlayerCommodityAmount(Commodities.PARTS) < XIV_UPGRADE_BY_SIZE.get(ship.getHullSpec().getHullSize()))
 			{
 				button.setEnabled(false);
 			}

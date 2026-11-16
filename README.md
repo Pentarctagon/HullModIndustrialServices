@@ -59,8 +59,8 @@ This doesn't work quite ideally since the economy in Starsector is based on comm
 
 This can be disabled via a Luna setting. The max demand can be adjusted via a Luna setting, but increasing it will tend to just create perpetual shortages and inflate the value unless there are additional sources of ship quality available from other mods.
 
-## XIV upgrade package (not available yet) ##
-At one of your own colonies where you have a Hull Mod Services structure, you can upgrade any base hull into its XIV variant (ie: Dominator -> XIV Dominator) in exchange for 50/100/150/200 domain grade parts.
+## XIV upgrade package ##
+At one of your own colonies where you have a Hull Mod Services structure, you can upgrade any base hull into its XIV variant (ie: Dominator -> XIV Dominator) in exchange for 100/200/300/400 domain grade parts.
 
 ## Deconstruction module (not yet available) ##
 After encountering the Threat, another option is available by clicking on the Hull Mod Services structure to create a Deconstruction Module colony item. This costs 25 fragment fabricators and 10 threat processing units. When installed in the Hull Mod Services structure it increases domain grade parts production by one, but decreases the colony's base ground defense value by 10.
