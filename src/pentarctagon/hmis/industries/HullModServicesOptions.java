@@ -42,19 +42,29 @@ extends BaseIndustryOptionProvider
 			return null;
 		}
 
-		ArrayList<IndustryOptionData> options = new ArrayList<>();
-
-		if(ships.getSpecialItem() != null && Items.PRISTINE_NANOFORGE.equals(ships.getSpecialItem().getId()))
+		if(!Global.getSector().getPlayerMemoryWithoutUpdate().getBoolean("$encounteredThreat"))
 		{
-			IndustryOptionData opt = new IndustryOptionData("Domain Grade Parts production", PROD_OPTION, ind, this);
-			opt.color = Color.GREEN;
-			options.add(opt);
+			return null;
 		}
+
+		ArrayList<IndustryOptionData> options = new ArrayList<>();
 
 		if(Global.getSector().getPlayerMemoryWithoutUpdate().getBoolean("$encounteredThreat"))
 		{
 			IndustryOptionData opt = new IndustryOptionData("Create Deconstruction Module", DECON_OPTION, ind, this);
 			opt.color = Color.RED;
+			options.add(opt);
+		}
+
+		if(
+			ships.getSpecialItem() != null &&
+			Items.PRISTINE_NANOFORGE.equals(ships.getSpecialItem().getId()) &&
+			ind.getSpecialItem() != null &&
+			Other.HMIS_DECONSTRUCTION_MODULE.equals(ind.getSpecialItem().getId())
+		)
+		{
+			IndustryOptionData opt = new IndustryOptionData("Domain Grade Parts production", PROD_OPTION, ind, this);
+			opt.color = Color.GREEN;
 			options.add(opt);
 		}
 
@@ -76,6 +86,7 @@ extends BaseIndustryOptionProvider
 						@Override
 						public void buttonPressed(Object buttonId)
 						{
+							((HullModServices) opt.ind).setDomainGradePartsProduction(Integer.parseInt(buttonId.toString().substring(UNITS.length())));
 							callback.dismissCustomDialog(1);
 						}
 					};
@@ -87,8 +98,10 @@ extends BaseIndustryOptionProvider
 					Industry ships = Utils.findShipIndustry(opt.ind.getMarket());
 					if(ships != null)
 					{
-						int originalShipsProduction = (int) ships.getSupply(Commodities.SHIPS).getQuantity().getModifiedValue();
-						for(int i = 0; i <= originalShipsProduction / 4; i++)
+						int effectiveShipsProduction = ships.getSupply(Commodities.SHIPS).getQuantity().getModifiedInt();
+						int dgpBonusProd = ((HullModServices) opt.ind).getDomainGradePartsProduction();
+						int originalShipsProduction = effectiveShipsProduction + dgpBonusProd;
+						for(int i = 0; i <= originalShipsProduction; i++)
 						{
 							info.addButton(String.valueOf(i), UNITS + i, 30f, 30f, 0).getPosition().inBL((i * 30) + (i * 5), 0);
 						}

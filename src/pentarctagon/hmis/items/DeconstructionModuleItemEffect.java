@@ -39,6 +39,10 @@ extends BaseInstallableItemEffect
 	public List<String> getUnmetRequirements(Industry industry)
 	{
 		ArrayList<String> reqs = new ArrayList<>();
+		if(industry == null)
+		{
+			return reqs;
+		}
 
 		if(!industry.getMarket().hasIndustry(Industries.HEAVYBATTERIES))
 		{

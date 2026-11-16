@@ -15,6 +15,7 @@ import pentarctagon.hmis.dmods.RestorationCostListener;
 import pentarctagon.hmis.doctrine.listener.PlayerFactionShipQuality;
 import pentarctagon.hmis.industries.HullModServicesOptions;
 import pentarctagon.hmis.industries.QualityDemandConfig;
+import pentarctagon.hmis.items.DeconstructionModuleMonthly;
 import pentarctagon.hmis.npc.smods.AddSmodsListener;
 import pentarctagon.hmis.npc.smods.listener.UpdatePlayerBlueprints;
 
@@ -37,8 +38,9 @@ import java.util.stream.Collectors;
 //  DGP cost formula: max(minDModRepairCostInParts, hullPrice/defaultDModRepairPartsBaseValueDivisor)
 //  requires updating the values settable via Luna as well if keeping
 
-// TODO: deconstruction module - change to add 1 unit of DGP to player storage per unit of ship production reduced
+// TODO: make sure readme and in-game dialogs are updated
 
+// TODO: deconstruction module - done
 // TODO: XIV upgrade package - done
 // TODO: allowing restoration of unrestorable ships - no change
 // TODO: AI core integration/de-integration - no change
@@ -98,8 +100,8 @@ extends BaseModPlugin
 	{
 		// save to faction memory
 		MemoryAPI memory = Global.getSector().getFaction(Factions.PLAYER).getMemory();
-		memory.set("$hmis_last_tick_quality", PlayerFactionShipQuality.getQualityOnLastTick().toString());
-		memory.set("$hmis_last_tick_timestamp", PlayerFactionShipQuality.getLastTimestamp());
+		memory.set(Other.HMIS_FACTION_QUALITY_LAST_TICK, PlayerFactionShipQuality.getQualityOnLastTick().toString());
+		memory.set(Other.HMIS_FACTION_QUALITY_LAST_TICK_TIMESTAMP, PlayerFactionShipQuality.getLastTimestamp());
 	}
 
 	@Override
@@ -112,6 +114,7 @@ extends BaseModPlugin
 		Global.getSector().getListenerManager().addListener(new PlayerFactionShipQuality(), true);
 		Global.getSector().getEconomy().addUpdateListener(new QualityDemandConfig());
 		Global.getSector().getListenerManager().addListener(new HullModServicesOptions(), true);
+		Global.getSector().getListenerManager().addListener(new DeconstructionModuleMonthly(), true);
 
 		Misc.getFactionMarkets(Factions.HEGEMONY)
 		    .stream()

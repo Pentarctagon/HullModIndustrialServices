@@ -5,6 +5,7 @@ import com.fs.starfarer.api.campaign.listeners.EconomyTickListener;
 import com.fs.starfarer.api.campaign.rules.MemoryAPI;
 import com.fs.starfarer.api.impl.campaign.ids.Factions;
 import pentarctagon.hmis.Utils;
+import pentarctagon.hmis.constants.Other;
 
 import java.math.BigDecimal;
 
@@ -18,17 +19,17 @@ implements EconomyTickListener
 	static
 	{
 		MemoryAPI memory = Global.getSector().getFaction(Factions.PLAYER).getMemory();
-		if(!memory.contains("$hmis_last_tick_quality"))
+		if(!memory.contains(Other.HMIS_FACTION_QUALITY_LAST_TICK))
 		{
-			memory.set("$hmis_last_tick_quality", Utils.getPlayerFactionDoctrineQuality().toString());
+			memory.set(Other.HMIS_FACTION_QUALITY_LAST_TICK, Utils.getPlayerFactionDoctrineQuality().toString());
 		}
-		if(!memory.contains("$hmis_last_tick_timestamp"))
+		if(!memory.contains(Other.HMIS_FACTION_QUALITY_LAST_TICK_TIMESTAMP))
 		{
-			memory.set("$hmis_last_tick_timestamp", PlayerFactionShipQuality.getLastTimestamp());
+			memory.set(Other.HMIS_FACTION_QUALITY_LAST_TICK_TIMESTAMP, PlayerFactionShipQuality.getLastTimestamp());
 		}
 
-		qualityOnLastTick = new BigDecimal(memory.getString("$hmis_last_tick_quality"));
-		lastTimestamp = memory.getLong("$hmis_last_tick_timestamp");
+		qualityOnLastTick = new BigDecimal(memory.getString(Other.HMIS_FACTION_QUALITY_LAST_TICK));
+		lastTimestamp = memory.getLong(Other.HMIS_FACTION_QUALITY_LAST_TICK_TIMESTAMP);
 	}
 
 	// doesn't seem to necessarily trigger with a consistent frequency
