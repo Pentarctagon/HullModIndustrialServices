@@ -2,6 +2,7 @@ package pentarctagon.hmis.data.campaign.rulecmd.utils.ui;
 
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.*;
+import com.fs.starfarer.api.campaign.listeners.DialogCreatorUI;
 import com.fs.starfarer.api.characters.MutableCharacterStatsAPI;
 import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
@@ -65,6 +66,24 @@ public class PanelCreator
 		Skills.SYSTEMS_EXPERTISE,
 		Skills.MISSILE_SPECIALIZATION
 	);
+
+	public static void showPopup(DialogCreatorUI ui, float width, float height, String text)
+	{
+		CustomDialogDelegate delegate = new BaseCustomDialogDelegate()
+		{
+			@Override
+			public void createCustomDialog(CustomPanelAPI panel, CustomDialogCallback callback)
+			{
+				CustomPanelAPI newpanel = panel.createCustomPanel(350f, 30f, null);
+				TooltipMakerAPI info = newpanel.createUIElement(350f, 30f, false);
+				info.addPara("Not enough materials", 0f);
+				newpanel.addUIElement(info);
+				panel.addComponent(newpanel);
+			}
+		};
+
+		ui.showDialog(350f, 50f, delegate);
+	}
 
 	/**
 	 * Creates and adds a title with the provided text to the provided panel.
@@ -453,6 +472,5 @@ public class PanelCreator
 	 * @param tooltipMaker The TooltipMakerAPI that was used to create the element
 	 * @param created      Whatever [tooltipMaker] created
 	 */
-	public record PanelCreatorData<T>(CustomPanelAPI panel, TooltipMakerAPI tooltipMaker, T created)
-	{}
+	public record PanelCreatorData<T>(CustomPanelAPI panel, TooltipMakerAPI tooltipMaker, T created){}
 }

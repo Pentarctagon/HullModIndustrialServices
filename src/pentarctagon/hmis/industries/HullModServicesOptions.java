@@ -12,6 +12,7 @@ import com.fs.starfarer.api.ui.CustomPanelAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import pentarctagon.hmis.Utils;
 import pentarctagon.hmis.constants.Other;
+import pentarctagon.hmis.data.campaign.rulecmd.utils.ui.PanelCreator;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -143,6 +144,10 @@ extends BaseIndustryOptionProvider
 				cargo.addSpecial(new SpecialItemData(Other.HMIS_DECONSTRUCTION_MODULE, null), 1);
 				cargo.removeItems(CargoAPI.CargoItemType.SPECIAL, new SpecialItemData(Items.FRAGMENT_FABRICATOR, null), Other.DECOMOD_FAB_COST);
 				cargo.removeItems(CargoAPI.CargoItemType.SPECIAL, new SpecialItemData(Items.THREAT_PROCESSING_UNIT, null), Other.DECONMOD_TPU_COST);
+			}
+			else
+			{
+				PanelCreator.showPopup(ui, 200f, 30f, "Not enough materials");
 			}
 		}
 	}
