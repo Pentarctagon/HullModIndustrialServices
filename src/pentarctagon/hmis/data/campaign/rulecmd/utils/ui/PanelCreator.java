@@ -74,9 +74,9 @@ public class PanelCreator
 			@Override
 			public void createCustomDialog(CustomPanelAPI panel, CustomDialogCallback callback)
 			{
-				CustomPanelAPI newpanel = panel.createCustomPanel(350f, 30f, null);
-				TooltipMakerAPI info = newpanel.createUIElement(350f, 30f, false);
-				info.addPara("Not enough materials", 0f);
+				CustomPanelAPI newpanel = panel.createCustomPanel(width, height, null);
+				TooltipMakerAPI info = newpanel.createUIElement(width, height, false);
+				info.addPara(text, 0f);
 				newpanel.addUIElement(info);
 				panel.addComponent(newpanel);
 			}
