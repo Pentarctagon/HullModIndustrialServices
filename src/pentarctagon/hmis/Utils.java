@@ -4,6 +4,7 @@ import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.econ.Industry;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.combat.ShipAPI;
+import com.fs.starfarer.api.combat.ShipHullSpecAPI;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
 import com.fs.starfarer.api.impl.campaign.ids.Industries;
@@ -24,19 +25,11 @@ public class Utils
 	 * added == true  -> adding an s-mod
 	 * added == false -> removing s-mod or enhancing default hullmod
 	 */
-	public static int getSmodCreditCost(ShipVariantAPI ship, boolean enhancedRemoved)
+	public static float setSmodCreditCost(ShipAPI.HullSize ship, MarketAPI market)
 	{
-		BigDecimal qualityModifier = getCostMultiplier();
+		BigDecimal qualityModifier = getCostMultiplier(market);
 
-		int cost;
-		if(enhancedRemoved)
-		{
-			cost = shipSizeEnhanceRemoveCost(ship);
-		}
-		else
-		{
-			cost = shipSizeSmodCost(ship);
-		}
+		int cost = shipSizeSmodCost(ship);
 
 		double lunaMultiplier = LunaHelper.getDouble(Luna.HMIS_CREDITS_MULTIPLIER, 1d);
 
@@ -48,9 +41,8 @@ public class Utils
 	 * Under 100% increases costs, over 100% decreases costs, by the percent under or over.
 	 * Under 100% returns a negative value, over 100% returns a positive value.
 	 */
-	private static BigDecimal getCostMultiplier()
+	private static BigDecimal getCostMultiplier(MarketAPI market)
 	{
-		MarketAPI market = getCurrentMarket();
 		BigDecimal adjustedQuality = getAdjustedQuality(market);
 
 		if(market.getIndustry(Other.HULL_MOD_SERVICES).isImproved())
@@ -89,48 +81,25 @@ public class Utils
 		return new BigDecimal(Global.getSector().getPlayerFaction().getProduction().getFaction().getDoctrine().getShipQualityContribution());
 	}
 
-	private static int shipSizeSmodCost(ShipVariantAPI ship)
+	public static int shipSizeSmodCost(ShipAPI.HullSize size)
 	{
-		ShipAPI.HullSize size = ship.getHullSize();
 		if(size == ShipAPI.HullSize.FRIGATE)
 		{
-			return 100_000;
+			return Global.getSettings().getInt("changeSmodsCost_FRIGATE");
 		}
 		if(size == ShipAPI.HullSize.DESTROYER)
 		{
-			return 200_000;
+			return Global.getSettings().getInt("changeSmodsCost_DESTROYER");
 		}
 		if(size == ShipAPI.HullSize.CRUISER)
 		{
-			return 300_000;
+			return Global.getSettings().getInt("changeSmodsCost_CRUISER");
 		}
 		if(size == ShipAPI.HullSize.CAPITAL_SHIP)
 		{
-			return 500_000;
+			return Global.getSettings().getInt("changeSmodsCost_CAPITAL_SHIP");
 		}
-		return 100_000;
-	}
-
-	private static int shipSizeEnhanceRemoveCost(ShipVariantAPI ship)
-	{
-		ShipAPI.HullSize size = ship.getHullSize();
-		if(size == ShipAPI.HullSize.FRIGATE)
-		{
-			return 100_000;
-		}
-		if(size == ShipAPI.HullSize.DESTROYER)
-		{
-			return 115_000;
-		}
-		if(size == ShipAPI.HullSize.CRUISER)
-		{
-			return 130_000;
-		}
-		if(size == ShipAPI.HullSize.CAPITAL_SHIP)
-		{
-			return 150_000;
-		}
-		return 100_000;
+		return 100_000_000;
 	}
 
 	public static int getPlayerCommodityAmount(String commodity)

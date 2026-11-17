@@ -11,11 +11,12 @@ import com.fs.starfarer.api.util.Misc;
 import org.apache.log4j.Logger;
 import pentarctagon.hmis.constants.Other;
 import pentarctagon.hmis.data.campaign.rulecmd.intro.HullEngineerListener;
-import pentarctagon.hmis.dmods.RestorationCostListener;
+import pentarctagon.hmis.listener.RestorationCostListener;
 import pentarctagon.hmis.doctrine.listener.PlayerFactionShipQuality;
 import pentarctagon.hmis.industries.HullModServicesOptions;
 import pentarctagon.hmis.industries.QualityDemandConfig;
 import pentarctagon.hmis.items.DeconstructionModuleMonthly;
+import pentarctagon.hmis.listener.SmodsCostListener;
 import pentarctagon.hmis.npc.smods.AddSmodsListener;
 import pentarctagon.hmis.npc.smods.listener.UpdatePlayerBlueprints;
 
@@ -25,21 +26,15 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-// TODO: add/remove s-mods dialog
-//  align pricing to match the costs from the "Change s-mods" vanilla functionality
-//    changeSmodsCost_FRIGATE = 75_000
-//    changeSmodsCost_DESTROYER = 100_000
-//    changeSmodsCost_CRUISER = 150_000
-//    changeSmodsCost_CAPITAL_SHIP = 250_000
-//  add functionality to have the vanilla "Change s-mods" pricing also be affected by colony ship quality
-
 // TODO: d-mod restoration cost - unsure
 //  either reduce the number of DGPs is costs or if possible remove this and instead reduce the cost of purchasing DGPs at this colony based on ship quality
 //  DGP cost formula: max(minDModRepairCostInParts, hullPrice/defaultDModRepairPartsBaseValueDivisor)
 //  requires updating the values settable via Luna as well if keeping
 
 // TODO: make sure readme and in-game dialogs are updated
+// TODO: testing
 
+// TODO: s-mods dialog prices+change s-mod prices - done
 // TODO: deconstruction module - done
 // TODO: XIV upgrade package - done
 // TODO: allowing restoration of unrestorable ships - no change
@@ -79,6 +74,7 @@ extends BaseModPlugin
 		HullMods.DEDICATED_TARGETING_CORE,
 		HullMods.INTEGRATED_TARGETING_UNIT,
 		// no active venting and severely reduced PPT requires a very aggressive build/fleet
+		// also not normally allowed to be built in anyway
 		HullMods.SAFETYOVERRIDES,
 		// rarely ever actually worth it
 		HullMods.CONVERTED_HANGAR,
@@ -108,6 +104,7 @@ extends BaseModPlugin
 	public void onGameLoad(boolean newGame)
 	{
 		Global.getSector().getListenerManager().addListener(new RestorationCostListener(), true);
+		Global.getSector().getListenerManager().addListener(new SmodsCostListener(), true);
 		Global.getSector().getListenerManager().addListener(new HullEngineerListener(), true);
 		Global.getSector().addTransientListener(new AddSmodsListener());
 		Global.getSector().getListenerManager().addListener(new UpdatePlayerBlueprints(), true);

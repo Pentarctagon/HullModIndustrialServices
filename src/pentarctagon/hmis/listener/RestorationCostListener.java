@@ -1,9 +1,10 @@
-package pentarctagon.hmis.dmods;
+package pentarctagon.hmis.listener;
 
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.PlayerMarketTransaction;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.campaign.listeners.ColonyInteractionListener;
+import com.fs.starfarer.api.combat.ShipAPI;
 import pentarctagon.hmis.Utils;
 import pentarctagon.hmis.constants.Luna;
 import pentarctagon.hmis.constants.Other;
@@ -14,8 +15,6 @@ import java.math.BigDecimal;
 public class RestorationCostListener
 implements ColonyInteractionListener
 {
-	// formula as of writing:
-	// (baseShipHullCost * baseRestoreCostMult) * (baseRestoreCostMultPerDMod^dmodCount)
 	private final float defaultMult;
 	private final float defaultMultPerDmod;
 
@@ -50,7 +49,7 @@ implements ColonyInteractionListener
 				{
 					mult = mult.subtract(new BigDecimal("0.2"));
 				}
-				float fmult = Math.max(mult.floatValue(), LunaHelper.getFloat(Luna.HMIS_DECREASE_RESTORATION_CAP, 0.7f));
+				float fmult = Math.max(mult.floatValue(), 0.7f);
 				Global.getSettings().setFloat("baseRestoreCostMult", fmult);
 			}
 		}

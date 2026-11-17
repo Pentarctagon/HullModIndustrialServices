@@ -110,8 +110,8 @@ extends Selector<HullModButton>
 			}
 
 			// enhancing a hullmod or removing an s-mod have the same cost
-			// else use the cost for adding a s-mod
-			int nextCost = Utils.getSmodCreditCost(checkerVariant, button.getData().isEnhanceOnly() || button.getData().isBuiltIn());
+			// else use the cost for adding an s-mod
+			int nextCost = Utils.shipSizeSmodCost(checkerVariant.getHullSize());
 			if(getCreditCost() + nextCost > Utils.getPlayerCredits())
 			{
 				disable(i, String.format("Not enough credits (%,d credits)", nextCost), false);
@@ -243,7 +243,7 @@ extends Selector<HullModButton>
 		{
 			countLabel.changeVar(0, countLabel.getVar(0) + 1);
 		}
-		currentCostsLabel.changeVar(0, currentCostsLabel.getVar(0)+ Utils.getSmodCreditCost(originalVariant, hullModButton.getData().isEnhanceOnly() || hullModButton.getData().isBuiltIn()));
+		currentCostsLabel.changeVar(0, currentCostsLabel.getVar(0)+ Utils.shipSizeSmodCost(originalVariant.getHullSize()));
 
 		if(!hullModButton.getData().isBuiltIn())
 		{
@@ -293,7 +293,7 @@ extends Selector<HullModButton>
 		{
 			countLabel.changeVar(0, countLabel.getVar(0) - 1);
 		}
-		currentCostsLabel.changeVar(0, currentCostsLabel.getVar(0)- Utils.getSmodCreditCost(originalVariant, hullModButton.getData().isEnhanceOnly() || hullModButton.getData().isBuiltIn()));
+		currentCostsLabel.changeVar(0, currentCostsLabel.getVar(0)- Utils.shipSizeSmodCost(originalVariant.getHullSize()));
 
 		if(!hullModButton.getData().isBuiltIn())
 		{
@@ -315,7 +315,7 @@ extends Selector<HullModButton>
 		if(!button.getData().isEnhanceOnly())
 		{
 			countLabel.changeVar(0, countLabel.getVar(0) - 1);
-			currentCostsLabel.changeVar(0, currentCostsLabel.getVar(0)- Utils.getSmodCreditCost(originalVariant, button.getData().isBuiltIn() || button.getData().isEnhanceOnly()));
+			currentCostsLabel.changeVar(0, currentCostsLabel.getVar(0)- Utils.shipSizeSmodCost(originalVariant.getHullSize()));
 		}
 		String hullModId = items.get(index).getData().id();
 		// Don't remove hull mods that were already on the ship
