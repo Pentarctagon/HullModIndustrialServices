@@ -14,7 +14,7 @@ public class Other
 
 	public static final int HMIS_MIN_MARKET_SIZE = 5;
 	public static final String HMIS_DECONSTRUCTION_MODULE = "hmis_deconstruction_module";
-	public static final String SHIP_QUALITY = "ship_quality";
+	public static final String CERTIFIED_DOMAIN_GRADE_PARTS = "certified_parts";
 	public static final int MAX_SMODS = 3;
 	public static final String HULL_MOD_SERVICES = "hmis_hullmodservices";
 	public static final int NO_SHIP_INDUSTRY = 0;

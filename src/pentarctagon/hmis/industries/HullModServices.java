@@ -5,10 +5,8 @@ import com.fs.starfarer.api.campaign.econ.CommoditySpecAPI;
 import com.fs.starfarer.api.campaign.econ.Industry;
 import com.fs.starfarer.api.impl.campaign.econ.impl.BaseIndustry;
 import com.fs.starfarer.api.impl.campaign.econ.impl.ItemEffectsRepo;
-import com.fs.starfarer.api.impl.campaign.ids.Commodities;
-import com.fs.starfarer.api.impl.campaign.ids.Industries;
-import com.fs.starfarer.api.impl.campaign.ids.Items;
-import com.fs.starfarer.api.impl.campaign.ids.Stats;
+import com.fs.starfarer.api.impl.campaign.ids.*;
+import com.fs.starfarer.api.impl.campaign.intel.events.HegemonyHostileActivityFactor;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import pentarctagon.hmis.Utils;
 import pentarctagon.hmis.constants.Luna;
@@ -104,14 +102,15 @@ extends BaseIndustry
 
 	    // for every 10% ship quality, export a unit that improves other factions' ship quality by 5%, rounded down by integer division
 	    float marketQuality = market.getShipQualityFactor();
-		if(marketQuality >= 1.1f && LunaHelper.getBoolean(Luna.HMIS_QUALITY_EXPORT, true) && shipsValue >= Other.ORBITAL_INDUSTRY)
+		boolean recognizedPolity = !market.isPlayerOwned() || market.hasCondition(Conditions.ESTABLISHED_POLITY) || HegemonyHostileActivityFactor.isPlayerDefeatedHegemony();
+		if(marketQuality >= 1.1f && LunaHelper.getBoolean(Luna.HMIS_CERTIFIED_PARTS_EXPORT, true) && shipsValue >= Other.ORBITAL_INDUSTRY && recognizedPolity)
 		{
-			int qualityExported = (int)((marketQuality-1)*10);
-			supply(Other.SHIP_QUALITY, qualityExported);
+			int certifiedPartsExported = (int)((marketQuality-1)*10);
+			supply(Other.CERTIFIED_DOMAIN_GRADE_PARTS, certifiedPartsExported);
 		}
 		else
 		{
-			supply(Other.SHIP_QUALITY, 0);
+			supply(Other.CERTIFIED_DOMAIN_GRADE_PARTS, 0);
 		}
     }
 

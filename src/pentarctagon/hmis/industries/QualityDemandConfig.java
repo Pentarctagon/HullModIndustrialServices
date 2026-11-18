@@ -20,11 +20,11 @@ implements EconomyAPI.EconomyUpdateListener
 	@Override
 	public void commodityUpdated(String commodityId)
 	{
-		if(commodityId.equals(Other.SHIP_QUALITY))
+		if(commodityId.equals(Other.CERTIFIED_DOMAIN_GRADE_PARTS))
 		{
 			for(MarketAPI market : Global.getSector().getEconomy().getMarketsCopy())
 			{
-				if(!LunaHelper.getBoolean(Luna.HMIS_QUALITY_EXPORT, true))
+				if(!LunaHelper.getBoolean(Luna.HMIS_CERTIFIED_PARTS_EXPORT, true))
 				{
 					market.getStats().getDynamic().getMod(Stats.PRODUCTION_QUALITY_MOD).unmodify(Other.HULL_MOD_SERVICES+"_imported");
 					continue;
@@ -37,7 +37,7 @@ implements EconomyAPI.EconomyUpdateListener
 					{
 						int available = market.getCommodityData(commodityId).getAvailable();
 						float importedQuality = new BigDecimal(available).multiply(new BigDecimal(5)).divide(new BigDecimal(100), 4, RoundingMode.HALF_UP).floatValue();
-						market.getStats().getDynamic().getMod(Stats.PRODUCTION_QUALITY_MOD).modifyFlat(Other.HULL_MOD_SERVICES+"_imported", importedQuality, "Hull Mod Services - imported ship quality");
+						market.getStats().getDynamic().getMod(Stats.PRODUCTION_QUALITY_MOD).modifyFlat(Other.HULL_MOD_SERVICES+"_imported", importedQuality, "Hull Mod Services - imported parts");
 					}
 					else
 					{
@@ -51,7 +51,7 @@ implements EconomyAPI.EconomyUpdateListener
 	@Override
 	public void economyUpdated()
 	{
-		if(!LunaHelper.getBoolean(Luna.HMIS_QUALITY_EXPORT, true))
+		if(!LunaHelper.getBoolean(Luna.HMIS_CERTIFIED_PARTS_EXPORT, true))
 		{
 			return;
 		}
@@ -72,12 +72,12 @@ implements EconomyAPI.EconomyUpdateListener
 				if(baseQuality.compareTo(new BigDecimal(1)) == -1)
 				{
 					int qualityDeficit = baseQuality.multiply(new BigDecimal(100)).subtract(new BigDecimal(100)).abs().intValue();
-					int demand = Math.min(qualityDeficit / 5, LunaHelper.getInteger(Luna.HMIS_QUALITY_IMPORT_CAP, 5));
+					int demand = Math.min(qualityDeficit / 5, LunaHelper.getInteger(Luna.HMIS_CERTIFIED_PARTS_IMPORT_CAP, 5));
 
 					Industry ships = Utils.findShipIndustry(market);
 					if(ships != null)
 					{
-						ships.getDemand(Other.SHIP_QUALITY).getQuantity().modifyFlat(Other.HULL_MOD_SERVICES, demand);
+						ships.getDemand(Other.CERTIFIED_DOMAIN_GRADE_PARTS).getQuantity().modifyFlat(Other.HULL_MOD_SERVICES, demand);
 					}
 				}
 				else
@@ -85,7 +85,7 @@ implements EconomyAPI.EconomyUpdateListener
 					Industry ships = Utils.findShipIndustry(market);
 					if(ships != null)
 					{
-						ships.getDemand(Other.SHIP_QUALITY).getQuantity().unmodifyFlat(Other.HULL_MOD_SERVICES);
+						ships.getDemand(Other.CERTIFIED_DOMAIN_GRADE_PARTS).getQuantity().unmodifyFlat(Other.HULL_MOD_SERVICES);
 					}
 				}
 			}

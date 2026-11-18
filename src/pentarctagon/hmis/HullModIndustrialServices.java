@@ -30,17 +30,24 @@ import java.util.stream.Collectors;
 //  either reduce the number of DGPs is costs or if possible remove this and instead reduce the cost of purchasing DGPs at this colony based on ship quality
 //  DGP cost formula: max(minDModRepairCostInParts, hullPrice/defaultDModRepairPartsBaseValueDivisor)
 //  requires updating the values settable via Luna as well if keeping
+//  may not be able to do anything with this anymore - DGPs aren't an independent commodity that can be manipulated and changing the setting controlling the amount needed seems to not do anything
+
+// TODO: exporting ship quality
+//  rename to Notarized Domain Grade Parts
+//  change to use vanilla DGP image - they aren't really a commodity so it's not used in the demand/supply screens
+//  colony production set to 0 until either the persean league blockade or the hegemony inspections are defeated
+//    market.hasCondition(Conditions.ESTABLISHED_POLITY) - persean
+//    HegemonyHostileActivityFactor.isPlayerDefeatedHegemony() - persean
 
 // TODO: make sure readme and in-game dialogs are updated
 // TODO: testing
 
-// TODO: s-mods dialog prices+change s-mod prices - done
+// TODO: s-mods dialog prices+change s-mod prices to use settings from vanilla - done
 // TODO: deconstruction module - done
 // TODO: XIV upgrade package - done
 // TODO: allowing restoration of unrestorable ships - no change
 // TODO: AI core integration/de-integration - no change
-// TODO: NPC s-mods - done
-// TODO: exporting ship quality - no change
+// TODO: NPC s-mods - no change
 
 // TODO: remove increase s-mod limit - done
 // TODO: remove DGP production - done

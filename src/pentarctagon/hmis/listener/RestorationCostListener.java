@@ -4,7 +4,6 @@ import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.PlayerMarketTransaction;
 import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.campaign.listeners.ColonyInteractionListener;
-import com.fs.starfarer.api.combat.ShipAPI;
 import pentarctagon.hmis.Utils;
 import pentarctagon.hmis.constants.Luna;
 import pentarctagon.hmis.constants.Other;
