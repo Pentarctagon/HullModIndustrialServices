@@ -26,23 +26,11 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 // TODO later: see about exposing an API for modded factions to add hullcheck evaluators?
+// TODO later: probably need to adjust the Sindrian dialog depending on the usurpers quest outcome
 
-// TODO: make sure in-game dialogs are updated
 // TODO: testing
 //  how does the change s-mod dialog costs get affected on colonies with basically no ship quality? since that gets adjusted as well
 //  make sure the size 7+ colonies have no perpetual shortages from HMS
-
-// TODO: exporting ship quality - done
-// TODO: s-mods dialog prices+change s-mod prices to use settings from vanilla - done
-// TODO: deconstruction module - done
-// TODO: XIV upgrade package - done
-// TODO: allowing restoration of unrestorable ships - no change
-// TODO: AI core integration/de-integration - no change
-// TODO: NPC s-mods - no change
-
-// TODO: remove d-mod restoration cost - done
-// TODO: remove increase s-mod limit - done
-// TODO: remove DGP production - done
 @SuppressWarnings("unused")
 public class HullModIndustrialServices
 extends BaseModPlugin

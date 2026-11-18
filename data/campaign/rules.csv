@@ -11,29 +11,25 @@ hull_engineer_options,PopulateOptions,"$hmis_hull_engineer
 $market.isPlayerOwned","RemoveOption cutCommLink
 AddOption 100 cutCommLink2""Thank you, that's all for now""
 SetShortcut cutCommLink2 ""ESCAPE""",,"hull_engineer_topic1:What services do you provide?
-hull_engineer_topic2:Cheaper hull restoration?
 hull_engineer_topic3:How about improving ship quality?
 hull_engineer_topic4:Other benefits to improving ship quality?
-hull_engineer_topic5:Producing domain grade parts?
 hull_engineer_topic6:What’s the XIV upgrade package?",
 hull_engineer_options_threat,PopulateOptions,"$hmis_hull_engineer
 $market.isPlayerOwned
-$player.encounteredThreat ",,,hull_engineer_topic7:Can Threat-tech be used for ship deconstruction?,
-hull_engineer_topic1,DialogOptionSelected,$option == hull_engineer_topic1,FireAll PopulateOptions,"Well, that depends on a few things, but at a minimum it becomes possible to add or remove s-mods from your ships. Ever add an s-mod and come to regret it later? We can fix that for you.
+$player.encounteredThreat ",,,hull_engineer_topic7:Can Threat-tech be used for domain-grade parts production?,
+hull_engineer_topic1,DialogOptionSelected,$option == hull_engineer_topic1,FireAll PopulateOptions,"Well, that depends on a few things, but at a minimum we can add or remove s-mods from your ships. Ever add an s-mod and come to regret it later? We can fix that for you.
 
-For, uh, credits, of course. You’re the boss and this is your colony, but this is expensive work.
-
-Also, once ship quality gets to the point where our ships don’t pop out of the forge with any d-mods, the cost of restoring the ships in your own fleet will start going down too.",,
-hull_engineer_topic2,DialogOptionSelected,$option == hull_engineer_topic2,FireAll PopulateOptions,"Right, so there’s a whole formula for calculating the cost to restore a ship, but what it comes down to is that as ship quality rises it’ll become cheaper to remove d-mods from your ships – production quality goes up and so it also gets easier to fix damaged ships, essentially. Streamlining and optimizing can only save you so many credits though, so no matter what you do you’ll never get more than about a 50% reduction in cost.",,
+For, uh, credits, of course. You’re the boss and this is your colony, but this is expensive work.",,
 hull_engineer_topic3,DialogOptionSelected,$option == hull_engineer_topic3,FireAll PopulateOptions,"You have several options for that. The Orbital Works and Hull Mod Services of course contribute, then obviously finding or uh, “otherwise obtaining” a Nanoforge will improve assembly output immensely. Keeping this colony as stable as possible also helps as does putting more priority on quality over quantity in your doctrine. And, well… an Alpha AI core would give a boost too, but I wouldn’t recommend it. Plugging an alien super intelligence into your entire ship building industry and hoping it only does what you tell it really seems like a bad idea to me. But, you’re the boss.",,
-hull_engineer_topic4,DialogOptionSelected,$option == hull_engineer_topic4,FireAll PopulateOptions,"Beyond reducing the cost of hull restoration, as ship quality increases we’ll be able to upgrade your ships to allow installing a third s-mod, restoring ships that are not otherwise restorable through regular means, and potentially integrating and de-integrating AI cores for automated ships should you happen to come into possession of any of those. You’d need to find a way to get access to some of the AI experts over at Tri-Tachyon for that last one though – no faction other than maybe the Hegemony would have anyone with that kind of expertise and there’s no way they’d help. They’d probably just arrest us all, actually.
+hull_engineer_topic4,DialogOptionSelected,$option == hull_engineer_topic4,FireAll PopulateOptions,"As ship quality increases we’ll be able to restore ships that are not otherwise restorable through regular means as well as potentially integrating and de-integrating AI cores for automated ships should you happen to come into possession of any of those. You’d need to find a way to get access to some of the AI experts over at Tri-Tachyon for that though – no faction other than maybe the Hegemony would have anyone with that kind of expertise and there’s no way they’d help. They’d probably just arrest us all, actually.
 
-Oh, and one last thing, once ship quality gets even a bit above baseline, there’ll be interest in using our services to improve other faction’s ships. Nothing too crazy, but for the right price and the right ships, there’s definitely money to be made fixing up some of the garbage that gets assembled on other planets.",,
-hull_engineer_topic5,DialogOptionSelected,$option == hull_engineer_topic5,FireAll PopulateOptions,"It’s, well, something we can do, sure. You need to understand though that nanoforges - and you’d need a pristine one for this – don’t print the individual parts, they print whole ships and then we’d try to carefully rip them apart to extract as many individual pieces as we can without damaging them. So we can do that, but it’s going to hurt everything else that depends on ship production. Hull exports will take a major hit, we’ll lose some capacity for fixing up other factions’ ships as a service, and there will be fewer ships available for this colony’s trade and military fleets.",,
-hull_engineer_topic6,DialogOptionSelected,$option == hull_engineer_topic6,FireAll PopulateOptions,"It’s pretty straightforward: for ships that have a known XIV Battlegroup variant, we can upgrade the base model to the XIV version as long as you have enough domain grade parts for us to substitute in and the ship doesn’t have any major damage. But, uh, keep it to yourself if you decide to upgrade anything. Just because it’s something we can do doesn’t mean the Hegemony’ll be happy about us doing it. Otherwise you can bet the Church would’ve been allowed to use them too, especially during the AI wars.",,
-hull_engineer_topic7,DialogOptionSelected,$option == hull_engineer_topic7,FireAll PopulateOptions,"That’s – what? You want to take the out of control murderbots from the Abyss and… well, I can see the logic there but, I mean… hmm.
+Oh, and one last thing, if you’re able to prove to the rest of the sector that we’re an established polity then once ship quality gets even a bit above baseline then we’ll be able to start selling certified domain-grade parts. No one places much trust in parts sourced from salvage or from some random spacer’s outpost, but if we can show we’re legit then the price we can sell them for goes up real fast.",,
+hull_engineer_topic6,DialogOptionSelected,$option == hull_engineer_topic6,FireAll PopulateOptions,"It’s pretty straightforward: for ships that have a known XIV Battlegroup variant, we can upgrade the base model to the XIV version as long as you have enough domain grade parts for us to substitute in and the ship doesn’t have any major damage. But, uh, keep it to yourself if you decide to upgrade anything. Just because it’s something we can do doesn’t mean the Hegemony’ll be happy about us doing it. Otherwise you can bet the Church would’ve been allowed to use them too, especially during the AI wars. Who cares if you lose a bit of speed in exchange for more armor and a better flux grid?",,
+hull_engineer_topic7,DialogOptionSelected,$option == hull_engineer_topic7,FireAll PopulateOptions,"I – what? You want to take the out of control murderbots from the Abyss and… well, I can see the logic there but, I mean… hmm.
 
-Alright, look. Yes, it can probably be done IF you can bring a lot back from the Abyss, and I mean A LOT – those Fragment Fabricators especially seeing as they tear themselves apart as soon as you glance at them wrong. And I absolutely will not be part of any of this without a lot of guns pointing at the thing. I don’t mean a few marines and mechs, I mean heavy fixed ground emplacements and a battlestation overhead ready to vaporize the thing the moment it spits out something we didn’t tell it to.",,
+Alright, look. Yes, it can probably be done IF you can bring a lot of that tech back from the Abyss, and I mean A LOT – those Fragment Fabricators especially seeing as they tear themselves apart as soon as you glance at them wrong. And I absolutely will not be part of any of this without a lot of guns pointing at the thing. I don’t mean a few marines and mechs, I mean heavy fixed ground emplacements and a battlestation overhead ready to vaporize it the moment it spits out something we didn’t tell it to.
+
+And just so you understand, nanoforges don’t print the individual parts, they print whole ships from the blueprint and it gets carefully ripped apart to extract as many individual pieces as we can without damaging them. So you’re not getting more domain-grade parts for free, you’re getting more domain-grade parts in exchange for fewer ships.",,
 ,,,,,,
 # tri-tachyon colony,,,,,,
 hull_engineer_greeting_tritachyon,PickGreeting,"$hmis_hull_engineer score:1000
@@ -47,9 +43,7 @@ hull_engineer_tritachyon_options,PopulateOptions,"$hmis_hull_engineer
 $global.hmis_market_faction_id == tritachyon","RemoveOption cutCommLink
 AddOption 100 cutCommLink2""Thank you, that's all for now""
 SetShortcut cutCommLink2 ""ESCAPE""",,hull_engineer_tritachyon_topic1:What services do you provide?,
-hull_engineer_tritachyon_topic1,DialogOptionSelected,$option == hull_engineer_tritachyon_topic1,FireAll PopulateOptions,"The Tri-Tachyon Corporation prides itself on providing the highest quality hull services in the entire sector. As long as you have sufficient credits at your disposal, any hullmod whose blueprint you are in possession of can be built-in to any ship in your fleet. Built in the wrong hullmod? Not a problem! Tri-Tachyon can also remove any built-in hullmod as well.
-
-Additionally, Tri-Tachyon d-mod removal services can restore any ship you have at significantly better prices than you’ll find anywhere else!",,
+hull_engineer_tritachyon_topic1,DialogOptionSelected,$option == hull_engineer_tritachyon_topic1,FireAll PopulateOptions,"The Tri-Tachyon Corporation prides itself on providing the highest quality hull services in the entire sector. As long as you have sufficient credits at your disposal, any hullmod whose blueprint you are in possession of can be built-in to any ship in your fleet. Built in the wrong hullmod? Not a problem! Tri-Tachyon can also remove any built-in hullmod as well for highly competitive prices!",,
 ,,,,,,
 # hegemony colony,,,,,,
 hull_engineer_greeting_hegemony,PickGreeting,"$hmis_hull_engineer score:1000
@@ -65,7 +59,7 @@ AddOption 100 cutCommLink2""Thank you, that's all for now""
 SetShortcut cutCommLink2 ""ESCAPE""",,hull_engineer_hegemony_topic1:What services do you provide?,
 hull_engineer_hegemony_topic1,DialogOptionSelected,$option == hull_engineer_hegemony_topic1,FireAll PopulateOptions,"While the Hegemony navy has many times demonstrated its primacy, maintaining that industrial base during a time of relative peace is costly. As such, excess capacity can be granted to those who have demonstrated their loyalty to the Domain’s legitimate successor state in the Persean sector.
 
-For you, captain, that grants access to our specialized services for adding or removing built-in hullmods to any ship in your fleet, along with restoring heavily damaged ships at a lower price than you will find on most other inhabited worlds.",,
+For you, captain, that grants access to our specialized services for adding or removing built-in hullmods to any ship in your fleet at a lower price than you will find on most other inhabited worlds.",,
 # persean league colony,,,,,,
 hull_engineer_greeting_persean,PickGreeting,"$hmis_hull_engineer score:1000
 $global.hmis_market_faction_id == persean
@@ -80,7 +74,7 @@ AddOption 100 cutCommLink2""Thank you, that's all for now""
 SetShortcut cutCommLink2 ""ESCAPE""",,hull_engineer_persean_topic1:What services do you provide?,
 hull_engineer_persean_topic1,DialogOptionSelected,$option == hull_engineer_persean_topic1,FireAll PopulateOptions,"As I’m sure you are already aware, the League, like those Hegemony warmongers, controls one of only two pristine nanoforges left in the core worlds after the Collapse. It mostly serves the needs of the great Gens of Kazeron, but its capabilities are shared amongst all worlds that are part of the League. And for allied captains such as yourself, that same courtesy is extended.
 
-So, while you are on Kazeron, the League’s services are at your disposal: for any ship in your fleet, built-in hullmods can be added or removed, and you’ll find that ship restoration is far cheaper here than at most other ports.",,
+So, while you are on Kazeron, the League’s services are at your disposal: for any ship in your fleet, built-in hullmods can be added or removed for far cheaper here than at most other ports.",,
 # sindrian colony,,,,,,
 hull_engineer_greeting_sindrian,PickGreeting,"$hmis_hull_engineer score:1000
 $global.hmis_market_faction_id == sindrian_diktat
@@ -95,7 +89,7 @@ AddOption 100 cutCommLink2""Thank you, that's all for now""
 SetShortcut cutCommLink2 ""ESCAPE""",,hull_engineer_sindrian_topic1:What services do you provide?,
 hull_engineer_sindrian_topic1,DialogOptionSelected,$option == hull_engineer_sindrian_topic1,FireAll PopulateOptions,"Despite the near constant interference of Hegemony spies and saboteurs, the Sindrian Diktat has forged an industrial juggernaut to support and enforce the Lion’s will. Your subservience to that will allows me to grant you access to those same facilities used by the Lion’s Guard itself!
 
-There you will be able to add or remove any built-in hullmods of any ship in your fleet as well as restoring damaged vessels at a reduced cost, so that you may adapt to better serve the Andradan movement.",,
+There you will be able to add or remove any built-in hullmods of any ship in your fleet so that you may adapt to better serve the Andradan movement.",,
 # any others,,,,,,
 hull_engineer_greeting_other,PickGreeting,"$hmis_hull_engineer score:900
 $global.hmis_current_market_rep < 50
@@ -120,4 +114,4 @@ $global.hmis_market_faction_id != persean
 $global.hmis_market_faction_id != sindrian_diktat","RemoveOption cutCommLink
 AddOption 100 cutCommLink2""Thank you, that's all for now""
 SetShortcut cutCommLink2 ""ESCAPE""",,hull_engineer_other_topic1:What services do you provide?,
-hull_engineer_other_topic1,DialogOptionSelected,$option == hull_engineer_other_topic1,FireAll PopulateOptions,Built-in hullmods can be added or removed from ships in your fleet and ship restoration is cheaper.,,
+hull_engineer_other_topic1,DialogOptionSelected,$option == hull_engineer_other_topic1,FireAll PopulateOptions,Built-in hullmods can be added or removed from ships in your fleet.,,

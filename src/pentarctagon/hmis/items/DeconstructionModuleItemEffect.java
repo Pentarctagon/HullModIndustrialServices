@@ -83,6 +83,6 @@ extends BaseInstallableItemEffect
 	@Override
 	protected void addItemDescriptionImpl(Industry industry, TooltipMakerAPI text, SpecialItemData data, InstallableIndustryItemPlugin.InstallableItemDescriptionMode mode, String pre, float pad)
 	{
-		text.addPara(pre + "Increases domain grade parts production by one unit. Decreases colony base ground defenses by 5.", pad);
+		text.addPara(pre + "Adds domain grade parts production. Decreases colony base ground defenses by 5.", pad);
 	}
 }
