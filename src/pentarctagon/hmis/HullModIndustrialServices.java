@@ -31,6 +31,8 @@ import java.util.stream.Collectors;
 // TODO: testing
 //  how does the change s-mod dialog costs get affected on colonies with basically no ship quality? since that gets adjusted as well
 //  make sure the size 7+ colonies have no perpetual shortages from HMS
+//  tritachyon deal enabling AI core integration/de-integration
+//  defeating the persean league/hegemony crisis enabling export of certified domain-grade parts
 @SuppressWarnings("unused")
 public class HullModIndustrialServices
 extends BaseModPlugin
