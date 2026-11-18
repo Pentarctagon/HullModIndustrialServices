@@ -25,16 +25,14 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-// TODO: exporting ship quality
-//  rename to Notarized Domain Grade Parts
-//  change to use vanilla DGP image - they aren't really a commodity so it's not used in the demand/supply screens
-//  colony production set to 0 until either the persean league blockade or the hegemony inspections are defeated
-//    market.hasCondition(Conditions.ESTABLISHED_POLITY) - persean
-//    HegemonyHostileActivityFactor.isPlayerDefeatedHegemony() - persean
+// TODO later: see about exposing an API for modded factions to add hullcheck evaluators?
 
-// TODO: make sure readme and in-game dialogs are updated
+// TODO: make sure in-game dialogs are updated
 // TODO: testing
+//  how does the change s-mod dialog costs get affected on colonies with basically no ship quality? since that gets adjusted as well
+//  make sure the size 7+ colonies have no perpetual shortages from HMS
 
+// TODO: exporting ship quality - done
 // TODO: s-mods dialog prices+change s-mod prices to use settings from vanilla - done
 // TODO: deconstruction module - done
 // TODO: XIV upgrade package - done
