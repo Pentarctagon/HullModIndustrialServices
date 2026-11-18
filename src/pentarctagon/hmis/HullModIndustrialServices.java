@@ -11,7 +11,6 @@ import com.fs.starfarer.api.util.Misc;
 import org.apache.log4j.Logger;
 import pentarctagon.hmis.constants.Other;
 import pentarctagon.hmis.data.campaign.rulecmd.intro.HullEngineerListener;
-import pentarctagon.hmis.listener.RestorationCostListener;
 import pentarctagon.hmis.doctrine.listener.PlayerFactionShipQuality;
 import pentarctagon.hmis.industries.HullModServicesOptions;
 import pentarctagon.hmis.industries.QualityDemandConfig;
@@ -25,12 +24,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-// TODO: d-mod restoration cost - unsure
-//  either reduce the number of DGPs is costs or if possible remove this and instead reduce the cost of purchasing DGPs at this colony based on ship quality
-//  DGP cost formula: max(minDModRepairCostInParts, hullPrice/defaultDModRepairPartsBaseValueDivisor)
-//  requires updating the values settable via Luna as well if keeping
-//  may not be able to do anything with this anymore - DGPs aren't an independent commodity that can be manipulated and changing the setting controlling the amount needed seems to not do anything
 
 // TODO: exporting ship quality
 //  rename to Notarized Domain Grade Parts
@@ -49,6 +42,7 @@ import java.util.stream.Collectors;
 // TODO: AI core integration/de-integration - no change
 // TODO: NPC s-mods - no change
 
+// TODO: remove d-mod restoration cost - done
 // TODO: remove increase s-mod limit - done
 // TODO: remove DGP production - done
 @SuppressWarnings("unused")
@@ -110,7 +104,6 @@ extends BaseModPlugin
 	@Override
 	public void onGameLoad(boolean newGame)
 	{
-		Global.getSector().getListenerManager().addListener(new RestorationCostListener(), true);
 		Global.getSector().getListenerManager().addListener(new SmodsCostListener(), true);
 		Global.getSector().getListenerManager().addListener(new HullEngineerListener(), true);
 		Global.getSector().addTransientListener(new AddSmodsListener());
