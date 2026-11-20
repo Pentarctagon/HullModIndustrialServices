@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
  * * Adding s-mods has been disabled in the Luna settings.<br>
  * <br>
  * If a fleet is eligible to have s-mods added, then the list of hullmod evaluators is randomized and the ships updated in this order:<br>
+ * * If it's a civilian ship, it's ignored. Note that this is different than a ship having the Civilian-grade Hull hullmod.<br>
  * * Any non-s-mod hullmod that a ship has which has an s-mod effect, has a non-zero ordnance cost, and isn't excluded from being built-in is made an s-mod.<br>
  * * If there are available s-mod slots remaining, use the evaluators to fill the remaining s-mod slots.<br>
  * * Since s-modding hullmods that the ship already had is done first, this means there are ordnance points that have been freed up, so use the evaluators to determine regular hullmods to add to use the ordnance points.<br>

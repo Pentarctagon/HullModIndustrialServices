@@ -75,7 +75,7 @@ implements FleetInflater
 				continue;
 			}
 
-			// copy and shuffle so the choice of hullmods below isn't always the same
+			// shuffle so the choice of hullmods below isn't always the same
 			Collections.shuffle(HullCheckManager.getEvaluators());
 
 			StringBuilder results = new StringBuilder();
@@ -90,7 +90,10 @@ implements FleetInflater
 			int extraSmod = random.nextInt(20) < (getQuality() * 100) % 20 && getAverageNumSMods() < LunaHelper.getInteger(Luna.HMIS_NPC_SMODS_CAP, Other.MAX_SMODS) ? 1 : 0;
 
 			// s-mod non-built-in hullmods already on the ship that give a benefit
-			for(String id : new ArrayList<>(variant.getNonBuiltInHullmods()))
+			// shuffle for some more variety in s-mods on NPC ships
+			ArrayList<String> existingHullmods = new ArrayList<>(variant.getNonBuiltInHullmods());
+			Collections.shuffle(existingHullmods);
+			for(String id : existingHullmods)
 			{
 				if(variant.getSMods().size() >= getAverageNumSMods()+extraSmod)
 				{

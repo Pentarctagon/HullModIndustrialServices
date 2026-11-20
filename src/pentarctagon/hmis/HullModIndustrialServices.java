@@ -22,9 +22,9 @@ import java.lang.invoke.MethodHandles;
 
 // TODO: changelog
 // TODO: check if lunalib is actually a soft dependency or not
-// TODO: watch NPC fleets spawning and check that the s-mod adding functionality is still working
 
 // TODO later: probably need to adjust the Sindrian dialog depending on the usurpers quest outcome
+// TODO later: watch NPC fleets spawning and check that the s-mod adding functionality is still working for modded faction fleets
 @SuppressWarnings("unused")
 public class HullModIndustrialServices
 extends BaseModPlugin
