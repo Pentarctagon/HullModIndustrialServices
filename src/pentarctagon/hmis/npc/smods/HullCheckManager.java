@@ -1,7 +1,6 @@
 package pentarctagon.hmis.npc.smods;
 
 import com.fs.starfarer.api.Global;
-import com.fs.starfarer.api.ModSpecAPI;
 import com.fs.starfarer.api.campaign.FactionAPI;
 import com.fs.starfarer.api.loading.HullModSpecAPI;
 import pentarctagon.hmis.HullModIndustrialServices;
@@ -84,7 +83,6 @@ public class HullCheckManager
 					      .stream()
 					      .filter(id -> {
 						      HullModSpecAPI spec = Global.getSettings().getHullModSpec(id);
-						      ModSpecAPI source = spec.getSourceMod();
 
 						      // ignore:
 						      // 0 cost hullmods
