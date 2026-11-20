@@ -6,10 +6,8 @@ import com.fs.starfarer.api.campaign.FleetInflater;
 import com.fs.starfarer.api.combat.ShipAPI;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
-import com.fs.starfarer.api.impl.campaign.ids.Factions;
 import com.fs.starfarer.api.loading.HullModSpecAPI;
 import org.apache.log4j.Logger;
-import pentarctagon.hmis.HullModIndustrialServices;
 import pentarctagon.hmis.constants.Luna;
 import pentarctagon.hmis.constants.Other;
 import pentarctagon.hmis.data.campaign.rulecmd.utils.LunaHelper;
@@ -38,49 +36,6 @@ implements FleetInflater
 		ShipAPI.HullSize.CAPITAL_SHIP, 25
 	);
 
-	/**
-	 * the idea is that, for adding additional s-mods, it's fairly easy to determine if these are always or almost always just a straight upgrade
-	 * ie: adding s-modded accelerated shields to a ship that didn't previously have any s-mods is just an improvement
-	 *     it doesn't evaluate whether a particular hullmod is an optimal choice, just that it's better than not having it at all
-	 */
-	private static final List<HullModEvaluator> evaluators = Arrays.asList(
-		new HardenedShieldsEvaluator(),
-		new AcceleratedShieldsEvaluator(),
-		new ExtendedShieldsEvaluator(),
-		new ShieldConversionFrontEvaluator(),
-		new StabilizedShieldsEvaluator(),
-		new ArmoredWeaponMountsEvaluator(),
-		new AutomatedRepairUnitEvaluator(),
-		new HeavyArmorEvaluator(),
-		new ReinforcedBulkheadsEvaluator(),
-		new ResistantFluxConduitsEvaluator(),
-		new AdvancedOpticsEvaluator(),
-		new AdvancedTurretGyrosEvaluator(),
-		new ECCMPackageEvaluator(),
-		new ExpandedMagazinesEvaluator(),
-		new ExpandedMissileRacksEvaluator(),
-		new IntegratedPointDefenseEvaluator(),
-		new MissileAutoloaderEvaluator(),
-		new AuxiliaryThrustersEvaluator(),
-		new UnstableInjectorEvaluator(),
-		new DefensiveTargetingArrayEvaluator(),
-		new ExpandedDeckCrewEvaluator(),
-		new FluxCoilAdjunctEvaluator(),
-		new FluxDistributorEvaluator(),
-		new HardenedSubsystemsEvaluator(),
-		new AdaptivePhaseCoilsEvaluator(),
-		new InsulatedEngineAssemblyEvaluator(),
-		new PhaseAnchorEvaluator(),
-		new ECMPackageEvaluator(),
-		new NavRelayEvaluator(),
-		new EfficiencyOverhaulEvaluator(),
-		new SolarShieldingEvaluator()
-	);
-
-	private static final List<String> evaluatorIds = evaluators.stream().map(HullModEvaluator::getId).toList();
-
-	private static final Set<String> ignoreFactions = Set.of(Factions.OMEGA, Factions.THREAT, Factions.DWELLER);
-
 	public AddSmodsInflater(FleetInflater originalFleetInflater)
 	{
 		this.originalFleetInflater = originalFleetInflater;
@@ -91,17 +46,12 @@ implements FleetInflater
 	{
 		originalFleetInflater.inflate(fleet);
 
-		ArrayList<String> factionHullmods;
-		synchronized(HullModIndustrialServices.class)
-		{
-			factionHullmods = new ArrayList<>(HullModIndustrialServices.vanillaHullmods.get(fleet.getFaction().getId()));
-		}
 		if(getQuality() < 1.0f)
 		{
 			log.info("[HMIS] Skipping s-mod setup for faction's fleet due to low quality ("+getQuality()+"): "+fleet.getFaction().getId());
 			return;
 		}
-		if(Collections.disjoint(evaluatorIds, factionHullmods))
+		if(HullCheckManager.factionKnowsEvaluatableHullmods(fleet.getFaction().getId()))
 		{
 			log.info("[HMIS] Skipping s-mod setup for faction's fleet due to not knowing any hullmods: "+fleet.getFaction().getId());
 			return;
@@ -111,7 +61,7 @@ implements FleetInflater
 			log.info("[HMIS] NPC s-mods disabled");
 			return;
 		}
-		if(ignoreFactions.contains(fleet.getFaction().getId()))
+		if(HullCheckManager.isIgnoredFaction(fleet.getFaction().getId()))
 		{
 			log.info("[HMIS] ignoring fleet for faction: "+fleet.getFaction().getId());
 			return;
@@ -126,7 +76,7 @@ implements FleetInflater
 			}
 
 			// copy and shuffle so the choice of hullmods below isn't always the same
-			Collections.shuffle(evaluators);
+			Collections.shuffle(HullCheckManager.getEvaluators());
 
 			StringBuilder results = new StringBuilder();
 
@@ -151,7 +101,9 @@ implements FleetInflater
 					spec.getEffect().hasSModEffect() &&
 					!spec.getEffect().isSModEffectAPenalty() &&
 					!variant.getPermaMods().contains(id) &&
-					!HullModIndustrialServices.neverBuildIn.contains(id)
+					!HullCheckManager.isNeverBuildIn(id) &&
+					spec.getFrigateCost() > 0 &&
+					!spec.hasTag("no_build_in")
 				)
 				{
 					variant.removeMod(spec.getId());
@@ -161,14 +113,14 @@ implements FleetInflater
 			}
 
 			// still s-mod slots left over, so add up to the limit
-			for(HullModEvaluator eval : evaluators)
+			for(HullModEvaluator eval : HullCheckManager.getEvaluators())
 			{
 				if(variant.getSMods().size() >= getAverageNumSMods()+extraSmod)
 				{
 					break;
 				}
 
-				if(eval.evaluate(ship, true) && factionHullmods.contains(eval.getId()))
+				if(HullCheckManager.factionHasHullmod(fleet.getFaction().getId(), eval.getId()) && eval.evaluate(ship, true))
 				{
 					variant.addPermaMod(eval.getId(), true);
 					results.append("s-modded: ").append(eval.getId()).append("\n");
@@ -180,10 +132,10 @@ implements FleetInflater
 			if(freedOrdnance > 0)
 			{
 				// add hullmods if enough OP was freed
-				for(HullModEvaluator eval : evaluators)
+				for(HullModEvaluator eval : HullCheckManager.getEvaluators())
 				{
 					int cost = Global.getSettings().getHullModSpec(eval.getId()).getCostFor(variant.getHullSize());
-					if(eval.evaluate(ship, false) && cost <= freedOrdnance && factionHullmods.contains(eval.getId()))
+					if(HullCheckManager.factionHasHullmod(fleet.getFaction().getId(), eval.getId()) && cost <= freedOrdnance && eval.evaluate(ship, false))
 					{
 						variant.addMod(eval.getId());
 						results.append("added: ").append(eval.getId()).append("\n");

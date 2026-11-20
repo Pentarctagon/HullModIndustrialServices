@@ -6,7 +6,7 @@ This mod adds the Hull Mod Services colony structure which requires a size 5+ co
 
 The cost of doing these actions is reduced by the ship quality percentage of the colony over 100%. So if the colony has 125% ship quality, it reduces the cost by 25%. The cost will also increase if the colony's ship quality drops below 100%.
 
-This cost adjustment also applies to the credits costs in the vanilla "Change s-mods" dialog in the refit screen. The "Change s-mods" dialog does mostly replace the need for this functionality with the exception of adding new s-mods with credits - the "Change s-mods" dialog only allows changing and removing s-mods with credits.
+This cost adjustment also applies to the credits costs in the vanilla "Change s-mods" dialog in the refit screen. The "Change s-mods" dialog does mostly replace the need for this functionality at your own colonies with the exception of adding new s-mods with credits - the "Change s-mods" dialog only allows changing and removing s-mods with credits. The "Change s-mods" dialog is also not available at colonies you don't own whereas this is available on certain core worlds and so isn't gated behind starting your own colony and investing in Heavy Industry.
 
 **NOTE:** to avoid gaming the system, the ship quality from the faction doctrine does not immediately take effect when considering d-mod restoration costs or adding/removing s-mods. Instead, it adjusts by 2.5% approximately every week towards the new value. So if the faction ship quality doctrine is changed from 0% to 25%, it will take about 10 weeks for that 25% ship quality to be used for s-mod and d-mod cost reductions.
 
@@ -70,12 +70,18 @@ NOTE: units of ship production affect more than how much money the colony makes 
 * Each unit of ship production counts for 25,000 credits worth of custom production capacity. So if you have six units of ship production and decide to spend two units on domain grade parts, your custom production capacity will drop from 150,000 credits to 100,000 credits.
 * Faction-wide ship quality is taken from the colony with the highest ship production, not the colony with the highest quality. If you have a colony that produces 6 units of ships and has 120% quality and another colony that produces 4 units of ships at 140% quality, all your other colonies will get their quality bonuses from the colony with 120% quality rather than the colony with 140% quality.
 
+## Extended Mode ##
+There is no difference in how this mod works in normal mode vs extended mode. In either mode it will likely make early game fights somewhat harder since fleets in general will either have fewer d-mods or have s-mods. Late game will potentially be somewhat easier given the Certified Domain-grade Parts export (colony income), making unrestorable ships restorable, and reducing s-mod related costs.
+
 ## Compatibility ##
 No compatibility issues that I know of.
 
 ## Dependencies ##
 * LunaLib (optional): for the usual settings, version checker, etc.
 * MagicLib (required): for achievements.
+
+## Modding ##
+I've never done any sort of inter-mod operability, but the HullCheckManager class should allow other mods to register their own hullmod evaluators for the functionality that adds s-mods to NPC fleets on the off chance anyone is interested in that.
 
 ## Credits ##
 * A lot of the initial code was taken from the Progressive S-Mods mod which I then modified/refactored/added to as needed, which helped a lot. It would have taken me a lot longer to figure all this out myself from scratch, especially the UI code.
