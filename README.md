@@ -81,7 +81,7 @@ No compatibility issues that I know of.
 * MagicLib (required): for achievements.
 
 ## Modding ##
-I've never done any sort of inter-mod operability, but the HullCheckManager class should allow other mods to register their own hullmod evaluators for the functionality that adds s-mods to NPC fleets on the off chance anyone is interested in that.
+I've never done any sort of inter-mod operability, but the HullCheckManager class should allow other mods to register their own hullmod evaluators for the functionality that adds s-mods to NPC fleets. No idea how useful it really is though, so open to changes.
 
 ## Credits ##
 * A lot of the initial code was taken from the Progressive S-Mods mod which I then modified/refactored/added to as needed, which helped a lot. It would have taken me a lot longer to figure all this out myself from scratch, especially the UI code.

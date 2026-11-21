@@ -3,6 +3,7 @@ package pentarctagon.hmis.industries;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.*;
 import com.fs.starfarer.api.campaign.econ.Industry;
+import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.campaign.listeners.BaseIndustryOptionProvider;
 import com.fs.starfarer.api.campaign.listeners.DialogCreatorUI;
 import com.fs.starfarer.api.impl.campaign.ids.Commodities;
@@ -52,9 +53,24 @@ extends BaseIndustryOptionProvider
 
 		if(Global.getSector().getPlayerMemoryWithoutUpdate().getBoolean("$encounteredThreat"))
 		{
-			IndustryOptionData opt = new IndustryOptionData("Create Deconstruction Module", DECON_OPTION, ind, this);
-			opt.color = Color.RED;
-			options.add(opt);
+			if(Global.getSector().getCampaignUI().getCurrentInteractionDialog() != null)
+			{
+				InteractionDialogAPI currentDialog = Global.getSector().getCampaignUI().getCurrentInteractionDialog();
+				if(currentDialog.getInteractionTarget() != null)
+				{
+					SectorEntityToken entity = currentDialog.getInteractionTarget();
+					if(entity.getMarket() != null)
+					{
+						MarketAPI market = entity.getMarket();
+						if(market.getId().equals(ind.getMarket().getId()))
+						{
+							IndustryOptionData opt = new IndustryOptionData("Create Deconstruction Module", DECON_OPTION, ind, this);
+							opt.color = Color.RED;
+							options.add(opt);
+						}
+					}
+				}
+			}
 		}
 
 		if(

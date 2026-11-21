@@ -3,9 +3,9 @@
   "name": "Hull Mod Industrial Services",
   "author": "pentarctagon",
   "utility": false,
-  "version": { "major": "1", "minor": "0", "patch": "9" },
-  "description": "Adds the Hull Mod Services colony structure for different handling of s-mods.",
-  "gameVersion": "0.98a-RC8",
+  "version": { "major": "1", "minor": "1", "patch": "0" },
+  "description": "Adds the Hull Mod Services colony structure for different handling of s-mods plus some other related features.",
+  "gameVersion": "0.98.5a-RC8",
   "jars": [ "jars/HullModIndustrialServices.jar" ],
   "modPlugin": "pentarctagon.hmis.HullModIndustrialServices",
   "dependencies": [

@@ -1,6 +1,8 @@
-## 1.0.10 (WIP)
+## 1.1.0
+* Updated for 0.98.5a
 * Hull engineers are now available in the Comm Directory for non-player faction markets that have a Hull Mod Services structure.
 * Added per-faction dialogue text for the hull engineer. The information is the same, but it adds some flavor.
+  * Doesn't yet take into account the possible results of the Sindrian questline resolution.
 * Added the XIV upgrade package option for base non-XIV ships.
 * Added the domain grade parts production option to the Hull Mod Services structure.
 * Added the Deconstruction Module colony item.
@@ -9,6 +11,13 @@
   * Fuel demand decreased by 1
   * Transplutonics demand decreased by 2
   * Added Heavy Machinery demand
+* The "Change s-mods" button is affected by cost reductions from colony ship quality.
+* D-mod cost reduction is removed.
+* The Custom Optimizations hullmod is removed.
+* Exporting ship quality has been replaced by "certified domain-grade parts".
+* Added the XIV upgrade package.
+* Added the Deconstruction Module.
+* Added an interface in case other mods want to add hull evaluators for the functionality that adds s-mods to NPC fleets.
 
 ## 1.0.9
 * Fix (again) for mods that provide an upgrade for the orbital works causing the Hull Mod Services effects to be disabled.
