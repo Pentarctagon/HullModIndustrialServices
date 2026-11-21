@@ -20,8 +20,6 @@ import pentarctagon.hmis.npc.smods.listener.UpdatePlayerBlueprints;
 
 import java.lang.invoke.MethodHandles;
 
-// TODO: require player to be at the colony when creating a deconstruction module
-
 // TODO later: probably need to adjust the Sindrian dialog depending on the usurpers quest outcome
 // TODO later: watch NPC fleets spawning and check that the s-mod adding functionality is still working for modded faction fleets
 @SuppressWarnings("unused")
